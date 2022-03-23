@@ -141,6 +141,93 @@
     
     
     <article
+  id="post-用Python编写Hadoop MapReduce程序"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2022/03/23/%E7%94%A8Python%E7%BC%96%E5%86%99Hadoop%20MapReduce%E7%A8%8B%E5%BA%8F/"
+    >用Python编写Hadoop MapReduce程序</a> 
+</h2>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2022/03/23/%E7%94%A8Python%E7%BC%96%E5%86%99Hadoop%20MapReduce%E7%A8%8B%E5%BA%8F/" class="article-date">
+  <time datetime="2022-03-23T13:23:03.000Z" itemprop="datePublished">2022-03-23</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+  </div>
+   
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="用Python编写Hadoop-MapReduce程序"><a href="#用Python编写Hadoop-MapReduce程序" class="headerlink" title="用Python编写Hadoop MapReduce程序"></a>用Python编写Hadoop MapReduce程序</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>&emsp;&emsp;尽管Hadoop框架是用Java编写的，但Hadoop程序不需要用Java编写。采用Java streaming实现用python实现mapreduce过程。</p>
+<h4 id="一-安装java和hadoop集群"><a href="#一-安装java和hadoop集群" class="headerlink" title="一.安装java和hadoop集群"></a>一.安装java和hadoop集群</h4><p>1.查看安装路径</br></p>
+<figure class="highlight java"><figcaption><span>version```查看java版本</br></span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">```which java```查看java安装路径&lt;/br&gt;</span><br><span class="line">```ls -lrt /usr/bin/java```&lt;/br&gt;</span><br><span class="line">```ls -lrt /etc/alternatives/java```&lt;/br&gt;</span><br><span class="line">最后一条指令执行完，复制记录/bin/java前面的路径。&lt;/br&gt;</span><br><span class="line">2.配置jdk环境变量&lt;/br&gt;</span><br><span class="line">```export JAVA_HOME=复制路径```&lt;/br&gt;</span><br><span class="line">```export PATH=$JAVA_HOME/bin:$PATH```&lt;/br&gt;</span><br><span class="line">```export CLASSPATH=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar```&lt;/br&gt;</span><br><span class="line">3.激活配置内容&lt;/br&gt;</span><br><span class="line">```source /etc/profile```&lt;/br&gt;</span><br><span class="line">#### 二.编写MapReduce代码</span><br><span class="line">mapper.py文件内容如下：</span><br></pre></td></tr></table></figure>
+<p>#!/usr/bin/env python<br>“””mapper.py”””</p>
+<p>import sys</p>
+<h1 id="input-comes-from-STDIN-standard-input"><a href="#input-comes-from-STDIN-standard-input" class="headerlink" title="input comes from STDIN (standard input)"></a>input comes from STDIN (standard input)</h1><p>for line in sys.stdin:<br>    # remove leading and trailing whitespace<br>    line = line.strip()<br>    # split the line into words<br>    words = line.split()<br>    # increase counters<br>    for word in words:<br>        # write the results to STDOUT (standard output);<br>        # what we output here will be the input for the<br>        # Reduce step, i.e. the input for reducer.py<br>        #<br>        # tab-delimited; the trivial word count is 1<br>        print ‘%s\t%s’ % (word, 1)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">reducer.py文件内容如下：</span><br></pre></td></tr></table></figure>
+<p>#!/usr/bin/env python<br>“””reducer.py”””</p>
+<p>from operator import itemgetter<br>import sys</p>
+<p>current_word = None<br>current_count = 0<br>word = None</p>
+<h1 id="input-comes-from-STDIN"><a href="#input-comes-from-STDIN" class="headerlink" title="input comes from STDIN"></a>input comes from STDIN</h1><p>for line in sys.stdin:<br>    # remove leading and trailing whitespace<br>    line = line.strip()</p>
+<pre><code># parse the input we got from mapper.py
+word, count = line.split(&#39;\t&#39;, 1)
+
+# convert count (currently a string) to int
+try:
+    count = int(count)
+except ValueError:
+    # count was not a number, so silently
+    # ignore/discard this line
+    continue
+
+# this IF-switch only works because Hadoop sorts map output
+# by key (here: word) before it is passed to the reducer
+if current_word == word:
+    current_count += count
+else:
+    if current_word:
+        # write result to STDOUT
+        print &#39;%s\t%s&#39; % (current_word, current_count)
+    current_count = count
+    current_word = word
+</code></pre>
+<h1 id="do-not-forget-to-output-the-last-word-if-needed"><a href="#do-not-forget-to-output-the-last-word-if-needed" class="headerlink" title="do not forget to output the last word if needed!"></a>do not forget to output the last word if needed!</h1><p>if current_word == word:<br>    print ‘%s\t%s’ % (current_word, current_count)</p>
+<p><code>注意应给这两个文件添加执行权限：&lt;/br&gt;</code> chmod u+x xxx.py```</p>
+<h4 id="运行与实践"><a href="#运行与实践" class="headerlink" title="运行与实践"></a>运行与实践</h4><h5 id="1-将本地数据复制到HDFS"><a href="#1-将本地数据复制到HDFS" class="headerlink" title="1.将本地数据复制到HDFS"></a>1.将本地数据复制到HDFS</h5><h5 id="2-运行MapReduce作业"><a href="#2-运行MapReduce作业" class="headerlink" title="2.运行MapReduce作业"></a>2.运行MapReduce作业</h5> 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/python/" rel="tag">python</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%8A%80%E6%9C%AF/" rel="tag">技术</a></li></ul>
+
+    </footer>
+  </div>
+
+    
+ 
+    
+</article>
+
+    
+    <article
   id="post-jenkins自动化部署学习过程"
   class="article article-type-post"
   itemscope
