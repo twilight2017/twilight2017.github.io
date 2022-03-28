@@ -9,7 +9,7 @@
     
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   <title>
-    jenkins自动化部署学习过程 |  瑟兰迪尔
+    用Python编写Hadoop MapReduce程序 |  瑟兰迪尔
   </title>
   <meta name="generator" content="hexo-theme-ayer">
   
@@ -40,7 +40,7 @@
     <main class="content on">
       <section class="outer">
   <article
-  id="post-jenkins自动化部署学习过程"
+  id="post-用Python编写Hadoop MapReduce程序"
   class="article article-type-post"
   itemscope
   itemprop="blogPost"
@@ -51,15 +51,15 @@
     <header class="article-header">
        
 <h1 class="article-title sea-center" style="border-left:0" itemprop="name">
-  jenkins自动化部署学习过程
+  用Python编写Hadoop MapReduce程序
 </h1>
  
 
     </header>
      
     <div class="article-meta">
-      <a href="/2022/03/12/jenkins%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2%E5%AD%A6%E4%B9%A0%E8%BF%87%E7%A8%8B/" class="article-date">
-  <time datetime="2022-03-12T08:23:52.000Z" itemprop="datePublished">2022-03-12</time>
+      <a href="/2022/03/28/%E7%94%A8Python%E7%BC%96%E5%86%99Hadoop%20MapReduce%E7%A8%8B%E5%BA%8F/" class="article-date">
+  <time datetime="2022-03-28T08:05:03.000Z" itemprop="datePublished">2022-03-28</time>
 </a> 
   <div class="article-category">
     <a class="article-category-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
@@ -70,7 +70,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-quill-pen-line"></i>
             <span class="post-meta-item-text"> 字数统计:</span>
-            <span class="post-count">789</span>
+            <span class="post-count">440</span>
         </span>
     </span>
 
@@ -79,7 +79,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-book-open-line"></i>
             <span class="post-meta-item-text"> 阅读时长≈</span>
-            <span class="post-count">3 分钟</span>
+            <span class="post-count">2 分钟</span>
         </span>
     </span>
 </div>
@@ -94,17 +94,14 @@
   
     <div class="article-entry" itemprop="articleBody">
        
-  <h1 id="Jenkins自动化部署学习记录"><a href="#Jenkins自动化部署学习记录" class="headerlink" title="Jenkins自动化部署学习记录"></a>Jenkins自动化部署学习记录</h1><h1 id="1-安装jenkins"><a href="#1-安装jenkins" class="headerlink" title="1.安装jenkins"></a>1.安装jenkins</h1><p>&emsp;&emsp;这部分踩了不少的坑，网上的诸多方法（以使用apt-get 命令行安装方式为主），对Ubuntu20.04的适用性均一般，最佳的方法还是来自官网(<a target="_blank" rel="noopener" href="https://www.jenkins.io/zh/doc/book/installing/):%E4%B8%8B%E8%BD%BD%E5%B9%B6%E8%BF%90%E8%A1%8CJenkins%E7%9A%84WAR%E6%96%87%E4%BB%B6%E7%89%88%E6%9C%AC%E3%80%82">https://www.jenkins.io/zh/doc/book/installing/):下载并运行Jenkins的WAR文件版本。</a></br><br>(1)将最新的稳定Jenkins WAR包下载到计算机的相应目录上。</br><br>(2)在下载的目录内打开一个终端/命令提示符窗口</br><br>(3)运行命令java -jar jenkins.war</br><br>(4)浏览<a href="http://localhost:8080并等到jenkins相关页面出现。">http://localhost:8080并等到jenkins相关页面出现。</a></br><br>(5)安装后设置向导(详情不在此处赘述了，参考官网即可)</br></p>
-<h1 id="2-有关pipeline官方文档学习记录"><a href="#2-有关pipeline官方文档学习记录" class="headerlink" title="2.有关pipeline官方文档学习记录"></a>2.有关pipeline官方文档学习记录</h1><p>&emsp;&emsp;持续交付（CD）：pipeline可以将软件从版本控制直接获取到用户和客户的<code>流程的自动表达。</code>这个过程的主要工作：以可靠且可重复的方式构建软件，以及通过测试和部署的多个阶段推进构建的软件。</br><br>&emsp;&emsp;Jenkins Pipeline的定义被写入一个文本文件（称为Jenkinsfile）。JenkinsFile可以提交到项目的源代码管理存储库中。<code>管道即代码</code>。我们要将CD管道视为要像其他任何代码一样进行版本控制和审阅的应用程序的一部分。</br><br>&emsp;&emsp;使用JenkinsFile进行源代码管理的好处有以下几条：</br><br>&emsp;&emsp;(1)自动为所有分支和拉取请求创建管道生成过程。</br><br>&emsp;&emsp;(2)管道上的代码审查/迭代(已经剩余的源代码)</br><br>&emsp;&emsp;(3)管道的审核跟踪。</br><br>&emsp;&emsp;(4)单一事实来源，可由项目的多个成员查看和编辑。</br></p>
-<h1 id="3-Jenkins-Pipeline自动化部署项目"><a href="#3-Jenkins-Pipeline自动化部署项目" class="headerlink" title="3.Jenkins+Pipeline自动化部署项目"></a>3.Jenkins+Pipeline自动化部署项目</h1><p>&emsp;&emsp;配置拉取代码的地址(一般选择git/github)</p>
-<h3 id="1-创建JenkinsFile：包含基本的三阶段"><a href="#1-创建JenkinsFile：包含基本的三阶段" class="headerlink" title="(1)创建JenkinsFile：包含基本的三阶段"></a>(1)创建JenkinsFile：包含基本的三阶段</h3><p>点击“流水线语法”，编辑pipeline脚本</br></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">Jenkinsfile(Declarative Pipeline)</span><br><span class="line">pipeline&#123;</span><br><span class="line">    agent any</span><br><span class="line">    </span><br><span class="line">    stages&#123;</span><br><span class="line">        stage(&#39;Build&#39;)&#123;</span><br><span class="line">            steps&#123;</span><br><span class="line">                echo &#39;Building..&#39;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        stage(&#39;Test&#39;)&#123;</span><br><span class="line">            step&#123;</span><br><span class="line">                echo &#39;Testing..&#39;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        stage(&#39;Deploy&#39;)&#123;</span><br><span class="line">            step&#123;</span><br><span class="line">                echo &#39;Deploying..&#39;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>①build阶段：将源代码组装、编译、打包</br><br>linux的build阶段举例：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">Jenkinsfile(Declarative Pipeline)</span><br><span class="line">pipeline&#123;</span><br><span class="line">    agent any</span><br><span class="line">    stages&#123;</span><br><span class="line">        stage(&#39;Build&#39;)&#123;</span><br><span class="line">            steps&#123;</span><br><span class="line">                sh &#39;make&#39;</span><br><span class="line">                archiveArtifacts artificates: &#39;**&#x2F;target&#x2F;*.jar&#39;, fingerprint:true</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>&emsp;&emsp;该sh步骤调用该make命令，只有在命令返回零退出代码时才会继续。任何非零退出代码将造成Pipeline失败。</br><br>②测试：以Junit插件提供的步骤为例：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">Jenkinsfile(Declarative Pepeline)</span><br><span class="line">pipeline&#123;</span><br><span class="line">    agent any</span><br><span class="line">    stages&#123;</span><br><span class="line">        stage(&#39;Test&#39;)&#123;</span><br><span class="line">            steps&#123;</span><br><span class="line">                sh &#39;make check || true&#39;</span><br><span class="line">                junit &#39;**&#x2F;target&#x2F;*.xml&#39;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>1&gt; 确保sh步骤始终看到零退出代码，使得Junit步骤有机会捕获和处理测试报告。</br><br>2&gt; junit捕获并关联与包含pattern匹配的Junit XMl文件</br><br>③部署：将代码推送到生产系统</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">Jenkinsfile(Declarative Pipeline)</span><br><span class="line">pipeline&#123;</span><br><span class="line">    agent any</span><br><span class="line">    stages&#123;</span><br><span class="line">        stage(&#39;Deploy&#39;)&#123;</span><br><span class="line">            when&#123;</span><br><span class="line">                expression&#123;</span><br><span class="line">                    currentBuild.result&#x3D;null || currentBuild.result&#x3D;&#x3D;&#39;SUCCESS&#39;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            steps&#123;</span><br><span class="line">                sh &#39;make publish&#39;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure> 
+  <h1 id="用Python编写Hadoop-MapReduce程序"><a href="#用Python编写Hadoop-MapReduce程序" class="headerlink" title="用Python编写Hadoop MapReduce程序"></a>用Python编写Hadoop MapReduce程序</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>&emsp;&emsp;尽管Hadoop框架是用Java编写的，但Hadoop程序不需要用Java编写。采用Java streaming实现用python实现mapreduce过程。</p>
+<h4 id="一-安装java和hadoop集群"><a href="#一-安装java和hadoop集群" class="headerlink" title="一.安装java和hadoop集群"></a>一.安装java和hadoop集群</h4><p>1.查看安装路径</br><br>java version查看java版本</br><br>which java查看java安装路径</br><br>ls -lrt /usr/bin/java</br><br>ls -lrt /etc/alternatives/java</br><br>最后一条指令执行完，复制记录/bin/java前面的路径。</br><br>2.配置jdk环境变量</br><br>export JAVA_HOME=复制路径</br><br>export PATH=$JAVA_HOME/bin:$PATH</br><br>export CLASSPATH=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar</br><br>3.激活配置内容</br><br>source /etc/profile</br></p>
+<h4 id="二-编写MapReduce代码"><a href="#二-编写MapReduce代码" class="headerlink" title="二.编写MapReduce代码"></a>二.编写MapReduce代码</h4><p>mapper.py文件内容如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">#!&#x2F;usr&#x2F;bin&#x2F;env python</span><br><span class="line"></span><br><span class="line">import sys</span><br><span class="line"></span><br><span class="line"># input comes from STDIN (standard input)</span><br><span class="line">for line in sys.stdin:</span><br><span class="line">    # remove leading and trailing whitespace</span><br><span class="line">    line &#x3D; line.strip()</span><br><span class="line">    # split the line into words</span><br><span class="line">    words &#x3D; line.split()</span><br><span class="line">    # increase counters</span><br><span class="line">    for word in words:</span><br><span class="line">        # write the results to STDOUT (standard output);</span><br><span class="line">        # what we output here will be the input for the</span><br><span class="line">        # Reduce step, i.e. the input for reducer.py</span><br><span class="line">        #</span><br><span class="line">        # tab-delimited; the trivial word count is 1</span><br><span class="line">        print &#39;%s\t%s&#39; % (word, 1)</span><br></pre></td></tr></table></figure>
+<p>reducer.py文件内容如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">#!&#x2F;usr&#x2F;bin&#x2F;env python</span><br><span class="line">&quot;&quot;&quot;reducer.py&quot;&quot;&quot;</span><br><span class="line"></span><br><span class="line">from operator import itemgetter</span><br><span class="line">import sys</span><br><span class="line"></span><br><span class="line">current_word &#x3D; None</span><br><span class="line">current_count &#x3D; 0</span><br><span class="line">word &#x3D; None</span><br><span class="line"></span><br><span class="line"># input comes from STDIN</span><br><span class="line">for line in sys.stdin:</span><br><span class="line">    # remove leading and trailing whitespace</span><br><span class="line">    line &#x3D; line.strip()</span><br><span class="line"></span><br><span class="line">    # parse the input we got from mapper.py</span><br><span class="line">    word, count &#x3D; line.split(&#39;\t&#39;, 1)</span><br><span class="line"></span><br><span class="line">    # convert count (currently a string) to int</span><br><span class="line">    try:</span><br><span class="line">        count &#x3D; int(count)</span><br><span class="line">    except ValueError:</span><br><span class="line">        # count was not a number, so silently</span><br><span class="line">        # ignore&#x2F;discard this line</span><br><span class="line">        continue</span><br><span class="line"></span><br><span class="line">    # this IF-switch only works because Hadoop sorts map output</span><br><span class="line">    # by key (here: word) before it is passed to the reducer</span><br><span class="line">    if current_word &#x3D;&#x3D; word:</span><br><span class="line">        current_count +&#x3D; count</span><br><span class="line">    else:</span><br><span class="line">        if current_word:</span><br><span class="line">            # write result to STDOUT</span><br><span class="line">            print &#39;%s\t%s&#39; % (current_word, current_count)</span><br><span class="line">        current_count &#x3D; count</span><br><span class="line">        current_word &#x3D; word</span><br><span class="line"></span><br><span class="line"># do not forget to output the last word if needed!</span><br><span class="line">if current_word &#x3D;&#x3D; word:</span><br><span class="line">    print &#39;%s\t%s&#39; % (current_word, current_count)</span><br></pre></td></tr></table></figure>
+<p>注意应给这两个文件添加执行权限：</br><br>chmod u+x xxx.py</p>
+<h4 id="运行与实践"><a href="#运行与实践" class="headerlink" title="运行与实践"></a>运行与实践</h4><h5 id="1-将本地数据复制到HDFS"><a href="#1-将本地数据复制到HDFS" class="headerlink" title="1.将本地数据复制到HDFS"></a>1.将本地数据复制到HDFS</h5><h5 id="2-运行MapReduce作业"><a href="#2-运行MapReduce作业" class="headerlink" title="2.运行MapReduce作业"></a>2.运行MapReduce作业</h5> 
       <!-- reward -->
       
     </div>
@@ -168,12 +165,12 @@
     <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://twilight2017.github.io/2022/03/12/jenkins%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2%E5%AD%A6%E4%B9%A0%E8%BF%87%E7%A8%8B/" alt="微信分享二维码">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://twilight2017.github.io/2022/03/28/%E7%94%A8Python%E7%BC%96%E5%86%99Hadoop%20MapReduce%E7%A8%8B%E5%BA%8F/" alt="微信分享二维码">
     </div>
 </div>
 
 <div id="share-mask"></div>  
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Jenkins/" rel="tag">Jenkins</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%8A%80%E6%9C%AF/" rel="tag">技术</a></li></ul>
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/python/" rel="tag">python</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%8A%80%E6%9C%AF/" rel="tag">技术</a></li></ul>
 
     </footer>
   </div>
@@ -181,19 +178,10 @@
    
   <nav class="article-nav">
     
+    
       <a href="/2022/03/23/Linux%E5%85%A5%E9%97%A8%E5%AD%A6%E4%B9%A0%E6%8C%87%E5%8D%97/" class="article-nav-link">
-        <strong class="article-nav-caption">上一篇</strong>
-        <div class="article-nav-title">
-          
-            Linux入门学习指南
-          
-        </div>
-      </a>
-    
-    
-      <a href="/2021/09/28/Django%E4%B8%ADImageField%E7%9A%84%E4%BD%BF%E7%94%A8/" class="article-nav-link">
         <strong class="article-nav-caption">下一篇</strong>
-        <div class="article-nav-title">Django中ImageField的使用</div>
+        <div class="article-nav-title">Linux入门学习指南</div>
       </a>
     
   </nav>
