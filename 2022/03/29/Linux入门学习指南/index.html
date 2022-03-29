@@ -58,8 +58,8 @@
     </header>
      
     <div class="article-meta">
-      <a href="/2022/03/23/Linux%E5%85%A5%E9%97%A8%E5%AD%A6%E4%B9%A0%E6%8C%87%E5%8D%97/" class="article-date">
-  <time datetime="2022-03-23T13:23:03.000Z" itemprop="datePublished">2022-03-23</time>
+      <a href="/2022/03/29/Linux%E5%85%A5%E9%97%A8%E5%AD%A6%E4%B9%A0%E6%8C%87%E5%8D%97/" class="article-date">
+  <time datetime="2022-03-29T08:56:03.000Z" itemprop="datePublished">2022-03-29</time>
 </a> 
   <div class="article-category">
     <a class="article-category-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
@@ -70,7 +70,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-quill-pen-line"></i>
             <span class="post-meta-item-text"> 字数统计:</span>
-            <span class="post-count">1k</span>
+            <span class="post-count">1.7k</span>
         </span>
     </span>
 
@@ -79,7 +79,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-book-open-line"></i>
             <span class="post-meta-item-text"> 阅读时长≈</span>
-            <span class="post-count">3 分钟</span>
+            <span class="post-count">6 分钟</span>
         </span>
     </span>
 </div>
@@ -115,6 +115,33 @@
 <h3 id="linux远程管理软件"><a href="#linux远程管理软件" class="headerlink" title="linux远程管理软件"></a>linux远程管理软件</h3><blockquote>
 <p>(1)基于VNC，图形远程管理软件。</br><br>(2)基于SSH协议的命令行操作管理。</br><br>(3)类似Webmin的基于浏览器的管理，该种方式下管理功能有限。</br></p>
 </blockquote>
+<h2 id="6-Linux软件包"><a href="#6-Linux软件包" class="headerlink" title="6.Linux软件包"></a>6.Linux软件包</h2><p>&emsp;&emsp;Linux软件包几乎都是经GPL授权的。这意味着如果你具备修改软件源代码的能力，可以随意地修改软件源代码。</br></p>
+<h4 id="Linux源码包"><a href="#Linux源码包" class="headerlink" title="Linux源码包"></a>Linux源码包</h4><p>源码包的安装需要很长时间的编译过程</br><br>例：MySQL安装包的大小只有23M，但其安装却需要30分钟左右的时间</p>
+<h4 id="Linux二进制包"><a href="#Linux二进制包" class="headerlink" title="Linux二进制包"></a>Linux二进制包</h4><p>二进制包在发布之前就已经完成了编译的工作。目前主要有2大主流的二进制包管理系统：</br></p>
+<blockquote>
+<p>1.RPM包管理系统：功能强大，安装、升级、查询和卸载非常简单方便。因此很多Linux发行版都默认采用此机制做为软件安装包的管理方式。</br><br>2.DPKG包管理方式：由Debian Linux所开发的软件包管理方式。主要应用在Debian和Ubuntu中</p>
+</blockquote>
+<h4 id="源码包VSRPM二进制包"><a href="#源码包VSRPM二进制包" class="headerlink" title="源码包VSRPM二进制包"></a>源码包VSRPM二进制包</h4><p>源码包一般包含多个文件，为了方便发布，一般会对源码包做打包处理。Linux中最常用的打包格式是”tar.gz”。因此源码包也会被称为tarball。</br><br>源码包需要我们去软件官方网站进行下载，其一般包含如下内容：</br></p>
+<blockquote>
+<p>1.源代码文件</br><br>2.配置和检测程序（如configure或config）</br><br>3.软件安装说明和软件说明(如INSTALL或README)</br></p>
+</blockquote>
+<p>总得来说，使用源码包安装软件具有以下好处：</br></p>
+<blockquote>
+<p>1.开源，能力足够的话可以自行修改源码。</br><br>2.可以自由选择所需的功能。</br><br>3.软件采用编译安装的方式。更适合自己的系统、更加稳定、效率也更高。</br></p>
+</blockquote>
+<p>但同时，使用源码包安装软件也存在以下几点不足：</br></p>
+<blockquote>
+<p>1.安装过程步骤较多、容易出错。</br><br>2.编译时间较长导致的安装时间较长。</br><br>3.因为软件是编译安装的，编译过程一旦出错，新手很难解决。</br></p>
+</blockquote>
+<p>使用RPM包安装软件具有以下好处：</br></p>
+<blockquote>
+<p>1.包管理系统简单，只需要几个命令就可以实现包的安装、升级、查询和卸载。</br></p>
+</blockquote>
+<p>使用RPM包安装软件存在以下不足：</br></p>
+<blockquote>
+<p>1.经过编译，不能再看到源代码。</br><br>2.功能选择不如源码包灵活。</br><br>3.依赖性有可能非常强。</br></p>
+</blockquote>
+<h2 id="7-yum源及其配置"><a href="#7-yum源及其配置" class="headerlink" title="7.yum源及其配置"></a>7.yum源及其配置</h2><p>&emsp;&emsp;yum，全称“Yellow dog Updater, Modified”,是一个专门为了解决包的依赖关系而存在的软件包管理器。yum是改进型的RPM软件管理器，它很好地解决了RPM软件包依赖问题。</br><br>&emsp;&emsp;当管理员使用yum安装RPM包时，yum会先从服务器端下载RPM包的依赖文件</p>
  
       <!-- reward -->
       
@@ -179,7 +206,7 @@
     <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://twilight2017.github.io/2022/03/23/Linux%E5%85%A5%E9%97%A8%E5%AD%A6%E4%B9%A0%E6%8C%87%E5%8D%97/" alt="微信分享二维码">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://twilight2017.github.io/2022/03/29/Linux%E5%85%A5%E9%97%A8%E5%AD%A6%E4%B9%A0%E6%8C%87%E5%8D%97/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -192,19 +219,10 @@
    
   <nav class="article-nav">
     
+    
       <a href="/2022/03/28/%E7%94%A8Python%E7%BC%96%E5%86%99Hadoop%20MapReduce%E7%A8%8B%E5%BA%8F/" class="article-nav-link">
-        <strong class="article-nav-caption">上一篇</strong>
-        <div class="article-nav-title">
-          
-            用Python编写Hadoop MapReduce程序
-          
-        </div>
-      </a>
-    
-    
-      <a href="/2022/03/12/jenkins%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2%E5%AD%A6%E4%B9%A0%E8%BF%87%E7%A8%8B/" class="article-nav-link">
         <strong class="article-nav-caption">下一篇</strong>
-        <div class="article-nav-title">jenkins自动化部署学习过程</div>
+        <div class="article-nav-title">用Python编写Hadoop MapReduce程序</div>
       </a>
     
   </nav>
