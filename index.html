@@ -141,6 +141,78 @@
     
     
     <article
+  id="post-Docker build的cache机制"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2022/04/17/Docker%20build%E7%9A%84cache%E6%9C%BA%E5%88%B6/"
+    >Docker build的cache机制</a> 
+</h2>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2022/04/17/Docker%20build%E7%9A%84cache%E6%9C%BA%E5%88%B6/" class="article-date">
+  <time datetime="2022-04-17T11:15:03.000Z" itemprop="datePublished">2022-04-17</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+  </div>
+   
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="Docker-build的cache机制"><a href="#Docker-build的cache机制" class="headerlink" title="Docker build的cache机制"></a>Docker build的cache机制</h1><h3 id="docker-build命令简介"><a href="#docker-build命令简介" class="headerlink" title="docker build命令简介"></a>docker build命令简介</h3><p>以如下这个Dockerfile为例：</br></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">FROM buntu:14.04</span><br><span class="line">RUN apt-get update ADD run.sh &#x2F; VOLUME &#x2F;data CMD[&quot;.&#x2F;run.sh&quot;]</span><br></pre></td></tr></table></figure>
+<p>随后执行下面一条命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker build -t&#x3D;&quot;my_new_image&quot;</span><br></pre></td></tr></table></figure>
+<p>&emsp;&emsp;即可将当前目录下的Dockerfile构建成一个名为my_new_image的镜像，镜像的默认tag是latest。对于以上的docker build请求，Docker Daemon新创建了4层镜像，除了FROM命令，其余的RUN、ADD、VOLUME以及CMD命令都会创建一层新的镜像。</p>
+<h3 id="镜像cache机制的介绍"><a href="#镜像cache机制的介绍" class="headerlink" title="镜像cache机制的介绍"></a>镜像cache机制的介绍</h3><p>&emsp;&emsp;Dockerfile可以通过<code>docker build</code>命令构建为一个新的镜像，Dockerfile中的每一条命令都会构建出一个新的镜像层。既然如此，构建成功后宿主机上的镜像层是否会不断增多，导致磁盘空间资源逐渐缩小？另外，一个Dockerfile如果构建多次，对于Dockerfile中的某一指定指令，是否会出现产生多个对应镜像层的情况呢？</p>
+<h3 id="docker-build的cache机制"><a href="#docker-build的cache机制" class="headerlink" title="docker build的cache机制"></a>docker build的cache机制</h3><p>&emsp;&emsp;Docker Daemon通过Dockerfile构建镜像时，当发现即将新构建出的镜像与已有的某镜像重复时，可以选择放弃构建新的镜像，也就是采取本地已经cache的镜像作为结果。</p>
+<h3 id="cache机制的实现原理："><a href="#cache机制的实现原理：" class="headerlink" title="cache机制的实现原理："></a>cache机制的实现原理：</h3><p>&emsp;&emsp;Docker镜像，由镜像层文件系统和镜像json文件组成，而这两者都含有一个相同的镜像ID。</br></p>
+<blockquote>
+<p>1.<code>FROM buntu:14.04</code>:FROM命令是Dockerfile中唯一不可缺少的命令，它为最终构建出的镜像设定了一个基础镜像(base image)。docker build命令解析Dockerfile的FROM命令时，可以立即获悉在哪一个镜像基础上完成下一条命令<code>RUN apt-get update</code>的镜像构建。此时，Docker Daemon获取Ubuntu: 14.04镜像的镜像ID，并提取该镜像json文件中的内容，以备下一条命令构建时使用。</br><br>2.<code>RUN apt-get update</code>:RUN命令是在上一层镜像(即ubuntu:14.04镜像)上运行apt-get update，所有对文件系统内容有更新的文件，都会保留于新构建的镜像层中，同时更新上一层镜像的json文件。</p>
+</blockquote>
+<h3 id="有关docker-build命令的事实："><a href="#有关docker-build命令的事实：" class="headerlink" title="有关docker build命令的事实："></a>有关docker build命令的事实：</h3><blockquote>
+<p>1.镜像关系：对于命令<code>RUN apt-get update</code>的构建，一定会产生一个新镜像，新镜像的父镜像ID为ubuntu:14.04的镜像ID。</br><br>2.镜像json文件更新：运行命令<code>apt-get update</code>后产生新镜像，新镜像json文件仅仅更新ubuntu:14.04镜像json文件的cmd属性，其他如config属性均不会修改。</br><br>3.镜像层文件系统内容更新：运行<code>apt-get update</code>后，对于容器可读写层的内容更新，全部将被打包进新镜像的镜像层文件系统内容。</br></p>
+</blockquote>
+<h3 id="cache机制的核心："><a href="#cache机制的核心：" class="headerlink" title="cache机制的核心："></a>cache机制的核心：</h3><p>&emsp;&emsp;遍历本地所有镜像，发现镜像与即将构建出的镜像一致时，将找到的镜像作为cache镜像，复用cache镜像作为构建结果。</p>
+<h3 id="cache机制注意事项"><a href="#cache机制注意事项" class="headerlink" title="cache机制注意事项"></a>cache机制注意事项</h3><p>&emsp;&emsp;cache机制很大程度上做到了镜像的复用，降低存储空间的同时，还大大缩短了构建时间。以下列出使用cache机制的几项注意事项：</p>
+<h5 id="ADD命令与COPY命令"><a href="#ADD命令与COPY命令" class="headerlink" title="ADD命令与COPY命令"></a>ADD命令与COPY命令</h5><p>&emsp;&emsp;判断ADD命令或者COPY命令后紧接的文件是否发生变化，成为是否沿用cache的重要依据。Docker采取的策略是：获取Dockerfile下的内容，计算出一个唯一的hash值，若hash值未发生变化，则可以认为文件内容没有发生变化，可以使用cache机制；反之亦然。</p>
+<h5 id="RUN命令存在外部依赖"><a href="#RUN命令存在外部依赖" class="headerlink" title="RUN命令存在外部依赖"></a>RUN命令存在外部依赖</h5><p>&emsp;&emsp;以命令<code>RUN apt-get update</code>为例，随着时间的推移，基于同一个基础镜像，一年前的<code>apt-get update</code>和一年后的<code>apt-get update</code>，由于软件源软件的更新，从而导致产生的镜像理论上应该不同。如果继续使用cache机制，将存在不满足用户需求的情况。</br><br>&emsp;&emsp;Docker采取的策略是：用户可以使用参数<code>--no-cache</code>确保获取最新的外部依赖。</br><br><code>docker build --no-cache -t=&quot;my_new_image&quot;</code></p>
+<h5 id="树状镜像的关系"><a href="#树状镜像的关系" class="headerlink" title="树状镜像的关系"></a>树状镜像的关系</h5><p>&emsp;&emsp;树状的镜像关系决定了，一次新镜像的成功构建将导致后续的cache机制全部失效。</br><br>&emsp;&emsp;一旦产生一个新的镜像，意味着产生一个新的镜像ID。而当前宿主机环境中肯定不会存在一个镜像，此镜像ID的父镜像ID是新产生镜像的ID。这也是为什么，书写Dockerfile的时候，应该将更多静态的安装、配置命令尽可能地放在Dockerfile的较前位置。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>&emsp;&emsp;docker build的cache机制实现了镜像的复用，不仅节省了镜像的存储空间，也为镜像构建节省了大量的时间。</p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/docker/" rel="tag">docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%8A%80%E6%9C%AF/" rel="tag">技术</a></li></ul>
+
+    </footer>
+  </div>
+
+    
+ 
+    
+</article>
+
+    
+    <article
   id="post-Git踩坑记录"
   class="article article-type-post"
   itemscope
@@ -328,7 +400,7 @@
 
     
     <article
-  id="post-用Python编写Hadoop MapReduce程序"
+  id="post-用Python编写Hadoop MapReduce程序 - 副本"
   class="article article-type-post"
   itemscope
   itemprop="blogPost"
@@ -339,7 +411,7 @@
     <header class="article-header">
        
 <h2 itemprop="name">
-  <a class="article-title" href="/2022/03/28/%E7%94%A8Python%E7%BC%96%E5%86%99Hadoop%20MapReduce%E7%A8%8B%E5%BA%8F/"
+  <a class="article-title" href="/2022/03/28/%E7%94%A8Python%E7%BC%96%E5%86%99Hadoop%20MapReduce%E7%A8%8B%E5%BA%8F%20-%20%E5%89%AF%E6%9C%AC/"
     >用Python编写Hadoop MapReduce程序</a> 
 </h2>
  
@@ -347,7 +419,7 @@
     </header>
      
     <div class="article-meta">
-      <a href="/2022/03/28/%E7%94%A8Python%E7%BC%96%E5%86%99Hadoop%20MapReduce%E7%A8%8B%E5%BA%8F/" class="article-date">
+      <a href="/2022/03/28/%E7%94%A8Python%E7%BC%96%E5%86%99Hadoop%20MapReduce%E7%A8%8B%E5%BA%8F%20-%20%E5%89%AF%E6%9C%AC/" class="article-date">
   <time datetime="2022-03-28T08:05:03.000Z" itemprop="datePublished">2022-03-28</time>
 </a> 
   <div class="article-category">
