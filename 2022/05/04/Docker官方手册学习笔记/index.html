@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+
+
+<head>
+  <meta charset="utf-8" />
+    
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>
+    Docker官方手册学习笔记 |  瑟兰迪尔
+  </title>
+  <meta name="generator" content="hexo-theme-ayer">
+  
+  <link rel="shortcut icon" href="/favicon.ico" />
+  
+  
+<link rel="stylesheet" href="/dist/main.css">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Shen-Yu/cdn/css/remixicon.min.css">
+  
+<link rel="stylesheet" href="/css/custom.css">
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+  
+  
+
+  
+
+</head>
+
+</html>
+
+<body>
+  <div id="app">
+    
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-Docker官方手册学习笔记"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  Docker官方手册学习笔记
+</h1>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2022/05/04/Docker%E5%AE%98%E6%96%B9%E6%89%8B%E5%86%8C%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" class="article-date">
+  <time datetime="2022-05-04T08:56:03.000Z" itemprop="datePublished">2022-05-04</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">6.3k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">24 分钟</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="Docker官方手册学习笔记"><a href="#Docker官方手册学习笔记" class="headerlink" title="Docker官方手册学习笔记"></a>Docker官方手册学习笔记</h1><blockquote>
+<p>官方学习手册：<a target="_blank" rel="noopener" href="https://yeasy.gitbook.io/docker_practice/introduction/what">https://yeasy.gitbook.io/docker_practice/introduction/what</a></p>
+</blockquote>
+<h1 id="什么是Docker"><a href="#什么是Docker" class="headerlink" title="什么是Docker"></a>什么是Docker</h1><p>Docker使用Google公司推出的Go语言进行开发实现，基于linux内核的cgroup、namespace、以及Union FS等技术，对进程进行封装隔离，属于操作系统层面的虚拟化技术(将操作系统内核虚拟化，可以允许用户空间软件实例被分割成几个独立的单元)。</br><br><img src="/images/docker.png"></br></p>
+<blockquote>
+<p>runc是一个Linux命令行工具，用于根据OCI容器运行时规范创建和运行容器。</br><br>containerd是一个守护程序，它管理容器生命周期，提供了一个在节点上执行容器和管理镜像的最小功能集。</p>
+</blockquote>
+<p>Docker在容器的基础上，进行了进一步的封装，从文件系统、网络互联到进程隔离等等，极大的简化了容器的创建和维护，使得Docker技术比虚拟机技术更为轻便、快捷。</br></p>
+<h5 id="Docker与传统虚拟化方式的不同之处"><a href="#Docker与传统虚拟化方式的不同之处" class="headerlink" title="Docker与传统虚拟化方式的不同之处"></a>Docker与传统虚拟化方式的不同之处</h5><p>传统虚拟机技术是模拟出一套硬件后，在其上运行一个完整的操作系统，在该系统上再运行所需应用进程。<b>而容器内的应用进程则直接运行于宿主的内核。容器内没有自己的内核，而且也没有进行硬件模拟，因此容器要比传统虚拟机更为轻便</b>。</br></p>
+<h1 id="为什么要用Docker"><a href="#为什么要用Docker" class="headerlink" title="为什么要用Docker"></a>为什么要用Docker</h1><h5 id="1-更高效的利用系统资源"><a href="#1-更高效的利用系统资源" class="headerlink" title="1.更高效的利用系统资源"></a>1.更高效的利用系统资源</h5><p>容器不需要进行硬件虚拟以及完整操作系统等额外开销。Docker对系统资源的利用率更高。在<b>应用执行速度、内存损耗、文件存储速度</b>等方面都比传统虚拟机技术更高效。因此，相比虚拟机技术，一个相同配置的主机，往往可以运行更多数量的应用。</p>
+<h5 id="2-更快速的启动时间"><a href="#2-更快速的启动时间" class="headerlink" title="2.更快速的启动时间"></a>2.更快速的启动时间</h5><p>Docker容器应用，直接运行于宿主内核，无需启动完整的操作系统。因此可以做到秒级、毫秒级的启动时间。<b>大大的节约了开发、测试、部署的时间。</b></p>
+<h5 id="一致的运行环境"><a href="#一致的运行环境" class="headerlink" title="一致的运行环境"></a>一致的运行环境</h5><p>Docker的镜像提供了除内核外完整的运行时环境，确保了应用运行环境一致性。</p>
+<h5 id="持续交付和部署"><a href="#持续交付和部署" class="headerlink" title="持续交付和部署"></a>持续交付和部署</h5><p>开发人员可以通过Dockerfile来进行镜像构建，并结合持续集成系统进行集成测试。而运维人员则可以直接在生产环境中快速部署该镜像，甚至结合持续部署系统进行自动部署。</p>
+<h5 id="更轻松的迁移"><a href="#更轻松的迁移" class="headerlink" title="更轻松的迁移"></a>更轻松的迁移</h5><p>Docker确保了执行环境的一致性，使得应用的迁移更加容易。用户可以轻易的将在一个平台上运行的应用，迁移到另一个平台上，而不用担心运行环境的变化导致应用无法正常运行的情况。</p>
+<h5 id="更轻松的维护和拓展"><a href="#更轻松的维护和拓展" class="headerlink" title="更轻松的维护和拓展"></a>更轻松的维护和拓展</h5><blockquote>
+<p>1.Docker使用的分层存储以及镜像的技术，使得应用重复部分的复用更为容易。</br><br>2.Docker团队同各个开源项目团队一起维护了一大批高质量的官方镜像，既可以直接在生产环境使用，又可用于专门定制，大大降低了应用服务的镜像制作成本。</p>
+</blockquote>
+<h1 id="基础概念区分"><a href="#基础概念区分" class="headerlink" title="基础概念区分"></a>基础概念区分</h1><h5 id="1-镜像"><a href="#1-镜像" class="headerlink" title="1.镜像"></a>1.镜像</h5><p>操作系统分为内核和用户空间。相对于Linux而言，内核启动后，会挂载root文件系统为其提供用户空间支持。而Docker镜像，就相当于是一个root文件系统。比如官方镜像ubuntu:18.04就包含了完整的一套Ubuntu 18.04最小系统的root文件系统。</br><br>&emsp;&emsp;<b>Docker镜像是一个特殊的文件系统，除了提供容器运行时所需的程序、库、资源、配置等文件外，还包含了一些为运行时准备的一些配置参数(如匿名卷、环境变量、用户等)。</b></br></p>
+<h5 id="分层存储机制"><a href="#分层存储机制" class="headerlink" title="分层存储机制"></a>分层存储机制</h5><p>Docker被设计为分层存储的架构。所以严格来说，镜像并非是像一个ISO那样的打包文件爱，镜像只是一个虚拟的概念，其实际体现并非由一个文件组成，而是由一组文件系统组成，或者说，由多层文件系统联合组成。</br><br>镜像构建时，会一层层构建，前一层是后一层的基础。每一层构建完就不会再发生变化，后一层上的任何改变只发生在自己这一层</p>
+<h5 id="2-容器"><a href="#2-容器" class="headerlink" title="2.容器"></a>2.容器</h5><p>&emsp;&emsp;容器(container)与镜像(image)的关系，就像是面对对象程序设计中的类和实例一样，镜像是静态的定义，容器是镜像运行时的实体。容器可以被创建、启动、停止、删除、暂停等。</br><br>&emsp;&emsp;容器的实质是进程，但与直接在宿主执行的进程不同，容器进程运行于属于自己的独立的命名空间。因此，<b>容器可以拥有自己的root文件系统、自己的网络配置、自己的进程空间，甚至自己的用户ID空间</b>。容器内的进程，运行在一个隔离的环境中，使用起来像是在一个独立与宿主的系统下操作一样。这种特性使得容器封装的应用比直接在宿主机运行更加安全。</br><br>&emsp;&emsp;镜像使用的是分层存储，容器亦是如此，每一个容器运行时，是以镜像为基础层，在其上创建一个当前容器的存储层。</br><br>&emsp;&emsp;容器存储层的生存周期和容器一样，容器消亡时，容器存储层也随之消亡。因此，任何保存于容器存储层的信息都会随容器删除而丢失。</br><br>&emsp;&emsp;按照Docker最佳实践的要求，容器不应该向其存储层内写入任何数据，容器存储层要保持无状态化。所有的文件写入操作，都应该使用数据卷(volume)或者绑定宿主目录，在这些位置的读写会跳过容器存储层，直接对宿主(或网络存储)发生读写，其性能和稳定性更高。</br><br>&emsp;&emsp;数据卷的生存周期独立于容器，容器消亡，数据卷不会消亡。因此，使用数据卷之后，容器删除或者重新运行之后，数据不会丢失。</br></p>
+<h5 id="3。仓库"><a href="#3。仓库" class="headerlink" title="3。仓库"></a>3。仓库</h5><p>仓库提供一个集中的存储、分发镜像的服务</p>
+<h1 id="使用镜像"><a href="#使用镜像" class="headerlink" title="使用镜像"></a>使用镜像</h1><h2 id="获取镜像"><a href="#获取镜像" class="headerlink" title="获取镜像"></a>获取镜像</h2><p>从Docker镜像仓库获取镜像的命令是docker pull。其命令格式是：<br><code>docker pull [选项] [Docker Registry 地址[:端口号]/]仓库名[:标签]</code><br>镜像名称的格式：</p>
+<blockquote>
+<p>1.Docker镜像仓库地址：地址格式一般是<code>&lt;域名/IP&gt;[:端口号]</code>。默认地址是Docker Hub</br><br>2.仓库名：采用两段式名称。即<code>&lt;用户名&gt;/&lt;软件名&gt;</code>。对于Docker Hub,如果不给出用户名，则默认为library，也就是官方镜像</p>
+</blockquote>
+<h2 id="运行"><a href="#运行" class="headerlink" title="运行"></a>运行</h2><p>&emsp;&emsp;有了镜像后，我们就能以这个镜像为基础启动并运行一个容器。</br></p>
+<figure class="highlight docker"><figcaption><span>run```就是运行容器的命令。以以下命令为例，简要说明一下上面用到的参数:</br></span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">```docker <span class="keyword">run</span><span class="bash"> -it --rm ubuntu:18.04 bash```</span></span><br><span class="line">&gt; 1.```-it```：这是两个参数，一个是-i:交互式操作，一个是-t终端。这里打算进入bash执行一些命令并查看返回结果，因此我们需要交互式终端。&lt;/br&gt;</span><br><span class="line">&gt; 2.```--rm```：这个参数是说容器退出后随之将其删除。&lt;/br&gt;</span><br><span class="line">&gt; 3.```ubuntu:18.04```：这是指用ubuntu:18.04镜像为基础来启动容器。&lt;/br&gt;</span><br><span class="line">&gt; <span class="number">4</span>.```bash```放在镜像名称后的是命令，这里我们希望有个交互式<span class="keyword">shell</span><span class="bash">，因此用的是bash</span></span><br><span class="line"></span><br><span class="line">可以通过```exit```命令退出容器</span><br><span class="line"><span class="comment">## 删除本地镜像</span></span><br><span class="line">```docker image rm [选项] &lt;镜像<span class="number">1</span>&gt; [&lt;镜像<span class="number">2</span>&gt;...]```</span><br><span class="line">其中，```镜像```可以是```镜像短ID、镜像长ID、镜像名或者镜像摘要```&lt;/br&gt;</span><br><span class="line">```短ID```一般取<span class="number">3</span>个字符以上，只要足够区分于别的镜像就可以了</span><br><span class="line"><span class="comment">## docker commit</span></span><br><span class="line">当我们运行一个容器的时候(如果不使用卷的话)，我们做的任何文件修改都会被记录于容器存储层内。而Docker提供了一个```docker commit```命令，可以将容器的存储层保存下来作为新的镜像。换句话说，就是在原有镜像的基础上，再叠加上容器的存储层，并构成新的镜像。以后运行这个新镜像的时候，就会拥有原有容器最后的文件变化。&lt;/br&gt;</span><br><span class="line">其语法格式为：&lt;/br&gt;</span><br><span class="line">```docker commit [选项] &lt;容器ID或容器名&gt; [&lt;仓库名&gt;[:&lt;标签&gt;]]```</span><br><span class="line">然而，由于命令的执行，还有很多文件被改动或添加了。如果是安装软件包、编译构建，那会有大量的无关内容被添加进来，将会导致镜像极为臃肿。&lt;/br&gt;</span><br><span class="line">此外，使用```docker commit```意味着对镜像的操作都是黑箱操作，生成的镜像也被称为黑箱镜像。黑箱镜像的维护工作是非常痛苦的。&lt;/br&gt;</span><br><span class="line">如果使用```docker commit```制作镜像，以及后期修改的话，每次修改都会让镜像更加臃肿一次，所删除的上一层的东西并不会丢失，会一直跟随着这个镜像，即使根本无法访问到，这会让镜像更加臃肿。</span><br><span class="line"><span class="comment">## 使用Dockerfile来定制镜像</span></span><br><span class="line">&gt; 原理介绍：镜像的定制实际上就是定制每一层所添加的配置、文件。如果我们可以把每一层修改、安装、构建、操作的命令都写入一个脚本，用这个脚本来构建、定制镜像。这个脚本就是Dockerfile</span><br><span class="line"><span class="comment">### FROM指定基础镜像</span></span><br><span class="line"><span class="keyword">FROM</span>就是指定基础镜像，一个Dockerfile中<span class="keyword">FROM</span>是必备的指令，而且必须是第一条指令</span><br><span class="line"><span class="comment">### RUN执行命令</span></span><br><span class="line"><span class="keyword">RUN</span><span class="bash">指令是在定制镜像时最常用的指令之一，其格式有如下两种：</span></span><br><span class="line">&gt; <span class="number">1</span>.shell格式：```<span class="keyword">RUN</span><span class="bash"> &lt;命令&gt;```，就像直接在命令行中输入的命令一样</span></span><br><span class="line">&gt; <span class="number">2</span>.exec格式</span><br><span class="line">```<span class="keyword">RUN</span><span class="bash"> [<span class="string">&quot;可执行文件&quot;</span>, <span class="string">&quot;参数1&quot;</span>, <span class="string">&quot;参数2&quot;</span>]```</span></span><br><span class="line">Dockerfile中每一个指令都会建立一层，<span class="keyword">RUN</span><span class="bash">也不例外。每一个RUN的行为，就和刚才手工建立镜像的过程一样：新建立一层，在其上执行这些命令，执行结束后，commit这一层的修改，构成新镜像</span></span><br><span class="line"><span class="comment">### COPY复制文件</span></span><br></pre></td></tr></table></figure>
+<p>COPY [–chown=<user>:<group>] &lt;源路径&gt;…&lt;目标路径&gt;</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">COPY指令将从构建上下文目录中&#96;&#96;&#96;&lt;源路径&gt;&#96;&#96;&#96;的文件&#x2F;目录复制到新的一层镜像内的&#96;&#96;&#96;&lt;目标路径&gt;&#96;&#96;&#96;位置</span><br><span class="line">&#96;&#96;&#96;COPY package.json &#x2F;usr&#x2F;src&#x2F;app&#x2F;&#96;&#96;&#96;</span><br><span class="line">值得注意的是，使用COPY指令，源文件的各种元数据都会保留。比如读、写、执行权限、文件变更时间等。这个特性对于镜像定制很有用。特别是构建相关文件都在使用Git进行管理的时候。&lt;&#x2F;br&gt;</span><br><span class="line">在使用该指令的时候还可以加上&#96;&#96;&#96;--chown&#x3D;&lt;user&gt;:&lt;group&gt;&#96;&#96;&#96;选项来改变文件的所属用户及所属组。</span><br><span class="line">### ENTRYPOINT入口点</span><br><span class="line">&#96;&#96;&#96;ENTRYPOINT&#96;&#96;&#96;的目的和&#96;&#96;&#96;CMD&#96;&#96;&#96;一样，都是在指定容器启动程序及参数，指令格式为：&lt;&#x2F;br&gt;</span><br><span class="line">&#96;&#96;&#96;&lt;ENTRYPOINT&gt; &quot;CMD&quot;&#96;&#96;&#96;</span><br><span class="line">##### 场景一：让镜像变成命令一样被使用</span><br></pre></td></tr></table></figure>
+<p>FROM ubuntu:18.04<br>RUN apt-get update <br>    &amp;&amp; apt-get install -y curl <br>    &amp;&amp; rm -rf /var/lib/apt/lists*<br>ENTRYPOINT [“curl”, “-s”, “<a href="http://myip.ipip.net&quot;]">http://myip.ipip.net&quot;]</a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">使用：</span><br></pre></td></tr></table></figure>
+<p>docker run myip -i</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">当存在ENTRYPOINT后，CMD的内容将会作为参数传递给ENTRYPOINT，-i就是这里新的CMD，会作为参数传递给curl</span><br><span class="line">##### 场景二：应用运行前的准备工作</span><br><span class="line">启动容器就是启动主进程，但有些时候，启动主进程前，需要一些准备工作。&lt;&#x2F;br&gt;</span><br><span class="line">比如mysql类的数据库，可能需要一些数据库配置、初始化的工作，这些工作要在最终的mysql服务器运行之前解决。&lt;&#x2F;br&gt;</span><br><span class="line">此外，要避免使用root用户去启动服务，从而提高安全性，在启动服务之前需要以root身份执行一些必要的准备工作。&lt;&#x2F;br&gt;</span><br><span class="line">官方镜像redis就是这么做的：</span><br></pre></td></tr></table></figure>
+<p>FROM alpine:3.4<br>…<br>RUN　addgroup -S redis &amp;&amp; adduser -S -G redis redis<br>…<br>ENTRYPOINT [“docker-entrypoint.sh”]</p>
+<p>EXPOSE 6379<br>CMD [“redis-server”]</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">### ENV设置环境变量</span><br><span class="line">这个指令就是设置环境变量，以官方&#96;&#96;&#96;node&#96;&#96;&#96;镜像的Dockerfile为例</span><br></pre></td></tr></table></figure>
+<p>ENV NODE_VERSION 7.2.0</p>
+<p>RUN curl -SLO “<a target="_blank" rel="noopener" href="https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-x64.tar.xz&quot;">https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-x64.tar.xz&quot;</a> <br>  &amp;&amp; curl -SLO “<a target="_blank" rel="noopener" href="https://nodejs.org/dist/v$NODE_VERSION/SHASUMS256.txt.asc&quot;">https://nodejs.org/dist/v$NODE_VERSION/SHASUMS256.txt.asc&quot;</a> <br>  &amp;&amp; gpg –batch –decrypt –output SHASUMS256.txt SHASUMS256.txt.asc <br>  &amp;&amp; grep “ node-v$NODE_VERSION-linux-x64.tar.xz$“ SHASUMS256.txt | sha256sum -c - <br>  &amp;&amp; tar -xJf “node-v$NODE_VERSION-linux-x64.tar.xz” -C /usr/local –strip-components=1 <br>  &amp;&amp; rm “node-v$NODE_VERSION-linux-x64.tar.xz” SHASUMS256.txt.asc SHASUMS256.txt <br>  &amp;&amp; ln -s /usr/local/bin/node /usr/local/bin/nodejs</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">这里先定义了环境变量&#96;&#96;&#96;NODE_VERSION&#96;&#96;&#96;，其后的&#96;&#96;&#96;RUN&#96;&#96;&#96;这层里，多次使用&#96;&#96;&#96;$NODE_VERSION&#96;&#96;&#96;来进行操作定制。可以看到，将来升级镜像构建版本的时候，只需要更新&#96;&#96;&#96;7.2.0&#96;&#96;&#96;即可，&#96;&#96;&#96;Dockerfile&#96;&#96;&#96;构建维护变得更轻松了。</span><br><span class="line">### VOLUME定义匿名卷</span><br><span class="line">格式为：</span><br></pre></td></tr></table></figure>
+<p>VOLUME &lt;路径&gt;</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">之前我们说过，容器运行时应该尽量保持容器存储层不发生写操作，对于数据库类需要保存动态数据的应用，其数据库文件应该保存于卷(volume)之中。在Dockerfile中，我们可以事先指定某些目录挂载为匿名卷，这样在运行时如果用户不指定挂载，其应用也可以正常运行，不会向容器存储层写入大量数据。</span><br></pre></td></tr></table></figure>
+<p>VOLUME /data</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">这里的&#96;&#96;&#96;&#x2F;data&#96;&#96;&#96;目录就会在容器运行时自动挂载为匿名卷，任何向&#96;&#96;&#96;&#x2F;data&#96;&#96;&#96;中写入的信息都不会记录进容器存储层，从而保证了容器存储层的无状态化。当然，运行容器时可以覆盖这个挂载设置，比如：</span><br></pre></td></tr></table></figure>
+<p>docker run -d -v mydata:/data xxxx</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">在这行命令中，就使用了mydata这个命名卷挂载到了&#x2F;data这个位置，替代了&#96;&#96;&#96;Dockerfile&#96;&#96;&#96;中的匿名卷的挂载配置。</span><br><span class="line">### EXPOSE暴露端口</span><br><span class="line">格式为：</span><br></pre></td></tr></table></figure>
+<p>EXPOSE &lt;端口1&gt; [&lt;端口2&gt;…]</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#96;&#96;&#96;EXPOSE&#96;&#96;&#96;指令是声明容器运行时提供服务的端口，这只是一个声明，在容器运行时并不会因为这个声明应用就会开启这个端口的服务。在Dockerfile中写入这样的声明有两个好处，一个是帮助镜像使用者理解这个镜像服务的守护端口，以方便配置映射。另一个好处则是在运行时使用随机端口映射，也就是&#96;&#96;&#96;docker run -P&#96;&#96;&#96;时，会自动随机映射&#96;&#96;&#96;EXPOSE&#96;&#96;&#96;端口。&lt;&#x2F;br&gt;</span><br><span class="line">要将&#96;&#96;&#96;EXPOSE&#96;&#96;&#96;和在运行时使用&#96;&#96;&#96;-p &lt;宿主端口&gt;：&lt;容器端口&gt;&#96;&#96;&#96;区分开来。&#96;&#96;&#96;-p&#96;&#96;&#96;，是映射宿主端口和容器端口，换句话说，就是将容器的对应端口服务公开给外界访问。而&#96;&#96;&#96;EXPOSE&#96;&#96;&#96;仅仅是声明容器打算使用什么端口二义，并不会自动在宿主机进行端口映射。</span><br><span class="line">### WORKDIR指定工作目录</span><br><span class="line">格式为：&lt;&#x2F;br&gt;</span><br></pre></td></tr></table></figure>
+<p>WORKDIR &lt;工作目录路径&gt;</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">使用&#96;&#96;&#96;WORKDIR&#96;&#96;&#96;指令可以来指定工作目录。目录不存在时，WORKDIR会帮你新建目录。</span><br><span class="line">以下举一个错误的例子：</span><br></pre></td></tr></table></figure>
+<p>RUN cd /app<br>RUN echo “hello” &gt; world.txt</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">将这个&#96;&#96;&#96;Dockerfile&#96;&#96;&#96;进行构建镜像运行后，会发现找不到&#96;&#96;&#96;&#x2F;app&#x2F;world.txt&#96;&#96;&#96;文件，或者其内容不是&#96;&#96;&#96;hello&#96;&#96;&#96;。原因很简单，在Shell中，连续两行是同一个进程执行环境，因此前一个命令修改的内存状态，会直接影响后一个命令；而在&#96;&#96;&#96;Dockerfile&#96;&#96;&#96;中，这两行&#96;&#96;&#96;RUN&#96;&#96;&#96;命令的执行环境根本不同，是两个完全不同的容器，这就是对&#96;&#96;&#96;Dockerfile&#96;&#96;&#96;构建分层存储的概念不了解所导致的错误。&lt;&#x2F;br&gt;</span><br><span class="line">之前说过，每一个&#96;&#96;&#96;RUN&#96;&#96;&#96;都是启动一个容器，执行命令、执行命令、然后提交存储层文件变更。第一层&#96;&#96;&#96;RUN cd &#x2F;app&#96;&#96;&#96;的执行仅仅是当前进程的工作目录变更，一个内存上的变化而已。其结果不会造成任何文件变更。而到第二层的时候，启动的是一个全新的容器。跟第一层的容器完全没关系，自然不可能继承前一层构建过程中的内存变化。&lt;&#x2F;br&gt;</span><br><span class="line">因此如果需要改变以后各层的工作目录的位置，那么应该使用WORKDIR指令。</span><br></pre></td></tr></table></figure>
+<p>WORKDIR /app<br>RUN echo “hello” &gt; world.txt</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># 操作容器</span><br><span class="line">&gt; 前言：简单的说，容器是独立运行的一个或一组应用，以及它们的运行态环境。对应的，虚拟机可以理解为模拟运行的一整套操作系统（提供了运行态环境和其他系统环境）和跑在上面的应用</span><br><span class="line">### 启动</span><br><span class="line">&gt; 启动容器有两种方式：一种是基于镜像新建一个容器并启动，另外一个是将在终止状态(exited)的容器重新启动。Dokcer实在是太轻量级了，很多时候用户都是随时删除和新创建容器&lt;&#x2F;br&gt;</span><br><span class="line"></span><br><span class="line">下面的命令启动一个bash终端，允许用户进行交互</span><br></pre></td></tr></table></figure>
+<p>docker run -t -i ubuntu:18.04 /bin/bash<br>root@af8bae53bdd3:/#</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">其中，-t选项让Docker分配一个伪终端(pseudo-tty)并绑定到容器的标准输入上，-i则让容器的标准输入保持打开</span><br><span class="line">### 守护态运行</span><br><span class="line">大多数情况下，我们需要让Docker在后台运行而不是直接把执行命令的结果输出在当前宿主机下，通过添加参数&#96;&#96;&#96;-d&#96;&#96;&#96;可以让容器在后台运行。</span><br><span class="line">### 终止</span><br><span class="line">可以使用&#96;&#96;&#96;docker container stop&#96;&#96;&#96;来终止一个运行中的容器&lt;&#x2F;br&gt;</span><br><span class="line">对于处于终止状态的容器，可以通过&#96;&#96;&#96;docker container start&#96;&#96;&#96;命令来重新启动。&lt;&#x2F;br&gt;</span><br><span class="line">此外，&#96;&#96;&#96;docker container restart&#96;&#96;&#96;命令会将一个运行态的容器终止，然后再重新启动它。</span><br><span class="line">### 进入容器</span><br><span class="line">对于需要进入容器才能进行的操作，可以使用&#96;&#96;&#96;docker attach&#96;&#96;&#96;或者&#96;&#96;&#96;docker exec&#96;&#96;&#96;命令，一般只使用&#96;&#96;&#96;docker exec&#96;&#96;&#96;命令&lt;&#x2F;br&gt;</span><br><span class="line">&#96;&#96;&#96;docker exec -it &lt;container_id&gt; bash&#96;&#96;&#96;</span><br><span class="line">如果从这个stdin中exit，不会导致容器的终止，这就是为什么推荐大家使用&#96;&#96;&#96;docker exec&#96;&#96;&#96;的原因</span><br><span class="line">### 导出和导入</span><br><span class="line">#### 导出容器</span><br><span class="line">如果想要导出本地某个容器，可以使用&#96;&#96;&#96;docker export&#96;&#96;&#96;命令</span><br></pre></td></tr></table></figure>
+<p>$ docker container ls -a<br>CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS                    PORTS               NAMES<br>7691a814370e        ubuntu:18.04        “/bin/bash”         36 hours ago        Exited (0) 21 hours ago                       test<br>$ docker export 7691a814370e &gt; ubuntu.tar</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#### 导入容器快照</span><br><span class="line">可以使用&#96;&#96;&#96;docker import&#96;&#96;&#96;从容器快照文件中再导入为镜像：</span><br></pre></td></tr></table></figure>
+<p>$ cat ubuntu.tar | docker import - test/ubuntu:v1.0<br>$ docker image ls<br>REPOSITORY          TAG                 IMAGE ID            CREATED              VIRTUAL SIZE<br>test/ubuntu         v1.0                9d37a6082e97        About a minute ago   171.3 MB</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">### 删除容器</span><br><span class="line">可以使用&#96;&#96;&#96;docker container rm&#96;&#96;&#96;来删除一个处于终止状态的容器</span><br></pre></td></tr></table></figure>
+<p>$ docker container rm trusting_newton<br>trusting_newton</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">如果要删除一个运行中的容器，可以添加&#96;&#96;&#96;-f&#96;&#96;&#96;参数来强制执行。Docker会发送SIGKILL信号给容器。</span><br><span class="line">### 清理所有处于终止状态的容器</span><br></pre></td></tr></table></figure>
+<p>docker container prune</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"># 数据管理</span><br><span class="line">### 数据卷</span><br><span class="line">数据卷是一个可供一个或多个容器使用的特殊目录，它可以提供很多有用的特性：</span><br><span class="line">&gt; 1.数据卷可以在容器之间共享和重用</span><br><span class="line">&gt; 2.对数据卷的修改会立马生效</span><br><span class="line">&gt; 3.对数据卷的更新，不会影响镜像</span><br><span class="line">&gt; 4.数据卷默认会一直存在，即使容器被删除</span><br><span class="line">注意：数据卷的使用，类似于Linux下对目录或文件进行mount，镜像中的被指定为挂载点的目录中的文件会复制到数据卷当中（仅数据卷为空时会复制）。</span><br><span class="line">### 挂载主机目录</span><br><span class="line">使用&#96;&#96;&#96;--mount&#96;&#96;&#96;命令可以指定挂载一个本地主机的目录到容器中去</span><br><span class="line"># 外部访问容器</span><br></pre></td></tr></table></figure>
+<p>$ docker run -d -P nginx:alpine</p>
+<p>$ docker container ls -l<br>CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                   NAMES<br>fae320d08268        nginx:alpine        “/docker-entrypoint.…”   24 seconds ago      Up 20 seconds       0.0.0.0:32768-&gt;80/tcp   bold_mcnulty</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">本地主机的32768被映射到了容器的80端口。此时访问本机的32768端口即可访问容器内NGINX默认页面&lt;&#x2F;br&gt;</span><br><span class="line">使用&#96;&#96;&#96;hostPort:containerPort&#96;&#96;&#96;格式本地的80端口映射到容器的80端口，可以执行：</span><br><span class="line">&#96;&#96;&#96;docker run -d -p 80:80 nginx:airpline&#96;&#96;&#96;</span><br><span class="line">此时默认会绑定本地所有接口上的所有地址</span><br><span class="line">##### 使用&#96;&#96;&#96;docker port&#96;&#96;&#96;来查看当前映射的端口配置</span><br><span class="line">&#96;&#96;&#96;docker port fa 80</span><br><span class="line">0.0.0.0:32768</span><br></pre></td></tr></table></figure>
+<h3 id="Docker-Compose"><a href="#Docker-Compose" class="headerlink" title="Docker Compose"></a>Docker Compose</h3><figure class="highlight docker"><figcaption><span>Compose```，负责快速的部署分布式应用。</br></span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">Compose允许用户通过一个单独的```docker-compose.yml```模板文件(YAML格式)来定义一组相关联的应用容器为一个项目(project)。简单来说，```docker-compose.yml```可以管理多个Dockerfile</span><br><span class="line"><span class="comment">##### docker-compose up</span></span><br><span class="line">命令格式为：</span><br><span class="line">```docker-compose up [options] [SERVICE...]```</span><br><span class="line">该命令十分强大，它将尝试自动完成包括构建镜像、创建服务、启动服务，并关联服务相关容器的一系列操作。&lt;/br&gt;</span><br><span class="line">可以说，大部分时候都可以直接通过该命令来启动一个项目。&lt;/br&gt;</span><br><span class="line">如果使用```dockerc-compose up -d```，将会在后台启动并运行所有容器。一般推荐生产环境下使用该选项。&lt;/br&gt;</span><br><span class="line">默认情况，如果服务容器已经存在，```docker-compose up```将会尝试停止容器，然后重新创建，以保证新启动的服务匹配```docker-compose.yml```文件的最新内容</span><br><span class="line"><span class="comment">#### Compose模板文件</span></span><br><span class="line">默认的模板文件名称为```docker-compose.yml```，格式为YAML格式</span><br></pre></td></tr></table></figure>
+<p>version: “3”</p>
+<p>services:<br>  webapp:<br>    image: examples/web<br>    ports:<br>      - “80:80”<br>    volumes:<br>      - “/data”</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">注意每个服务都必须通过image指令指定镜像或build指令等来自动构建生成镜像。&lt;&#x2F;br&gt;</span><br><span class="line">如果使用build指令，在Dockerfile中设置的选项(例如：CMD、EXPOSE、VOLUME、ENV等)将会被自动获取，无需在&#96;&#96;&#96;docker-compose.yml&#96;&#96;&#96;中重复设置</span><br><span class="line">#### 介绍几个重要的参数</span><br><span class="line">##### build</span><br><span class="line">指定Dockerfile所在文件夹的路径，Compose将会利用它自动构建这个镜像，然后使用这个镜像</span><br></pre></td></tr></table></figure>
+<p>version: ‘3’<br>services:</p>
+<p>  webapp:<br>    build:<br>      context: ./dir<br>      dockerfile: Dockerfile-alternate</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">##### devices</span><br><span class="line">指定设备映射关系</span><br></pre></td></tr></table></figure>
+<p>devices:</p>
+<ul>
+<li>“/dev/ttyUSB1:/dev/ttyUSB0”<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">##### depends_on</span><br><span class="line">解决容器的依赖、启动先后的问题。以下例子中会先启动redis、db再启动web</span><br></pre></td></tr></table></figure>
+version: ‘3’</li>
+</ul>
+<p>services:<br>  web:<br>    build: .<br>    depends_on:<br>      - db<br>      - redis</p>
+<p>  redis:<br>    image: redis</p>
+<p>  db:<br>    image: postgres</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">##### env_file</span><br><span class="line">从文件中获取环境变量，可以为单独的文件路径或列表</span><br></pre></td></tr></table></figure>
+<p>env_file:</p>
+<ul>
+<li>./common.env</li>
+<li>./apps/web.env</li>
+<li>/opt/secrets.env<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">##### environment</span><br><span class="line">设置环境变量</span><br></pre></td></tr></table></figure>
+environment:<br>RACK_ENV: development<br>SESSION_SECRET:</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">##### expose</span><br><span class="line">暴露端口，但不映射到宿主机，只被连接的服务访问</span><br><span class="line">##### ports</span><br><span class="line">暴露端口信息。&lt;&#x2F;br&gt;</span><br><span class="line">使用宿主端口：容器端口(HOST:CONTAINER)格式。若仅指定容器端口(宿主将会随机选择端口)</span><br></pre></td></tr></table></figure>
+<p>ports:</p>
+<ul>
+<li>“3000”</li>
+<li>“8000:8000”</li>
+<li>“49100:22”</li>
+<li>“127.0.0.1:8001:8001”<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">##### volumes</span><br><span class="line">数据卷所挂载路径设置。可以设置为宿主机路径(HOST:CONTAINER)或者数据卷名称(VOLUME:CONTAINER)，并且可以设置访问模式</span><br></pre></td></tr></table></figure>
+version: “3”</li>
+</ul>
+<p>services:<br>  my_src:<br>    image: mysql:8.0<br>    volumes:<br>      - mysql_data:/var/lib/mysql</p>
+<p>volumes:<br>  mysql_data:<br>```</p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <div class="declare">
+      <ul class="post-copyright">
+        <li>
+          <i class="ri-copyright-line"></i>
+          <strong>版权声明： </strong>
+          
+          本博客所有文章除特别声明外，著作权归作者所有。转载请注明出处！
+          
+        </li>
+      </ul>
+    </div>
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://twilight2017.github.io/2022/05/04/Docker%E5%AE%98%E6%96%B9%E6%89%8B%E5%86%8C%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/docker/" rel="tag">docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%8A%80%E6%9C%AF/" rel="tag">技术</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+    
+      <a href="/2022/04/28/Go%E8%AF%AD%E8%A8%80%E5%9F%BA%E7%A1%80%E8%BF%9B%E9%98%B6%E6%95%99%E7%A8%8B(%E4%B8%80)%EF%BC%9Abufio%E5%8C%85/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">Go语言基础进阶教程(一)：bufio包</div>
+      </a>
+    
+  </nav>
+
+   
+<!-- valine评论 -->
+<div id="vcomments-box">
+  <div id="vcomments"></div>
+</div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js"></script>
+<script>
+  new Valine({
+    el: "#vcomments",
+    app_id: "",
+    app_key: "",
+    path: window.location.pathname,
+    avatar: "monsterid",
+    placeholder: "给我的文章加点评论吧~",
+    recordIP: true,
+  });
+  const infoEle = document.querySelector("#vcomments .info");
+  if (infoEle && infoEle.childNodes && infoEle.childNodes.length > 0) {
+    infoEle.childNodes.forEach(function (item) {
+      item.parentNode.removeChild(item);
+    });
+  }
+</script>
+<style>
+  #vcomments-box {
+    padding: 5px 30px;
+  }
+
+  @media screen and (max-width: 800px) {
+    #vcomments-box {
+      padding: 5px 0px;
+    }
+  }
+
+  #vcomments-box #vcomments {
+    background-color: #fff;
+  }
+
+  .v .vlist .vcard .vh {
+    padding-right: 20px;
+  }
+
+  .v .vlist .vcard {
+    padding-left: 10px;
+  }
+</style>
+
+ 
+   
+     
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2015-2022
+        <i class="ri-heart-fill heart_icon"></i> twilight2017
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        
+        由 <a href="https://hexo.io" target="_blank">Hexo</a> 强力驱动
+        <span class="division">|</span>
+        主题 - <a href="https://github.com/Shen-Yu/hexo-theme-ayer" target="_blank">Ayer</a>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></s>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>
+      <div class="float_btns">
+        <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+      </div>
+    </main>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="瑟兰迪尔"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E6%8A%80%E6%9C%AF">技术</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E8%AF%BB%E4%B9%A6">读书</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/travels">旅行</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E9%9A%8F%E7%AC%94">随笔</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/friends">友链</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/about">关于我</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <script>
+      if (window.matchMedia("(max-width: 768px)").matches) {
+        document.querySelector('.content').classList.remove('on');
+        document.querySelector('.sidebar').classList.remove('on');
+      }
+    </script>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="https://cdn.jsdelivr.net/gh/Shen-Yu/cdn/img/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="https://cdn.jsdelivr.net/gh/Shen-Yu/cdn/img/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-2.0.3.min.js"></script>
+
+
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+
+
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: '.tocbot',
+    contentSelector: '.article-entry',
+    headingSelector: 'h1, h2, h3, h4, h5, h6',
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: 'main',
+    positionFixedSelector: '.tocbot',
+    positionFixedClass: 'is-position-fixed',
+    fixedSidebarOffset: 'auto'
+  });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.css">
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css">
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script>
+
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+
+
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+
+
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+
+
+<link rel="stylesheet" href="/css/clipboard.css">
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+
+
+<!-- CanvasBackground -->
+
+
+    
+  </div>
+</body>
+
+</html>
