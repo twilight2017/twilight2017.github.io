@@ -9,7 +9,7 @@
     
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   <title>
-    Tag: 技术 |  瑟兰迪尔
+    使用Jenkins构建Docker镜像并自动上传到docker registry私有仓库 |  瑟兰迪尔
   </title>
   <meta name="generator" content="hexo-theme-ayer">
   
@@ -39,292 +39,203 @@
       
     <main class="content on">
       <section class="outer">
-  
-  
-  <article class="articles">
+  <article
+  id="post-使用Jenkins构建Docker镜像并自动上传到docker registry仓库"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
     
-    
-    <h1 class="page-type-title">#&nbsp技术</h1>
-    
-    
-  
-  
-  
-  
-  
-  
-  <div class="archives-wrap">
-    <div class="archive-year-wrap">
-      <a href="/archives/2022" class="archive-year">2022</a>
-    </div>
-    <div class="archives">
-      
-      <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2022/06/01/%E4%BD%BF%E7%94%A8Jenkins%E6%9E%84%E5%BB%BADocker%E9%95%9C%E5%83%8F%E5%B9%B6%E8%87%AA%E5%8A%A8%E4%B8%8A%E4%BC%A0%E5%88%B0docker%20registry%E4%BB%93%E5%BA%93/" class="archive-article-date">
-  <time datetime="2022-06-01T14:07:03.000Z" itemprop="datePublished">06/01</time>
-</a>
+    <header class="article-header">
        
-<h2 itemprop="name">
-  <a class="archive-article-title" href="/2022/06/01/%E4%BD%BF%E7%94%A8Jenkins%E6%9E%84%E5%BB%BADocker%E9%95%9C%E5%83%8F%E5%B9%B6%E8%87%AA%E5%8A%A8%E4%B8%8A%E4%BC%A0%E5%88%B0docker%20registry%E4%BB%93%E5%BA%93/"
-    >使用Jenkins构建Docker镜像并自动上传到docker registry私有仓库</a> 
-</h2>
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  使用Jenkins构建Docker镜像并自动上传到docker registry私有仓库
+</h1>
  
 
     </header>
-    
-    
+     
+    <div class="article-meta">
+      <a href="/2022/06/01/%E4%BD%BF%E7%94%A8Jenkins%E6%9E%84%E5%BB%BADocker%E9%95%9C%E5%83%8F%E5%B9%B6%E8%87%AA%E5%8A%A8%E4%B8%8A%E4%BC%A0%E5%88%B0docker%20registry%E4%BB%93%E5%BA%93/" class="article-date">
+  <time datetime="2022-06-01T14:07:03.000Z" itemprop="datePublished">2022-06-01</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">201</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">1 分钟</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
       
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="使用Jenkins构建Docker镜像并自动上传到docker-registry仓库"><a href="#使用Jenkins构建Docker镜像并自动上传到docker-registry仓库" class="headerlink" title="使用Jenkins构建Docker镜像并自动上传到docker registry仓库"></a>使用Jenkins构建Docker镜像并自动上传到docker registry仓库</h1><h2 id="Jenkins构建docker镜像的应用需求"><a href="#Jenkins构建docker镜像的应用需求" class="headerlink" title="Jenkins构建docker镜像的应用需求"></a>Jenkins构建docker镜像的应用需求</h2><p>公司各个项目分成多个组进行开发，为了便于各个组进行测试，进行如下设计：</br></p>
+<blockquote>
+<p>1.各个项目在gitee上创建一个或多个branch，jenkins为各组master的branch创建一个job，并为job创建对应的build策略。</br><br>2.镜像私有仓库中存储了各个项目的镜像。</br><br>3.提交到gitee的源码需要包含一个dockerfile。</br><br>4.项目更新代码后，jenkins拉取提交的branch代码，并在jenkins服务器本地执行Dockerfile，完成image的升级或更新，然后根据job的build策略，执行build操作，生成一个新镜像。</br><br>5.job对应的build策略中，包含了将镜像push到私有仓库的操作。</br></p>
+</blockquote>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <div class="declare">
+      <ul class="post-copyright">
+        <li>
+          <i class="ri-copyright-line"></i>
+          <strong>版权声明： </strong>
+          
+          本博客所有文章除特别声明外，著作权归作者所有。转载请注明出处！
+          
+        </li>
+      </ul>
+    </div>
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://twilight2017.github.io/2022/06/01/%E4%BD%BF%E7%94%A8Jenkins%E6%9E%84%E5%BB%BADocker%E9%95%9C%E5%83%8F%E5%B9%B6%E8%87%AA%E5%8A%A8%E4%B8%8A%E4%BC%A0%E5%88%B0docker%20registry%E4%BB%93%E5%BA%93/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/docker/" rel="tag">docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/jenkins/" rel="tag">jenkins</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%8A%80%E6%9C%AF/" rel="tag">技术</a></li></ul>
 
-    
+    </footer>
   </div>
-</article>
-      
-  
-  
-      <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2022/05/04/Docker%E5%AE%98%E6%96%B9%E6%89%8B%E5%86%8C%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" class="archive-article-date">
-  <time datetime="2022-05-04T08:56:03.000Z" itemprop="datePublished">05/04</time>
-</a>
-       
-<h2 itemprop="name">
-  <a class="archive-article-title" href="/2022/05/04/Docker%E5%AE%98%E6%96%B9%E6%89%8B%E5%86%8C%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"
-    >Docker官方手册学习笔记</a> 
-</h2>
+
+   
+  <nav class="article-nav">
+    
+    
+      <a href="/2022/05/04/Docker%E5%AE%98%E6%96%B9%E6%89%8B%E5%86%8C%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">Docker官方手册学习笔记</div>
+      </a>
+    
+  </nav>
+
+   
+<!-- valine评论 -->
+<div id="vcomments-box">
+  <div id="vcomments"></div>
+</div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js"></script>
+<script>
+  new Valine({
+    el: "#vcomments",
+    app_id: "",
+    app_key: "",
+    path: window.location.pathname,
+    avatar: "monsterid",
+    placeholder: "给我的文章加点评论吧~",
+    recordIP: true,
+  });
+  const infoEle = document.querySelector("#vcomments .info");
+  if (infoEle && infoEle.childNodes && infoEle.childNodes.length > 0) {
+    infoEle.childNodes.forEach(function (item) {
+      item.parentNode.removeChild(item);
+    });
+  }
+</script>
+<style>
+  #vcomments-box {
+    padding: 5px 30px;
+  }
+
+  @media screen and (max-width: 800px) {
+    #vcomments-box {
+      padding: 5px 0px;
+    }
+  }
+
+  #vcomments-box #vcomments {
+    background-color: #fff;
+  }
+
+  .v .vlist .vcard .vh {
+    padding-right: 20px;
+  }
+
+  .v .vlist .vcard {
+    padding-left: 10px;
+  }
+</style>
+
  
-
-    </header>
-    
-    
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/docker/" rel="tag">docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%8A%80%E6%9C%AF/" rel="tag">技术</a></li></ul>
-
-    
-  </div>
+   
+     
 </article>
-      
-  
-  
-      <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2022/04/28/Go%E8%AF%AD%E8%A8%80%E5%9F%BA%E7%A1%80%E8%BF%9B%E9%98%B6%E6%95%99%E7%A8%8B(%E4%B8%80)%EF%BC%9Abufio%E5%8C%85/" class="archive-article-date">
-  <time datetime="2022-04-28T12:59:52.000Z" itemprop="datePublished">04/28</time>
-</a>
-       
-<h2 itemprop="name">
-  <a class="archive-article-title" href="/2022/04/28/Go%E8%AF%AD%E8%A8%80%E5%9F%BA%E7%A1%80%E8%BF%9B%E9%98%B6%E6%95%99%E7%A8%8B(%E4%B8%80)%EF%BC%9Abufio%E5%8C%85/"
-    >Go语言基础进阶教程(一)：bufio包</a> 
-</h2>
- 
 
-    </header>
-    
-    
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Go/" rel="tag">Go</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%8A%80%E6%9C%AF/" rel="tag">技术</a></li></ul>
-
-    
-  </div>
-</article>
-      
-  
-  
-      <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2022/04/17/Docker%20build%E7%9A%84cache%E6%9C%BA%E5%88%B6/" class="archive-article-date">
-  <time datetime="2022-04-17T11:15:03.000Z" itemprop="datePublished">04/17</time>
-</a>
-       
-<h2 itemprop="name">
-  <a class="archive-article-title" href="/2022/04/17/Docker%20build%E7%9A%84cache%E6%9C%BA%E5%88%B6/"
-    >Docker build的cache机制</a> 
-</h2>
- 
-
-    </header>
-    
-    
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/docker/" rel="tag">docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%8A%80%E6%9C%AF/" rel="tag">技术</a></li></ul>
-
-    
-  </div>
-</article>
-      
-  
-  
-      <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2022/04/11/Git%E8%B8%A9%E5%9D%91%E8%AE%B0%E5%BD%95/" class="archive-article-date">
-  <time datetime="2022-04-11T02:56:03.000Z" itemprop="datePublished">04/11</time>
-</a>
-       
-<h2 itemprop="name">
-  <a class="archive-article-title" href="/2022/04/11/Git%E8%B8%A9%E5%9D%91%E8%AE%B0%E5%BD%95/"
-    >Git踩坑记录</a> 
-</h2>
- 
-
-    </header>
-    
-    
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/python/" rel="tag">python</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%8A%80%E6%9C%AF/" rel="tag">技术</a></li></ul>
-
-    
-  </div>
-</article>
-      
-  
-  
-      <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2022/03/29/Linux%E5%85%A5%E9%97%A8%E5%AD%A6%E4%B9%A0%E6%8C%87%E5%8D%97/" class="archive-article-date">
-  <time datetime="2022-03-29T08:56:03.000Z" itemprop="datePublished">03/29</time>
-</a>
-       
-<h2 itemprop="name">
-  <a class="archive-article-title" href="/2022/03/29/Linux%E5%85%A5%E9%97%A8%E5%AD%A6%E4%B9%A0%E6%8C%87%E5%8D%97/"
-    >Linux入门学习指南</a> 
-</h2>
- 
-
-    </header>
-    
-    
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/python/" rel="tag">python</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%8A%80%E6%9C%AF/" rel="tag">技术</a></li></ul>
-
-    
-  </div>
-</article>
-      
-  
-  
-      <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2022/03/28/%E7%94%A8Python%E7%BC%96%E5%86%99Hadoop%20MapReduce%E7%A8%8B%E5%BA%8F%20-%20%E5%89%AF%E6%9C%AC/" class="archive-article-date">
-  <time datetime="2022-03-28T08:05:03.000Z" itemprop="datePublished">03/28</time>
-</a>
-       
-<h2 itemprop="name">
-  <a class="archive-article-title" href="/2022/03/28/%E7%94%A8Python%E7%BC%96%E5%86%99Hadoop%20MapReduce%E7%A8%8B%E5%BA%8F%20-%20%E5%89%AF%E6%9C%AC/"
-    >用Python编写Hadoop MapReduce程序</a> 
-</h2>
- 
-
-    </header>
-    
-    
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/python/" rel="tag">python</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%8A%80%E6%9C%AF/" rel="tag">技术</a></li></ul>
-
-    
-  </div>
-</article>
-      
-  
-  
-      <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2022/03/12/jenkins%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2%E5%AD%A6%E4%B9%A0%E8%BF%87%E7%A8%8B/" class="archive-article-date">
-  <time datetime="2022-03-12T08:23:52.000Z" itemprop="datePublished">03/12</time>
-</a>
-       
-<h2 itemprop="name">
-  <a class="archive-article-title" href="/2022/03/12/jenkins%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2%E5%AD%A6%E4%B9%A0%E8%BF%87%E7%A8%8B/"
-    >jenkins自动化部署学习过程</a> 
-</h2>
- 
-
-    </header>
-    
-    
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Jenkins/" rel="tag">Jenkins</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%8A%80%E6%9C%AF/" rel="tag">技术</a></li></ul>
-
-    
-  </div>
-</article>
-      
-  
-  
-  
-  </div>
-  </div>
-  
-  
-  <div class="archives-wrap">
-    <div class="archive-year-wrap">
-      <a href="/archives/2021" class="archive-year">2021</a>
-    </div>
-    <div class="archives">
-      
-      <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2021/09/28/Django%E4%B8%ADImageField%E7%9A%84%E4%BD%BF%E7%94%A8/" class="archive-article-date">
-  <time datetime="2021-09-28T02:51:52.000Z" itemprop="datePublished">09/28</time>
-</a>
-       
-<h2 itemprop="name">
-  <a class="archive-article-title" href="/2021/09/28/Django%E4%B8%ADImageField%E7%9A%84%E4%BD%BF%E7%94%A8/"
-    >Django中ImageField的使用</a> 
-</h2>
- 
-
-    </header>
-    
-    
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Django/" rel="tag">Django</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%8A%80%E6%9C%AF/" rel="tag">技术</a></li></ul>
-
-    
-  </div>
-</article>
-      
-  
-  
-      <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2021/02/04/%E5%8C%97%E4%BA%AC%E4%B8%9C%E6%96%B9%E5%9B%BD%E4%BF%A1%E9%9D%A2%E7%BB%8F/" class="archive-article-date">
-  <time datetime="2021-02-04T14:42:48.000Z" itemprop="datePublished">02/04</time>
-</a>
-       
-<h2 itemprop="name">
-  <a class="archive-article-title" href="/2021/02/04/%E5%8C%97%E4%BA%AC%E4%B8%9C%E6%96%B9%E5%9B%BD%E4%BF%A1%E9%9D%A2%E7%BB%8F/"
-    >北京东方国信面经</a> 
-</h2>
- 
-
-    </header>
-    
-    
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%8A%80%E6%9C%AF/" rel="tag">技术</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E9%9D%A2%E8%AF%95/" rel="tag">面试</a></li></ul>
-
-    
-  </div>
-</article>
-      
-      
-    </div>
-  </div>
-  
-  
-
-  
 </section>
       <footer class="footer">
   <div class="outer">
@@ -482,6 +393,23 @@
 <script src="/js/lazyload.min.js"></script>
 
 <!-- Tocbot -->
+
+
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: '.tocbot',
+    contentSelector: '.article-entry',
+    headingSelector: 'h1, h2, h3, h4, h5, h6',
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: 'main',
+    positionFixedSelector: '.tocbot',
+    positionFixedClass: 'is-position-fixed',
+    fixedSidebarOffset: 'auto'
+  });
+</script>
 
 <script src="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.css">
