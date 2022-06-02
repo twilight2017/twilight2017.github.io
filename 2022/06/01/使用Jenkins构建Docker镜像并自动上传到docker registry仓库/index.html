@@ -70,7 +70,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-quill-pen-line"></i>
             <span class="post-meta-item-text"> 字数统计:</span>
-            <span class="post-count">201</span>
+            <span class="post-count">1.1k</span>
         </span>
     </span>
 
@@ -79,7 +79,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-book-open-line"></i>
             <span class="post-meta-item-text"> 阅读时长≈</span>
-            <span class="post-count">1 分钟</span>
+            <span class="post-count">4 分钟</span>
         </span>
     </span>
 </div>
@@ -94,10 +94,30 @@
   
     <div class="article-entry" itemprop="articleBody">
        
-  <h1 id="使用Jenkins构建Docker镜像并自动上传到docker-registry仓库"><a href="#使用Jenkins构建Docker镜像并自动上传到docker-registry仓库" class="headerlink" title="使用Jenkins构建Docker镜像并自动上传到docker registry仓库"></a>使用Jenkins构建Docker镜像并自动上传到docker registry仓库</h1><h2 id="Jenkins构建docker镜像的应用需求"><a href="#Jenkins构建docker镜像的应用需求" class="headerlink" title="Jenkins构建docker镜像的应用需求"></a>Jenkins构建docker镜像的应用需求</h2><p>公司各个项目分成多个组进行开发，为了便于各个组进行测试，进行如下设计：</br></p>
+  <h1 id="使用Jenkins构建Docker镜像并自动上传到docker-registry仓库"><a href="#使用Jenkins构建Docker镜像并自动上传到docker-registry仓库" class="headerlink" title="使用Jenkins构建Docker镜像并自动上传到docker registry仓库"></a>使用Jenkins构建Docker镜像并自动上传到docker registry仓库</h1><h2 id="0-Jenkins构建docker镜像的应用需求"><a href="#0-Jenkins构建docker镜像的应用需求" class="headerlink" title="0 Jenkins构建docker镜像的应用需求"></a>0 Jenkins构建docker镜像的应用需求</h2><p>公司各个项目分成多个组进行开发，为了便于各个组进行测试，进行如下设计：</br></p>
 <blockquote>
-<p>1.各个项目在gitee上创建一个或多个branch，jenkins为各组master的branch创建一个job，并为job创建对应的build策略。</br><br>2.镜像私有仓库中存储了各个项目的镜像。</br><br>3.提交到gitee的源码需要包含一个dockerfile。</br><br>4.项目更新代码后，jenkins拉取提交的branch代码，并在jenkins服务器本地执行Dockerfile，完成image的升级或更新，然后根据job的build策略，执行build操作，生成一个新镜像。</br><br>5.job对应的build策略中，包含了将镜像push到私有仓库的操作。</br></p>
+<p>1.各个项目在gitee上创建一个或多个branch，jenkins为各组master的branch创建一个job，并为job创建对应的build策略。</br><br>2.镜像私有仓库中存储了各个项目的镜像。</br><br>3.提交到gitee的源码需要包含一个dockerfile。</br><br>4.项目更新代码后，jenkins拉取提交的branch代码，并在jenkins服务器本地执行Dockerfile，完成image的升级或更新，然后根据job的build策略，执行build操作，生成一个新镜像。</br><br>5.job对应的build策略中，包含了将镜像push到私有仓库的操作。</br><br>6.查看仓库中是否有该镜像，如果有，则说明成功。</br><br>7.各项目继续进行开发，可以基于上一次更新的image</br></p>
 </blockquote>
+<h2 id="1-Jenkins上创建一个job"><a href="#1-Jenkins上创建一个job" class="headerlink" title="1.Jenkins上创建一个job"></a>1.Jenkins上创建一个job</h2><blockquote>
+<p>该文章基于已经创建了gitee, jenkins以及docker registry的基础之上。</br><br>下述过程可以构建一个dockerfile。</p>
+</blockquote>
+<h5 id="1-创建job"><a href="#1-创建job" class="headerlink" title="(1) 创建job"></a>(1) 创建job</h5><p>构建一个<b>自由风格的软件项目</b>.<br><img src="/images/jenkins.png"></br><br>如图配置，这里使用的是gitee仓库。</p>
+<h5 id="2-构建脚本，往下拉到build–add-build-step，选择执行shell。"><a href="#2-构建脚本，往下拉到build–add-build-step，选择执行shell。" class="headerlink" title="(2)构建脚本，往下拉到build–add build step，选择执行shell。"></a>(2)构建脚本，往下拉到build–add build step，选择执行shell。</br></h5><p>添加如下内容，主要就是<code>docker build</code>和<code>docker push</code>所需要的参数，这里要注意docker所在的路径，可以先用<code>whereis docker</code>命令找一下，shell脚本的代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">#!&#x2F;bin&#x2F;sh</span><br><span class="line">#</span><br><span class="line">echo &quot;release_tag&#x3D;$&#123;release_tag&#125;&quot;</span><br><span class="line"></span><br><span class="line">upload_p&#x3D;$&#123;upload_path&#125;</span><br><span class="line"></span><br><span class="line"> DIR&#x3D;&quot;.&quot;</span><br><span class="line">sudo &#x2F;usr&#x2F;bin&#x2F;docker build -t andon_$&#123;release_tag&#125; $DIR | tee $DIR&#x2F;Docker_build_result.log</span><br><span class="line"> </span><br><span class="line">RESULT&#x3D;$(cat $DIR&#x2F;Docker_build_result.log | tail -n 1)</span><br><span class="line"> </span><br><span class="line">if [[&quot;$RESULT&quot; !&#x3D; *Successfully*]];then</span><br><span class="line">  exit -1</span><br><span class="line">fi</span><br><span class="line"></span><br><span class="line"># aliyun exclusive tagging and image push operations</span><br><span class="line">function uploadAliyun()&#123;</span><br><span class="line">    echo &#39;&gt;&gt;&gt; Add tag to the new image&#39;</span><br><span class="line">    sudo &#x2F;usr&#x2F;bin&#x2F;docker tag andon_$&#123;release_tag&#125; registry.cn-hangzhou.aliyuncs.com&#x2F;images_manage&#x2F;andon:$&#123;release_tag&#125;</span><br><span class="line">    echo &#39;&gt;&gt;&gt; Start push new image&#39;</span><br><span class="line">    sudo &#x2F;usr&#x2F;bin&#x2F;docker push registry.cn-hangzhou.aliyuncs.com&#x2F;images_manage&#x2F;andon:$&#123;release_tag&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">if [[ &quot;$upload_p&quot; &#x3D;&#x3D; &quot;aliyun&quot; ]];then</span><br><span class="line">    uploadAliyun</span><br><span class="line">fi</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>配置结束后，点击应用并保存。</p>
+<h5 id="3-配置jenkins用户"><a href="#3-配置jenkins用户" class="headerlink" title="(3)配置jenkins用户"></a>(3)配置jenkins用户</h5><p>此时还不能立刻构建，因为jenkins触发脚本并不是root用户，因此需要将jenkins免密码，并将用户加入到docker组，否则获取不到容器ID。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">nano&#x2F;etc&#x2F;sudoers</span><br><span class="line"></span><br><span class="line">Default:jenkins !requiretty</span><br><span class="line"># User privilege specification</span><br><span class="line">root  ALL&#x3D;(ALL:ALL) ALL</span><br><span class="line">jenkins ALL&#x3D;(ALL:ALL) ALL</span><br></pre></td></tr></table></figure>
+<h5 id="4-开始构建镜像"><a href="#4-开始构建镜像" class="headerlink" title="(4)开始构建镜像"></a>(4)开始构建镜像</h5><p>在jenkins页面上对项目执行build。查看日志，jenkins会自动把gitee上的文件给下载下来放在workpace目录中。因此，触发脚本后，直接开始构建镜像。</p>
+<h5 id="5-配置自动推送镜像"><a href="#5-配置自动推送镜像" class="headerlink" title="(5)配置自动推送镜像"></a>(5)配置自动推送镜像</h5><p>修改job中的配置中的build中的shell脚本。我们选择的是阿里云私人镜像仓库。</br><br>将官网上的操作指南记录如下：</br><br>1&gt; 登录阿里云Docker Registry.</br></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker login --username&#x3D;aliyun1490882597 registry.cn-hangzhou.aliyuncs.com</span><br></pre></td></tr></table></figure>
+<p>2&gt; 将镜像推送至Registry。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ docker tag [ImageId] registry.cn-hangzhou.aliyuncs.com&#x2F;images_manage&#x2F;andon:[镜像版本号]</span><br><span class="line">$ docker push registry.cn-hangzhou.aliyuncs.com&#x2F;images_manage&#x2F;andon:[镜像版本号]</span><br></pre></td></tr></table></figure>
+<h2 id="在Jenkins中配置根据参数进行构建"><a href="#在Jenkins中配置根据参数进行构建" class="headerlink" title="在Jenkins中配置根据参数进行构建"></a>在Jenkins中配置<code>根据参数进行构建</code></h2><blockquote>
+<p>场景描述：我们在构建任务时经常会遇到这样的场景：一个任务配置好了以后，在后面的构建过程中，又会修改一些配置。例如，我们构建的项目的代码可能是拉取指定的分支或者是Tag进行构建，又或者构建是在特定的平台上进行的。如果我们每次构建时都去修改配置，这就太麻烦了。这种情况下我们选择通过参数进行控制。</br><br>Jenkins默认已经支持的参数类型有：凭据参数、字符参数、密码参数、布尔参数、文件参数、选项参数等。具体使用方法记录如下：</br></p>
+</blockquote>
+<h5 id="1-创建job时，在【配置】中勾选上【参数化构建过程】"><a href="#1-创建job时，在【配置】中勾选上【参数化构建过程】" class="headerlink" title="(1)创建job时，在【配置】中勾选上【参数化构建过程】"></a>(1)创建job时，在【配置】中勾选上【参数化构建过程】</h5><p>可以在shell脚本中，输出我们的参数内容看看效果</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo &quot;release_tag&#x3D;$&#123;release_tag&#125;&quot;</span><br></pre></td></tr></table></figure>
+<p>保存之后，左侧菜单栏中的【立即构建】按钮会变成【Build with Parameters】,并且点击【Build with parameters】会要求输入参数，下图是默认的参数情况</p>
  
       <!-- reward -->
       
