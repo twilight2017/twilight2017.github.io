@@ -141,6 +141,76 @@
     
     
     <article
+  id="post-Django中ImageField的使用"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2021/09/28/Django%E4%B8%ADImageField%E7%9A%84%E4%BD%BF%E7%94%A8/"
+    >Django中ImageField的使用</a> 
+</h2>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2021/09/28/Django%E4%B8%ADImageField%E7%9A%84%E4%BD%BF%E7%94%A8/" class="article-date">
+  <time datetime="2021-09-28T02:51:52.000Z" itemprop="datePublished">2021-09-28</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+  </div>
+   
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="Django-ImageField学习笔记"><a href="#Django-ImageField学习笔记" class="headerlink" title="Django ImageField学习笔记"></a>Django ImageField学习笔记</h1><h2 id="1-Django-的静态文件管理机制"><a href="#1-Django-的静态文件管理机制" class="headerlink" title="1.Django 的静态文件管理机制"></a>1.Django 的静态文件管理机制</h2><blockquote>
+<p>前言：网站通常需要为用户提供类似图片、JavaScript或者CSS的额外文件服务。在Django中，统一将他们称为“静态文件”。这一章节将重点介绍如何为这些静态文件提供服务。且如果要使用ImageField，必须提前安装Pillow库</p>
+</blockquote>
+<h4 id="1-1配置静态文件"><a href="#1-1配置静态文件" class="headerlink" title="1.1配置静态文件"></a>1.1配置静态文件</h4><p>(1)确保INSTALLED_APPS中包含了django.contrib.staticfiles.</br><br>(2)在配置文件中，定义STATIC_URL，例子：</br><br>STATIC_URL = ‘/static/‘</br><br>(3)在前端模板中，用static模板标签，基于配置给定的相对路径构建URL。</br><br>(4)开发期间，可以用django.views.static.serve()视图为用户上传的媒体文件提供服务。</p>
+<blockquote>
+<p>默认情况下，Django使用MEDIA_ROOT和MEDIA_URL设置本地存储。</p>
+</blockquote>
+<h2 id="2-有关ImageField和FileFiled的讨论。"><a href="#2-有关ImageField和FileFiled的讨论。" class="headerlink" title="2.有关ImageField和FileFiled的讨论。"></a>2.有关ImageField和FileFiled的讨论。</h2><blockquote>
+<p>当我们使用这两个字段时，Django提供了一组处理文件的API</p>
+</blockquote>
+<h4 id="2-1-ImageFiled拥有的方法和属性-其拥有File类型的所有属性和方法，其内容可在官方文档中阅读python的源码"><a href="#2-1-ImageFiled拥有的方法和属性-其拥有File类型的所有属性和方法，其内容可在官方文档中阅读python的源码" class="headerlink" title="2.1 ImageFiled拥有的方法和属性(其拥有File类型的所有属性和方法，其内容可在官方文档中阅读python的源码)"></a>2.1 ImageFiled拥有的方法和属性(其拥有File类型的所有属性和方法，其内容可在官方文档中阅读python的源码)</h4><blockquote>
+<p>(1)对象类型：<br>&lt;ImageFieldFile: cars/chevy.jpg&gt;</br><br>(2)name属性</br><br>(3)path属性</br><br>(4)url属性</p>
+</blockquote>
+<h4 id="2-2-Django文件存储"><a href="#2-2-Django文件存储" class="headerlink" title="2.2 Django文件存储"></a>2.2 Django文件存储</h4><blockquote>
+<p>Django的默认文件存储通过DEFAULT_FILE_STORAGE配置。如果设计者没有显式地提供存储系统，我们将使用默认配置</p>
+</blockquote>
+<p>upload_to=’photos’，这句设置表示上传的文件会存放在<code>$MEDIA_ROOT/photos</code>下面</p>
+<h4 id="2-3-ImageFiled对象使用"><a href="#2-3-ImageFiled对象使用" class="headerlink" title="2.3 ImageFiled对象使用"></a>2.3 ImageFiled对象使用</h4><p>可以去阅读ImageFiled的源代码</br><br>在django/db/models/fields/files.py文件中</p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Django/" rel="tag">Django</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%8A%80%E6%9C%AF/" rel="tag">技术</a></li></ul>
+
+    </footer>
+  </div>
+
+    
+ 
+    
+</article>
+
+    
+    <article
   id="post-五月总结"
   class="article article-type-post"
   itemscope

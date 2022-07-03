@@ -141,6 +141,87 @@
     
     
     <article
+  id="post-Docker进阶学习"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2022/07/03/Docker%E8%BF%9B%E9%98%B6%E5%AD%A6%E4%B9%A0/"
+    >Docker进阶学习</a> 
+</h2>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2022/07/03/Docker%E8%BF%9B%E9%98%B6%E5%AD%A6%E4%B9%A0/" class="article-date">
+  <time datetime="2022-07-03T15:15:03.000Z" itemprop="datePublished">2022-07-03</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+  </div>
+   
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="Docker进阶学习笔记"><a href="#Docker进阶学习笔记" class="headerlink" title="Docker进阶学习笔记"></a>Docker进阶学习笔记</h1><h2 id="Docker-Compose"><a href="#Docker-Compose" class="headerlink" title="Docker Compose"></a>Docker Compose</h2><h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><blockquote>
+<p>往常方式：DockerFile build run 手动操作启动，单个容器。</br><br>微服务场景：100个微服务，存在依赖关系。</p>
+</blockquote>
+<p>Docker compose来轻松高效地管理容器，定义运行多个容器</p>
+<h3 id="官方介绍"><a href="#官方介绍" class="headerlink" title="官方介绍"></a>官方介绍</h3><p>定义、运行多个容器</br><br>YAML file配置文件 </p>
+<figure class="highlight plain"><figcaption><span>is a tool for defining and running multi-container Docker applications. With Compose, you use a YAML file to configure your application’s services. Then, with a single command, you create and start all the services from your configuration. To learn more about all the features of Compose, see the list of features.</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">Compose works in all environments: production, staging, development, testing, as well as CI workflows. You can learn more about each case in Common Use Cases.</span><br><span class="line"></span><br><span class="line">Using Compose is basically a three-step process:</span><br><span class="line"></span><br><span class="line">Define your app’s environment with a Dockerfile so it can be reproduced anywhere.</span><br><span class="line">1.Dockerfile保证我们的项目可以在任何地方运行</span><br><span class="line"></span><br><span class="line">Define the services that make up your app in docker-compose.yml so they can be run together in an isolated environment.</span><br><span class="line">2.docker-compose.yml文件</span><br><span class="line"></span><br><span class="line">Run docker compose up and the Docker compose command starts and runs your entire app. You can alternatively run docker-compose up using the docker-compose binary.</span><br><span class="line">3.docker-compose up命令启动服务</span><br></pre></td></tr></table></figure>
+<p>作用：批量容器编排</p>
+<h3 id="扩展理解"><a href="#扩展理解" class="headerlink" title="扩展理解"></a>扩展理解</h3><p>Compose是Docker官方的开源项目，需要独立安装</br><br>Dockerfile让程序在任何地方运行。web服务、redis、mysql、nginx多个容器。</br></p>
+<h3 id="官方compose-yml文件示例"><a href="#官方compose-yml文件示例" class="headerlink" title="官方compose.yml文件示例"></a>官方compose.yml文件示例</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">version: &quot;3.9&quot;  # optional since v1.27.0</span><br><span class="line">services:</span><br><span class="line">  web:</span><br><span class="line">    build: .</span><br><span class="line">    ports:</span><br><span class="line">      - &quot;8000:5000&quot;</span><br><span class="line">    volumes:</span><br><span class="line">      - .:&#x2F;code</span><br><span class="line">      - logvolume01:&#x2F;var&#x2F;log</span><br><span class="line">    links:</span><br><span class="line">      - redis</span><br><span class="line">  redis:</span><br><span class="line">    image: redis</span><br><span class="line">volumes:</span><br><span class="line">  logvolume01: &#123;&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="重点概念"><a href="#重点概念" class="headerlink" title="重点概念"></a>重点概念</h3><blockquote>
+<p>服务services, 容器，应用。<br>项目project：一组关联的容器。</p>
+</blockquote>
+<h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><p>该部分内容见官方文档<br><code>https://docs.docker.com/compose/install/</code></p>
+<h3 id="体验"><a href="#体验" class="headerlink" title="体验"></a>体验</h3><blockquote>
+<p>场景：官网案例是一个计数器应用，用redis辅助<br>1.创建</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mkdir composetest</span><br><span class="line">cd composetest</span><br><span class="line">vim app.py</span><br></pre></td></tr></table></figure>
+<p>app.py文件内容如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">import time</span><br><span class="line"></span><br><span class="line">import redis</span><br><span class="line">from flask import Flask</span><br><span class="line"></span><br><span class="line">app &#x3D; Flask(__name__)</span><br><span class="line">cache &#x3D; redis.Redis(host&#x3D;&#39;redis&#39;, port&#x3D;6379)</span><br><span class="line"></span><br><span class="line">def get_hit_count():</span><br><span class="line">    retries &#x3D; 5</span><br><span class="line">    while True:</span><br><span class="line">        try:</span><br><span class="line">            return cache.incr(&#39;hits&#39;)</span><br><span class="line">        except redis.exception.ConnectionError as exec:</span><br><span class="line">            if retries &#x3D;&#x3D; 0:</span><br><span class="line">                raise exec</span><br><span class="line">            retries -&#x3D; 1</span><br><span class="line">            time.sleep(0.5)</span><br><span class="line"></span><br><span class="line">@app.route(&#39;&#x2F;&#39;) </span><br><span class="line">def hello():</span><br><span class="line">    count +&#x3D; get_hit_count()</span><br><span class="line">    return &#39;Hellow World! I have been seen &#123;&#125; times.\n&#39;.format(count</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">vim requirements.txt</span><br><span class="line">内容如下：</span><br><span class="line">flask</span><br><span class="line">redis</span><br></pre></td></tr></table></figure>
+<p>create Dockerfile</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">FROM python:3.7-alipine</span><br><span class="line">FROM python:3.7-pline</span><br><span class="line">WORKDIR &#x2F;code</span><br><span class="line">WORKDIR &#x2F;code</span><br><span class="line">ENV FLASK_APP app.py</span><br><span class="line">ENV FLASK_RUN_HOST 0.0.0.0</span><br><span class="line">RUN apk add --no-cache gcc musl-dev linux-headers</span><br><span class="line">COPY requirements.txt requirements.txt</span><br><span class="line">RUN pip install -r requirements.txt</span><br><span class="line">EXPOSE 5000</span><br><span class="line">COPY . .</span><br><span class="line">CMD [&quot;flask&quot;, &quot;run&quot;]</span><br></pre></td></tr></table></figure>
+<p>在compose.yml中定义服务</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">version: &quot;3.9&quot;</span><br><span class="line">services:</span><br><span class="line">  web:</span><br><span class="line">    build: .</span><br><span class="line">    ports:</span><br><span class="line">      - &quot;8000:5000&quot;</span><br><span class="line">  redis:</span><br><span class="line">    image: &quot;redis:alipine&quot;</span><br></pre></td></tr></table></figure>
+<p>其中定义了启动服务的两种方式：1.build(依赖于Dockerfile)。 2.依赖官方镜像</p>
+<h3 id="步骤总结"><a href="#步骤总结" class="headerlink" title="步骤总结"></a>步骤总结</h3><p>1.应用：app.py</br><br>2.Dockerfile应用打包为镜像</br><br>3.Docker-compose yaml文件定义整个服务</br><br>4.启动compose项目(docker-compose up)</br></p>
+<h3 id="网络规则"><a href="#网络规则" class="headerlink" title="网络规则"></a>网络规则</h3><p>项目中的内容都在同个网络下，可以直接通过域名访问（例：可直接用：mysql:3306访问mysql服务）</p>
+<h3 id="停止方法："><a href="#停止方法：" class="headerlink" title="停止方法："></a>停止方法：</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker-compose down</span><br></pre></td></tr></table></figure>
+<p>或<br>crtl+c</p>
+<h3 id="Compose文件的编写规则"><a href="#Compose文件的编写规则" class="headerlink" title="Compose文件的编写规则"></a>Compose文件的编写规则</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">有且仅有三层</span><br><span class="line">第一层：version-docker-compose版本，和docker engine对应</span><br><span class="line">第二层: services</span><br><span class="line">服务1</span><br><span class="line">   # 服务配置</span><br><span class="line">   images</span><br><span class="line">   build</span><br><span class="line">   network</span><br><span class="line">服务2</span><br><span class="line">第三层：其他配置: 网络&#x2F;卷、全局规则</span><br></pre></td></tr></table></figure> 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/docker/" rel="tag">docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%8A%80%E6%9C%AF/" rel="tag">技术</a></li></ul>
+
+    </footer>
+  </div>
+
+    
+ 
+    
+</article>
+
+    
+    <article
   id="post-使用Jenkins构建Docker镜像并自动上传到docker registry仓库"
   class="article article-type-post"
   itemscope
@@ -874,76 +955,6 @@ version: “3”</li>
     <footer class="article-footer">
        
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Jenkins/" rel="tag">Jenkins</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%8A%80%E6%9C%AF/" rel="tag">技术</a></li></ul>
-
-    </footer>
-  </div>
-
-    
- 
-    
-</article>
-
-    
-    <article
-  id="post-Django中ImageField的使用"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2021/09/28/Django%E4%B8%ADImageField%E7%9A%84%E4%BD%BF%E7%94%A8/"
-    >Django中ImageField的使用</a> 
-</h2>
- 
-
-    </header>
-     
-    <div class="article-meta">
-      <a href="/2021/09/28/Django%E4%B8%ADImageField%E7%9A%84%E4%BD%BF%E7%94%A8/" class="article-date">
-  <time datetime="2021-09-28T02:51:52.000Z" itemprop="datePublished">2021-09-28</time>
-</a> 
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
-  </div>
-   
-    </div>
-      
-    <div class="article-entry" itemprop="articleBody">
-       
-  <h1 id="Django-ImageField学习笔记"><a href="#Django-ImageField学习笔记" class="headerlink" title="Django ImageField学习笔记"></a>Django ImageField学习笔记</h1><h2 id="1-Django-的静态文件管理机制"><a href="#1-Django-的静态文件管理机制" class="headerlink" title="1.Django 的静态文件管理机制"></a>1.Django 的静态文件管理机制</h2><blockquote>
-<p>前言：网站通常需要为用户提供类似图片、JavaScript或者CSS的额外文件服务。在Django中，统一将他们称为“静态文件”。这一章节将重点介绍如何为这些静态文件提供服务。且如果要使用ImageField，必须提前安装Pillow库</p>
-</blockquote>
-<h4 id="1-1配置静态文件"><a href="#1-1配置静态文件" class="headerlink" title="1.1配置静态文件"></a>1.1配置静态文件</h4><p>(1)确保INSTALLED_APPS中包含了django.contrib.staticfiles.</br><br>(2)在配置文件中，定义STATIC_URL，例子：</br><br>STATIC_URL = ‘/static/‘</br><br>(3)在前端模板中，用static模板标签，基于配置给定的相对路径构建URL。</br><br>(4)开发期间，可以用django.views.static.serve()视图为用户上传的媒体文件提供服务。</p>
-<blockquote>
-<p>默认情况下，Django使用MEDIA_ROOT和MEDIA_URL设置本地存储。</p>
-</blockquote>
-<h2 id="2-有关ImageField和FileFiled的讨论。"><a href="#2-有关ImageField和FileFiled的讨论。" class="headerlink" title="2.有关ImageField和FileFiled的讨论。"></a>2.有关ImageField和FileFiled的讨论。</h2><blockquote>
-<p>当我们使用这两个字段时，Django提供了一组处理文件的API</p>
-</blockquote>
-<h4 id="2-1-ImageFiled拥有的方法和属性-其拥有File类型的所有属性和方法，其内容可在官方文档中阅读python的源码"><a href="#2-1-ImageFiled拥有的方法和属性-其拥有File类型的所有属性和方法，其内容可在官方文档中阅读python的源码" class="headerlink" title="2.1 ImageFiled拥有的方法和属性(其拥有File类型的所有属性和方法，其内容可在官方文档中阅读python的源码)"></a>2.1 ImageFiled拥有的方法和属性(其拥有File类型的所有属性和方法，其内容可在官方文档中阅读python的源码)</h4><blockquote>
-<p>(1)对象类型：<br>&lt;ImageFieldFile: cars/chevy.jpg&gt;</br><br>(2)name属性</br><br>(3)path属性</br><br>(4)url属性</p>
-</blockquote>
-<h4 id="2-2-Django文件存储"><a href="#2-2-Django文件存储" class="headerlink" title="2.2 Django文件存储"></a>2.2 Django文件存储</h4><blockquote>
-<p>Django的默认文件存储通过DEFAULT_FILE_STORAGE配置。如果设计者没有显式地提供存储系统，我们将使用默认配置</p>
-</blockquote>
-<p>upload_to=’photos’，这句设置表示上传的文件会存放在<code>$MEDIA_ROOT/photos</code>下面</p>
-<h4 id="2-3-ImageFiled对象使用"><a href="#2-3-ImageFiled对象使用" class="headerlink" title="2.3 ImageFiled对象使用"></a>2.3 ImageFiled对象使用</h4><p>可以去阅读ImageFiled的源代码</br><br>在django/db/models/fields/files.py文件中</p>
- 
-      <!-- reward -->
-      
-    </div>
-    
-
-    <!-- copyright -->
-    
-    <footer class="article-footer">
-       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Django/" rel="tag">Django</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%8A%80%E6%9C%AF/" rel="tag">技术</a></li></ul>
 
     </footer>
   </div>
