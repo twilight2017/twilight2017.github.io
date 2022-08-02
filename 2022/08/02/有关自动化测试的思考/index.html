@@ -9,7 +9,7 @@
     
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   <title>
-    技术 |  瑟兰迪尔
+    有关自动化测试的思考 |  瑟兰迪尔
   </title>
   <meta name="generator" content="hexo-theme-ayer">
   
@@ -39,90 +39,213 @@
       
     <main class="content on">
       <section class="outer">
-  
-  
-  <article class="articles">
+  <article
+  id="post-有关自动化测试的思考"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
     
-    
-    <h1 class="page-type-title">技术</h1>
-    
-    
-  
-  
-  
-  
-  
-  
-  <div class="archives-wrap">
-    <div class="archive-year-wrap">
-      <a href="/archives/2021" class="archive-year">2021</a>
-    </div>
-    <div class="archives">
-      
-      <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2021/09/28/Django%E4%B8%ADImageField%E7%9A%84%E4%BD%BF%E7%94%A8/" class="archive-article-date">
-  <time datetime="2021-09-28T02:51:52.000Z" itemprop="datePublished">09/28</time>
-</a>
+    <header class="article-header">
        
-<h2 itemprop="name">
-  <a class="archive-article-title" href="/2021/09/28/Django%E4%B8%ADImageField%E7%9A%84%E4%BD%BF%E7%94%A8/"
-    >Django中ImageField的使用</a> 
-</h2>
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  有关自动化测试的思考
+</h1>
  
 
     </header>
-    
-      
+     
+    <div class="article-meta">
+      <a href="/2022/08/02/%E6%9C%89%E5%85%B3%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95%E7%9A%84%E6%80%9D%E8%80%83/" class="article-date">
+  <time datetime="2022-08-02T09:42:52.000Z" itemprop="datePublished">2022-08-02</time>
+</a> 
   <div class="article-category">
     <a class="article-category-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
   </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">648</span>
+        </span>
+    </span>
 
-    
-    
-  </div>
-</article>
-      
-  
-  
-      <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2021/02/04/%E5%8C%97%E4%BA%AC%E4%B8%9C%E6%96%B9%E5%9B%BD%E4%BF%A1%E9%9D%A2%E7%BB%8F/" class="archive-article-date">
-  <time datetime="2021-02-04T14:42:48.000Z" itemprop="datePublished">02/04</time>
-</a>
-       
-<h2 itemprop="name">
-  <a class="archive-article-title" href="/2021/02/04/%E5%8C%97%E4%BA%AC%E4%B8%9C%E6%96%B9%E5%9B%BD%E4%BF%A1%E9%9D%A2%E7%BB%8F/"
-    >北京东方国信面经</a> 
-</h2>
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">2 分钟</span>
+        </span>
+    </span>
+</div>
  
-
-    </header>
-    
+    </div>
       
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
-  </div>
+    <div class="tocbot"></div>
 
-    
-    
-  </div>
-</article>
-      
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="自动化测试"><a href="#自动化测试" class="headerlink" title="自动化测试"></a>自动化测试</h1><h2 id="哪些测试场景-用例可以自动化？"><a href="#哪些测试场景-用例可以自动化？" class="headerlink" title="哪些测试场景/用例可以自动化？"></a>哪些测试场景/用例可以自动化？</h2><blockquote>
+<p>1.重复性的测试：在多次构建中运行的测试</br><br>2.容易导致人为错误的测试</br><br>3.需要多个数据集的测试</br><br>4.软件经常使用的功能：意味着高风险</br><br>5.不能手动执行的测试：压力/性能测试等</br><br>6.手动测试时需要花费大量精力和时间的测试</br></p>
+</blockquote>
+<h2 id="在自动化任何测试用例之前应该考虑什么？"><a href="#在自动化任何测试用例之前应该考虑什么？" class="headerlink" title="在自动化任何测试用例之前应该考虑什么？"></a>在自动化任何测试用例之前应该考虑什么？</h2><h5 id="1-测试频率"><a href="#1-测试频率" class="headerlink" title="1.测试频率"></a>1.测试频率</h5><p>边缘情况进行手动测试可能更有效</p>
+<h5 id="2-测试覆盖率"><a href="#2-测试覆盖率" class="headerlink" title="2.测试覆盖率"></a>2.测试覆盖率</h5><h5 id="3-测试的结果应该是明确的"><a href="#3-测试的结果应该是明确的" class="headerlink" title="3.测试的结果应该是明确的"></a>3.测试的结果应该是明确的</h5><p>自动化测试需要预先定义输入和输出来产生通过和失败条件。</p>
+<h5 id="4-时间回报比"><a href="#4-时间回报比" class="headerlink" title="4.时间回报比"></a>4.时间回报比</h5><p>进行自动化测试前，必须要将维护自动化测试所需的时间和成本进行充分考虑。</p>
+<h5 id="5-人的干预"><a href="#5-人的干预" class="headerlink" title="5.人的干预"></a>5.人的干预</h5><p>如果自动化测试套件过于复杂，需要人重新检查测试结果或交互过程，那进行自动化测试的意义不大。</p>
+<h5 id="6-考虑优先级"><a href="#6-考虑优先级" class="headerlink" title="6.考虑优先级"></a>6.考虑优先级</h5><p>如果自动化测试有助于更快地将产品推向时长，则应该继续使用自动化测试。但如果需要立即获得结果，不要让编写和运行自动化测试成为瓶颈。</p>
+<h2 id="经常自动化的测试用例"><a href="#经常自动化的测试用例" class="headerlink" title="经常自动化的测试用例"></a>经常自动化的测试用例</h2><h5 id="1-性能测试（负载、压力测试）"><a href="#1-性能测试（负载、压力测试）" class="headerlink" title="1.性能测试（负载、压力测试）"></a>1.性能测试（负载、压力测试）</h5><p>此时自动化测试工具可以以很少的成本有效地模拟用户和资源。</p>
+<h5 id="2-单元测试"><a href="#2-单元测试" class="headerlink" title="2.单元测试"></a>2.单元测试</h5><p>单元测试在重构代码时非常有效</p>
+<h5 id="3-回归测试（烟雾、健全性测试）"><a href="#3-回归测试（烟雾、健全性测试）" class="headerlink" title="3.回归测试（烟雾、健全性测试）"></a>3.回归测试（烟雾、健全性测试）</h5><p>回归测试需要确保即使进行了大量更改，应用程序也能顺利运行。这意味着需要反复重新测试多个应用程序组件。此时，自动化测试是理想方法。</p>
+<h5 id="4-功能测试"><a href="#4-功能测试" class="headerlink" title="4.功能测试"></a>4.功能测试</h5><p>功能测试应尽量自动化进行，以确保无错误的产品交付。</p>
+<h2 id="哪些测试不应该自动化？"><a href="#哪些测试不应该自动化？" class="headerlink" title="哪些测试不应该自动化？"></a>哪些测试不应该自动化？</h2><h5 id="1-探索性测试"><a href="#1-探索性测试" class="headerlink" title="1.探索性测试"></a>1.探索性测试</h5><p>探索性测试包括广泛的非脚本测试。通常，这些测试需要一些领域知识和对应用程序的熟悉才能找出意外行为。因为它们没有被很好地定义，它们不能被自动化。</p>
+<h5 id="2-可用性测试"><a href="#2-可用性测试" class="headerlink" title="2.可用性测试"></a>2.可用性测试</h5><p>可用性测试不应该被自动化。因为人类行为难以进行完全预测，这可能包括错误的字体、颜色或使人们感到困惑的ui</p>
+ 
+      <!-- reward -->
       
     </div>
-  </div>
-  
-  
-
-  
-  <nav class="page-nav">
     
-    <a class="extend prev" rel="prev" href="/categories/%E6%8A%80%E6%9C%AF/">上一页</a><a class="page-number" href="/categories/%E6%8A%80%E6%9C%AF/">1</a><span class="page-number current">2</span>
+
+    <!-- copyright -->
+    
+    <div class="declare">
+      <ul class="post-copyright">
+        <li>
+          <i class="ri-copyright-line"></i>
+          <strong>版权声明： </strong>
+          
+          本博客所有文章除特别声明外，著作权归作者所有。转载请注明出处！
+          
+        </li>
+      </ul>
+    </div>
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://twilight2017.github.io/2022/08/02/%E6%9C%89%E5%85%B3%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95%E7%9A%84%E6%80%9D%E8%80%83/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%8A%80%E6%9C%AF/" rel="tag">技术</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%B5%8B%E8%AF%95/" rel="tag">测试</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+    
+      <a href="/2022/07/03/Docker%E8%BF%9B%E9%98%B6%E5%AD%A6%E4%B9%A0/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">Docker进阶学习</div>
+      </a>
+    
   </nav>
-  
+
+   
+<!-- valine评论 -->
+<div id="vcomments-box">
+  <div id="vcomments"></div>
+</div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js"></script>
+<script>
+  new Valine({
+    el: "#vcomments",
+    app_id: "",
+    app_key: "",
+    path: window.location.pathname,
+    avatar: "monsterid",
+    placeholder: "给我的文章加点评论吧~",
+    recordIP: true,
+  });
+  const infoEle = document.querySelector("#vcomments .info");
+  if (infoEle && infoEle.childNodes && infoEle.childNodes.length > 0) {
+    infoEle.childNodes.forEach(function (item) {
+      item.parentNode.removeChild(item);
+    });
+  }
+</script>
+<style>
+  #vcomments-box {
+    padding: 5px 30px;
+  }
+
+  @media screen and (max-width: 800px) {
+    #vcomments-box {
+      padding: 5px 0px;
+    }
+  }
+
+  #vcomments-box #vcomments {
+    background-color: #fff;
+  }
+
+  .v .vlist .vcard .vh {
+    padding-right: 20px;
+  }
+
+  .v .vlist .vcard {
+    padding-left: 10px;
+  }
+</style>
+
+ 
+   
+     
+</article>
+
 </section>
       <footer class="footer">
   <div class="outer">
@@ -280,6 +403,23 @@
 <script src="/js/lazyload.min.js"></script>
 
 <!-- Tocbot -->
+
+
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: '.tocbot',
+    contentSelector: '.article-entry',
+    headingSelector: 'h1, h2, h3, h4, h5, h6',
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: 'main',
+    positionFixedSelector: '.tocbot',
+    positionFixedClass: 'is-position-fixed',
+    fixedSidebarOffset: 'auto'
+  });
+</script>
 
 <script src="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.css">
