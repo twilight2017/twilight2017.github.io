@@ -9,7 +9,7 @@
     
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   <title>
-    有关自动化测试的思考 |  瑟兰迪尔
+    Python接口自动化测试实战教程 |  瑟兰迪尔
   </title>
   <meta name="generator" content="hexo-theme-ayer">
   
@@ -40,7 +40,7 @@
     <main class="content on">
       <section class="outer">
   <article
-  id="post-有关自动化测试的思考"
+  id="post-Python接口自动化测试实战教程"
   class="article article-type-post"
   itemscope
   itemprop="blogPost"
@@ -51,15 +51,15 @@
     <header class="article-header">
        
 <h1 class="article-title sea-center" style="border-left:0" itemprop="name">
-  有关自动化测试的思考
+  Python接口自动化测试实战教程
 </h1>
  
 
     </header>
      
     <div class="article-meta">
-      <a href="/2022/08/02/%E6%9C%89%E5%85%B3%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95%E7%9A%84%E6%80%9D%E8%80%83/" class="article-date">
-  <time datetime="2022-08-02T09:42:52.000Z" itemprop="datePublished">2022-08-02</time>
+      <a href="/2022/08/08/Python%E6%8E%A5%E5%8F%A3%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95%E5%AE%9E%E6%88%98%E6%95%99%E7%A8%8B/" class="article-date">
+  <time datetime="2022-08-08T09:06:03.000Z" itemprop="datePublished">2022-08-08</time>
 </a> 
   <div class="article-category">
     <a class="article-category-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
@@ -70,7 +70,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-quill-pen-line"></i>
             <span class="post-meta-item-text"> 字数统计:</span>
-            <span class="post-count">648</span>
+            <span class="post-count">900</span>
         </span>
     </span>
 
@@ -79,7 +79,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-book-open-line"></i>
             <span class="post-meta-item-text"> 阅读时长≈</span>
-            <span class="post-count">2 分钟</span>
+            <span class="post-count">3 分钟</span>
         </span>
     </span>
 </div>
@@ -94,20 +94,24 @@
   
     <div class="article-entry" itemprop="articleBody">
        
-  <h1 id="自动化测试"><a href="#自动化测试" class="headerlink" title="自动化测试"></a>自动化测试</h1><h2 id="哪些测试场景-用例可以自动化？"><a href="#哪些测试场景-用例可以自动化？" class="headerlink" title="哪些测试场景/用例可以自动化？"></a>哪些测试场景/用例可以自动化？</h2><blockquote>
-<p>1.重复性的测试：在多次构建中运行的测试</br><br>2.容易导致人为错误的测试</br><br>3.需要多个数据集的测试</br><br>4.软件经常使用的功能：意味着高风险</br><br>5.不能手动执行的测试：压力/性能测试等</br><br>6.手动测试时需要花费大量精力和时间的测试</br></p>
+  <h1 id="Python接口自动化测试实战教程"><a href="#Python接口自动化测试实战教程" class="headerlink" title="Python接口自动化测试实战教程"></a>Python接口自动化测试实战教程</h1><h2 id="一-pytest用例管理框架"><a href="#一-pytest用例管理框架" class="headerlink" title="一.pytest用例管理框架"></a>一.pytest用例管理框架</h2><h3 id="pyest默认规则："><a href="#pyest默认规则：" class="headerlink" title="pyest默认规则："></a>pyest默认规则：</h3><p>1.py文件必须以test_开头或者_test结尾</br><br>2.类名必须以Test开头</br><br>3.测试用例必须以test_开头<br></p>
+<h3 id="pytest用例管理框架的作用？"><a href="#pytest用例管理框架的作用？" class="headerlink" title="pytest用例管理框架的作用？"></a>pytest用例管理框架的作用？</h3><p>1.发现测试用例：从多个py文件中通过默认的规则去找测试用例。</br><br>2.执行测试用例：顺序和条件。</br><br>3.判断测试结果：断言。</br><br>4.生成测试报告：html，allure。</br><br>5.python:unittest或pytest。</br><br>6.java:Junit,testong.</p>
+<h2 id="二-pytest全局观"><a href="#二-pytest全局观" class="headerlink" title="二.pytest全局观"></a>二.pytest全局观</h2><h6 id="1-它可以和所有自动化测试工具selenium-requests结合实现web自动化，接口自动化以及app自动化。"><a href="#1-它可以和所有自动化测试工具selenium-requests结合实现web自动化，接口自动化以及app自动化。" class="headerlink" title="1.它可以和所有自动化测试工具selenium, requests结合实现web自动化，接口自动化以及app自动化。"></a>1.它可以和所有自动化测试工具selenium, requests结合实现web自动化，接口自动化以及app自动化。</h6><h6 id="2-跳过用例以及失败用例重跑"><a href="#2-跳过用例以及失败用例重跑" class="headerlink" title="2.跳过用例以及失败用例重跑"></a>2.跳过用例以及失败用例重跑</h6><h6 id="3-结合allure生成美观的测试报告"><a href="#3-结合allure生成美观的测试报告" class="headerlink" title="3.结合allure生成美观的测试报告"></a>3.结合allure生成美观的测试报告</h6><h6 id="4-和Jenkins自动集成"><a href="#4-和Jenkins自动集成" class="headerlink" title="4.和Jenkins自动集成"></a>4.和Jenkins自动集成</h6><h6 id="5-有很多强大的插件"><a href="#5-有很多强大的插件" class="headerlink" title="5.有很多强大的插件"></a>5.有很多强大的插件</h6><blockquote>
+<p>pytest-html 生成html测试报告</br><br>pytest-xdist 多线程运行</br><br>pytest-ordering 改变测试用例的执行顺序</br><br>pytest-rerunfailures 失败用例重跑</br><br>allure-pytest 生成allure测试报告</p>
 </blockquote>
-<h2 id="在自动化任何测试用例之前应该考虑什么？"><a href="#在自动化任何测试用例之前应该考虑什么？" class="headerlink" title="在自动化任何测试用例之前应该考虑什么？"></a>在自动化任何测试用例之前应该考虑什么？</h2><h5 id="1-测试频率"><a href="#1-测试频率" class="headerlink" title="1.测试频率"></a>1.测试频率</h5><p>边缘情况进行手动测试可能更有效</p>
-<h5 id="2-测试覆盖率"><a href="#2-测试覆盖率" class="headerlink" title="2.测试覆盖率"></a>2.测试覆盖率</h5><h5 id="3-测试的结果应该是明确的"><a href="#3-测试的结果应该是明确的" class="headerlink" title="3.测试的结果应该是明确的"></a>3.测试的结果应该是明确的</h5><p>自动化测试需要预先定义输入和输出来产生通过和失败条件。</p>
-<h5 id="4-时间回报比"><a href="#4-时间回报比" class="headerlink" title="4.时间回报比"></a>4.时间回报比</h5><p>进行自动化测试前，必须要将维护自动化测试所需的时间和成本进行充分考虑。</p>
-<h5 id="5-人的干预"><a href="#5-人的干预" class="headerlink" title="5.人的干预"></a>5.人的干预</h5><p>如果自动化测试套件过于复杂，需要人重新检查测试结果或交互过程，那进行自动化测试的意义不大。</p>
-<h5 id="6-考虑优先级"><a href="#6-考虑优先级" class="headerlink" title="6.考虑优先级"></a>6.考虑优先级</h5><p>如果自动化测试有助于更快地将产品推向时长，则应该继续使用自动化测试。但如果需要立即获得结果，不要让编写和运行自动化测试成为瓶颈。</p>
-<h2 id="经常自动化的测试用例"><a href="#经常自动化的测试用例" class="headerlink" title="经常自动化的测试用例"></a>经常自动化的测试用例</h2><h5 id="1-性能测试（负载、压力测试）"><a href="#1-性能测试（负载、压力测试）" class="headerlink" title="1.性能测试（负载、压力测试）"></a>1.性能测试（负载、压力测试）</h5><p>此时自动化测试工具可以以很少的成本有效地模拟用户和资源。</p>
-<h5 id="2-单元测试"><a href="#2-单元测试" class="headerlink" title="2.单元测试"></a>2.单元测试</h5><p>单元测试在重构代码时非常有效</p>
-<h5 id="3-回归测试（烟雾、健全性测试）"><a href="#3-回归测试（烟雾、健全性测试）" class="headerlink" title="3.回归测试（烟雾、健全性测试）"></a>3.回归测试（烟雾、健全性测试）</h5><p>回归测试需要确保即使进行了大量更改，应用程序也能顺利运行。这意味着需要反复重新测试多个应用程序组件。此时，自动化测试是理想方法。</p>
-<h5 id="4-功能测试"><a href="#4-功能测试" class="headerlink" title="4.功能测试"></a>4.功能测试</h5><p>功能测试应尽量自动化进行，以确保无错误的产品交付。</p>
-<h2 id="哪些测试不应该自动化？"><a href="#哪些测试不应该自动化？" class="headerlink" title="哪些测试不应该自动化？"></a>哪些测试不应该自动化？</h2><h5 id="1-探索性测试"><a href="#1-探索性测试" class="headerlink" title="1.探索性测试"></a>1.探索性测试</h5><p>探索性测试包括广泛的非脚本测试。通常，这些测试需要一些领域知识和对应用程序的熟悉才能找出意外行为。因为它们没有被很好地定义，它们不能被自动化。</p>
-<h5 id="2-可用性测试"><a href="#2-可用性测试" class="headerlink" title="2.可用性测试"></a>2.可用性测试</h5><p>可用性测试不应该被自动化。因为人类行为难以进行完全预测，这可能包括错误的字体、颜色或使人们感到困惑的ui</p>
+<h2 id="三-运行方式"><a href="#三-运行方式" class="headerlink" title="三.运行方式"></a>三.运行方式</h2><p>1.主函数的方式（命令行的方式）</br><br>-v: 输出更加详细的信息</br><br>-s：输出调试信息</br><br>-n：指定线程个数</br><br>–reruns：失败用例重跑</br><br>–html 生成报告的路径</br><br>2.项目中使用pytest.ini配置文件，举例如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[pytest]</span><br><span class="line">addopts &#x3D; -vs</span><br><span class="line">testpaths &#x3D; .&#x2F;testcases</span><br><span class="line">python_files &#x3D; test_*.py</span><br><span class="line">python_classes &#x3D; Test*</span><br><span class="line">python_functions &#x3D; test_*</span><br></pre></td></tr></table></figure>
+<h2 id="四-前后置、夹具"><a href="#四-前后置、夹具" class="headerlink" title="四.前后置、夹具"></a>四.前后置、夹具</h2><p>1.setup/teardown 在每个用例之前/之后执行一次</br><br>2.setup_class/teardown_class 在每个类之前和之后执行一次</br></p>
+<h5 id="如何实现部分前置？装饰器"><a href="#如何实现部分前置？装饰器" class="headerlink" title="如何实现部分前置？装饰器"></a>如何实现部分前置？装饰器</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">@pytest.fixture(scope&#x3D;&quot;作用域&quot;， params&#x3D;&quot;数据驱动&quot;, autouse&#x3D;&quot;自动执行&quot;, ids&#x3D;&quot;自定义参数名&quot;,name&#x3D;&quot;重命名&quot;)</span><br></pre></td></tr></table></figure>
+<p>作用域：function.class,module, package/session<br>可以通过yield唤醒类似teardown功能，简单理解就是返回，yield和return都表示返回数据的意思，只是区别在于：yield返回多次且其后可以跟代码，return只返回一次且其后不能跟代码</p>
+<h5 id="conftest-py文件很强大"><a href="#conftest-py文件很强大" class="headerlink" title="conftest.py文件很强大"></a>conftest.py文件很强大</h5><p>1.conftest.py文件是单独存放@pytest.fixture()的方法，用处是可以在多个py文件之间共享前置配置</br><br>2.conftest.py里面的方法在调用时不需要导入，可以直接使用。</br><br>3.conftest.py可以有多个，也可以有不同的层级。</p>
+<h2 id="接口自动化框架封装"><a href="#接口自动化框架封装" class="headerlink" title="接口自动化框架封装"></a>接口自动化框架封装</h2><p>一般情况下通过关联的yaml文件来实现</p>
+<h2 id="五-接口断言"><a href="#五-接口断言" class="headerlink" title="五.接口断言"></a>五.接口断言</h2><h2 id="六。pytest结合allure-pytest生成allure生成测试报告"><a href="#六。pytest结合allure-pytest生成allure生成测试报告" class="headerlink" title="六。pytest结合allure-pytest生成allure生成测试报告"></a>六。pytest结合allure-pytest生成allure生成测试报告</h2><p>1.官网下载allure</p>
+<h2 id="七-接口自动化测试框架Yaml数据驱动的封装"><a href="#七-接口自动化测试框架Yaml数据驱动的封装" class="headerlink" title="七.接口自动化测试框架Yaml数据驱动的封装"></a>七.接口自动化测试框架Yaml数据驱动的封装</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">@pytest.mark.parametrize(args_name, args_value)</span><br><span class="line">args_name：参数名</span><br><span class="line">args_value：参数值</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">import pytest</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class TestApi:</span><br><span class="line"></span><br><span class="line">    @pytest.mark.parametrize(&#39;args&#39;, [&#39;a&#39;, &#39;b&#39;, &#39;c&#39;])</span><br><span class="line">    def test_api(self, args):</span><br><span class="line">        print(&quot;1&quot;)</span><br><span class="line">        print(args)</span><br></pre></td></tr></table></figure>
+<p>打印结果如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">[gw0] win32 Python 3.8.6 cwd: D:\2021_practice\heaven-sword-backend</span><br><span class="line">[gw1] win32 Python 3.8.6 cwd: D:\2021_practice\heaven-sword-backend</span><br><span class="line">[gw2] win32 Python 3.8.6 cwd: D:\2021_practice\heaven-sword-backend</span><br><span class="line">[gw0] Python 3.8.6 (tags&#x2F;v3.8.6:db45529, Sep 23 2020, 15:52:53) [MSC v.1927 64 bit (AMD64)]</span><br><span class="line">[gw1] Python 3.8.6 (tags&#x2F;v3.8.6:db45529, Sep 23 2020, 15:52:53) [MSC v.1927 64 bit (AMD64)]</span><br><span class="line">[gw2] Python 3.8.6 (tags&#x2F;v3.8.6:db45529, Sep 23 2020, 15:52:53) [MSC v.1927 64 bit (AMD64)]</span><br><span class="line">gw0 [3] &#x2F; gw1 [3] &#x2F; gw2 [3]</span><br><span class="line"></span><br><span class="line">scheduling tests via LoadScheduling</span><br><span class="line"></span><br><span class="line">test_api.py::TestApi::test_api[a] </span><br><span class="line">test_api.py::TestApi::test_api[c] </span><br><span class="line">test_api.py::TestApi::test_api[b] </span><br><span class="line">[gw0] [ 33%] PASSED test_api.py::TestApi::test_api[a] </span><br><span class="line">[gw1] [ 66%] PASSED test_api.py::TestApi::test_api[b] </span><br><span class="line">[gw2] [100%] PASSED test_api.py::TestApi::test_api[c] </span><br></pre></td></tr></table></figure>
+<h2 id="八-YAML详解"><a href="#八-YAML详解" class="headerlink" title="八.YAML详解"></a>八.YAML详解</h2><p>也是一种数据格式。</br><br>主要的两个作用：<br>1.配置文件<br>2.测试用例</br><br>数据组成：1.map对象：键(空格)值 2.列表：用-开头</p>
  
       <!-- reward -->
       
@@ -172,12 +176,12 @@
     <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://twilight2017.github.io/2022/08/02/%E6%9C%89%E5%85%B3%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95%E7%9A%84%E6%80%9D%E8%80%83/" alt="微信分享二维码">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://twilight2017.github.io/2022/08/08/Python%E6%8E%A5%E5%8F%A3%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95%E5%AE%9E%E6%88%98%E6%95%99%E7%A8%8B/" alt="微信分享二维码">
     </div>
 </div>
 
 <div id="share-mask"></div>  
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%8A%80%E6%9C%AF/" rel="tag">技术</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%B5%8B%E8%AF%95/" rel="tag">测试</a></li></ul>
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Python/" rel="tag">Python</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%8A%80%E6%9C%AF/" rel="tag">技术</a></li></ul>
 
     </footer>
   </div>
@@ -185,19 +189,10 @@
    
   <nav class="article-nav">
     
-      <a href="/2022/08/08/Python%E6%8E%A5%E5%8F%A3%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95%E5%AE%9E%E6%88%98%E6%95%99%E7%A8%8B/" class="article-nav-link">
-        <strong class="article-nav-caption">上一篇</strong>
-        <div class="article-nav-title">
-          
-            Python接口自动化测试实战教程
-          
-        </div>
-      </a>
     
-    
-      <a href="/2022/07/03/Docker%E8%BF%9B%E9%98%B6%E5%AD%A6%E4%B9%A0/" class="article-nav-link">
+      <a href="/2022/08/02/%E6%9C%89%E5%85%B3%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95%E7%9A%84%E6%80%9D%E8%80%83/" class="article-nav-link">
         <strong class="article-nav-caption">下一篇</strong>
-        <div class="article-nav-title">Docker进阶学习</div>
+        <div class="article-nav-title">有关自动化测试的思考</div>
       </a>
     
   </nav>
