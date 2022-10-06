@@ -141,7 +141,7 @@
     
     
     <article
-  id="post-Django中ImageField的使用 - 副本"
+  id="post-用Go实现orm框架"
   class="article article-type-post"
   itemscope
   itemprop="blogPost"
@@ -152,7 +152,103 @@
     <header class="article-header">
        
 <h2 itemprop="name">
-  <a class="article-title" href="/2022/09/26/Django%E4%B8%ADImageField%E7%9A%84%E4%BD%BF%E7%94%A8%20-%20%E5%89%AF%E6%9C%AC/"
+  <a class="article-title" href="/2022/10/06/%E7%94%A8Go%E5%AE%9E%E7%8E%B0orm%E6%A1%86%E6%9E%B6/"
+    >用Go实现ORM框架</a> 
+</h2>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2022/10/06/%E7%94%A8Go%E5%AE%9E%E7%8E%B0orm%E6%A1%86%E6%9E%B6/" class="article-date">
+  <time datetime="2022-10-06T03:51:52.000Z" itemprop="datePublished">2022-10-06</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+  </div>
+   
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="用Go实现ORM框架"><a href="#用Go实现ORM框架" class="headerlink" title="用Go实现ORM框架"></a>用Go实现ORM框架</h1><h2 id="1-浅谈ORM框架"><a href="#1-浅谈ORM框架" class="headerlink" title="1.浅谈ORM框架"></a>1.浅谈ORM框架</h2><blockquote>
+<p>对象关系映射(Object Relational Mapping, 简称ORM)是通过使用描述对象和数据库之间映射的原数据，将面向对象语言程序中的对象自动持久化到关系数据库中</p>
+</blockquote>
+<h5 id="其基本的映射关系如下表所示："><a href="#其基本的映射关系如下表所示：" class="headerlink" title="其基本的映射关系如下表所示："></a>其基本的映射关系如下表所示：</h5><table>
+<thead>
+<tr>
+<th>面向对象的编程语言</th>
+<th>数据库</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>类(class/struct)</td>
+<td>表(table)</td>
+</tr>
+<tr>
+<td>对象(object)</td>
+<td>记录(record, row)</td>
+</tr>
+<tr>
+<td>对象属性(attribute)</td>
+<td>字段(field, column)</td>
+</tr>
+</tbody></table>
+<h5 id="举一个具体的例子，来理解ORM："><a href="#举一个具体的例子，来理解ORM：" class="headerlink" title="举一个具体的例子，来理解ORM："></a>举一个具体的例子，来理解ORM：</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE &#96;User&#96; (&#96;Name&#96; text, &#96;Age&#96; integer);</span><br><span class="line">INSERT INTO &#96;User&#96; (&#96;Name&#96;, &#96;Age&#96;) VALUES (&#96;Tom&#96;, &#96;18&#96;);</span><br><span class="line">SELECT * FROM &#96;User&#96;;</span><br></pre></td></tr></table></figure>
+<p>其中第一条SQL语句，在数据库中创建了表User，并且定义了两个字段Name和Age；第二条SQL语句往表中添加了一条记录;最后一条语句返回表中的所有记录。</br><br>加入我们使用了ORM框架，可以这么写：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">type User struct&#123;</span><br><span class="line">    Name string</span><br><span class="line">    Age int</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">orm.CreateTable(&amp;User&#123;&#125;)</span><br><span class="line">orm.Save(&amp;User&#123;&quot;Tom&quot;, 18&#125;)</span><br><span class="line">var users []User</span><br><span class="line">orm.Find(&amp;users)</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>ps:一直使用的Django用到的就是orm框架</p>
+</blockquote>
+<h5 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h5><p>ORM框架相当于对象和数据库之间的一个桥梁，<strong>借助ORM可以避免写繁琐的SQL语言</strong>，仅仅通过操作具体的对象，就能够完成对关系型数据库的操作。</p>
+<h5 id="那我们如何实现一个ORM框架呢？"><a href="#那我们如何实现一个ORM框架呢？" class="headerlink" title="那我们如何实现一个ORM框架呢？"></a>那我们如何实现一个ORM框架呢？</h5><ol>
+<li>CreateTable方法需要从参数&amp;User{}得到对应的结构体的名称User作为表名，成员变量Name，Age作为列名，同时还需要知道成员变量对应的类型。</br></li>
+<li>Save方法需要知道每个成员变量的值。</br></li>
+<li>Find方法仅从传入的空切片&amp;[]User，得到对应的结构体名也就是表名User，并从数据库中取到所有的记录，将其转换成User对象，添加到切片中。<h5 id="进行orm设计前我们需要考虑的问题："><a href="#进行orm设计前我们需要考虑的问题：" class="headerlink" title="进行orm设计前我们需要考虑的问题："></a>进行orm设计前我们需要考虑的问题：</h5></li>
+<li>Mysql, PostgreSQL, SQlite等数据库的sql语句是有区别的， ORM框架如何在开发者不感知的情况下完成多种数据库的适配？</br></li>
+<li>如果对象的字段发生改变，数据库表是否能够自动更新，即是否支持数据库自动迁移(migrate)?</br></li>
+<li>数据库支持的事务很多，ORM框架能实现哪些？<h2 id="2-对象表结构映射"><a href="#2-对象表结构映射" class="headerlink" title="2.对象表结构映射"></a>2.对象表结构映射</h2><h5 id="设计目的"><a href="#设计目的" class="headerlink" title="设计目的"></a>设计目的</h5><blockquote>
+<p>1.使用dialect隔离不同数据库之间的差异，便于扩展。</br><br>2.使用反射(reflect)获取任意struct对象的名称和字段，映射为数据库中的表。</br><br>3.数据库表的创建(create)、删除(drop)</br></p>
+</blockquote>
+<h5 id="Dialect"><a href="#Dialect" class="headerlink" title="Dialect"></a>Dialect</h5>&emsp;&emsp;SQL语句中的类型和Go语言中的类型是不同的，例如Go语言中的int\int8\int16等类型均对应Sqlite中的integer类型。因此实现ORM映射的第一步，需要思考如何将GO语言的类型映射为数据库中的类型。</br><br>&emsp;&emsp;同时，不同数据库支持的数据类型也是有差一点，即使功能相同，在SQL语句的表达上也可能有差异。ORM框架往往需要兼容多种数据库，因此我们需要将差异的这一部分提取出来，每一种数据库分别实现-&gt;interface。实现最大程度的复用和解耦，这部分代码称之为<strong>dialect</strong>。<h5 id="Schema"><a href="#Schema" class="headerlink" title="Schema"></a>Schema</h5>ORM框架中最为核心的转换是：给定一个任意的对象，转换为关系型数据库中的表结构。<br>在数据库中创建一张表需要哪些要素呢？<blockquote>
+<p>表名(table name) – 结构体名(struct name)</br><br>字段名和字段类型 –成员变量和类型</br><br>额外的约束条件（例如非空，主键等）–成员变量的Tag（Go语言通过Tag实现， Java\Python等语言通过注解实现）</p>
+</blockquote>
+</li>
+</ol>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Go/" rel="tag">Go</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%8A%80%E6%9C%AF/" rel="tag">技术</a></li></ul>
+
+    </footer>
+  </div>
+
+    
+ 
+    
+</article>
+
+    
+    <article
+  id="post-Go语言http包"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2022/09/26/Go%E8%AF%AD%E8%A8%80http%E5%8C%85/"
     >Go语言http包</a> 
 </h2>
  
@@ -160,7 +256,7 @@
     </header>
      
     <div class="article-meta">
-      <a href="/2022/09/26/Django%E4%B8%ADImageField%E7%9A%84%E4%BD%BF%E7%94%A8%20-%20%E5%89%AF%E6%9C%AC/" class="article-date">
+      <a href="/2022/09/26/Go%E8%AF%AD%E8%A8%80http%E5%8C%85/" class="article-date">
   <time datetime="2022-09-26T07:51:52.000Z" itemprop="datePublished">2022-09-26</time>
 </a> 
   <div class="article-category">
@@ -853,75 +949,6 @@ version: “3”</li>
     <footer class="article-footer">
        
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/docker/" rel="tag">docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%8A%80%E6%9C%AF/" rel="tag">技术</a></li></ul>
-
-    </footer>
-  </div>
-
-    
- 
-    
-</article>
-
-    
-    <article
-  id="post-Git踩坑记录"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2022/04/11/Git%E8%B8%A9%E5%9D%91%E8%AE%B0%E5%BD%95/"
-    >Git踩坑记录</a> 
-</h2>
- 
-
-    </header>
-     
-    <div class="article-meta">
-      <a href="/2022/04/11/Git%E8%B8%A9%E5%9D%91%E8%AE%B0%E5%BD%95/" class="article-date">
-  <time datetime="2022-04-11T02:56:03.000Z" itemprop="datePublished">2022-04-11</time>
-</a> 
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
-  </div>
-   
-    </div>
-      
-    <div class="article-entry" itemprop="articleBody">
-       
-  <h1 id="Git踩坑记录"><a href="#Git踩坑记录" class="headerlink" title="Git踩坑记录"></a>Git踩坑记录</h1><p>前言：对git的操作使用好像一直停滞在：</p>
-<blockquote>
-<p>git pull</br><br>git add </br><br>git commit -m</br><br>git push</br></p>
-</blockquote>
-<p>这几大简单操作上，于是想着开个文档，记录一下其他学习内容，方便后续回顾。</br></p>
-<h1 id="Git缓存区"><a href="#Git缓存区" class="headerlink" title="Git缓存区"></a>Git缓存区</h1><h6 id="git-add-files把当前工作目录中的文件放入暂存区域，其实主要做了以下两件事："><a href="#git-add-files把当前工作目录中的文件放入暂存区域，其实主要做了以下两件事：" class="headerlink" title="git add files把当前工作目录中的文件放入暂存区域，其实主要做了以下两件事："></a>git add files把当前工作目录中的文件放入暂存区域，其实主要做了以下两件事：</h6><blockquote>
-<p>1.将本地文件的时间戳、长度，当前文档对象的id等信息保存到一个树形目录中去</br><br>2.将本地文件的内容做快照并保存到Git的对象库。</p>
-</blockquote>
-<p>综上所述，暂存区实际上就是一个包含文件索引的目录树，像是一个虚拟的工作区。在这个虚拟工作区的目录树中，记录了文件名、文件的状态信息（时间戳、文件长度等），文件的内容并不存储其中，而是保存在Git对象库(.git/objects)中，文件索引建立了文件和对象库中对象实体之间的对应。</br><br>有关git暂存区的命令学习：</br></p>
-<blockquote>
-<p>1.<code>git rm --cached 文件名</code></br><br>这个命令不会删除物理文件，只是将已经add进缓存的文件删除。</br><br>2.<code>git rm --f 文件名</code></br><br>这个命令不仅将文件从缓存中删除，还会将物理文件删除，所以使用这个命令要非常谨慎。</br><br>3.若删除已经添加缓存的某一个目录下所有文件的话需要添加一个参数-r</br><br><code>git rm -r --cached 文件名</code></p>
-</blockquote>
-<h1 id="git-submodule用法整理"><a href="#git-submodule用法整理" class="headerlink" title="git submodule用法整理"></a>git submodule用法整理</h1><p>&emsp;&emsp;有submodule的仓库在当前目录会有个<code>.gitmodules</code>文件。记录path和url。这里表示项目引用子模块的关系</br><br>&emsp;&emsp;克隆带有子模块的项目后，需要初始化并拉取子模块</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">git submodule init</span><br><span class="line">git submodule update</span><br><span class="line"># 上面两条命令的组合，一般直接使用组合命令</span><br><span class="line">git submodule update --init</span><br><span class="line">#可以加上--recursive拉取嵌套的子模块（子模块中还包含有其他子模块）</span><br><span class="line">git submodule update --init --recursive</span><br></pre></td></tr></table></figure>
-<p>&emsp;&emsp;或者可以在clone代码时加上<code>--recurse-submodules</code>选项自动完成拉取</br><br><code>git clone --recurse-submodules &lt;main-project-repo-url&gt;</code><br>当需要更新子模块时，可以使用下面的指令，不用切目录就能进行手动更新：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git submodule update --remote [submodule-path]</span><br></pre></td></tr></table></figure>
-<p>上述所有命令都默认拉取的是master分支的代码，如果想拉取其他分支，则进行如下配置：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git config -f .gitmodules submodule.&lt;submodule-name&gt;.branch &lt;branch-name&gt;</span><br></pre></td></tr></table></figure> 
-      <!-- reward -->
-      
-    </div>
-    
-
-    <!-- copyright -->
-    
-    <footer class="article-footer">
-       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/python/" rel="tag">python</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%8A%80%E6%9C%AF/" rel="tag">技术</a></li></ul>
 
     </footer>
   </div>

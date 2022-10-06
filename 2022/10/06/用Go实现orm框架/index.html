@@ -9,7 +9,7 @@
     
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   <title>
-    实现Dockerfile，打包python3.9的编译过程 |  瑟兰迪尔
+    用Go实现ORM框架 |  瑟兰迪尔
   </title>
   <meta name="generator" content="hexo-theme-ayer">
   
@@ -40,7 +40,7 @@
     <main class="content on">
       <section class="outer">
   <article
-  id="post-实现Dockerfile，打包python3.9的编译过程"
+  id="post-用Go实现orm框架"
   class="article article-type-post"
   itemscope
   itemprop="blogPost"
@@ -51,15 +51,15 @@
     <header class="article-header">
        
 <h1 class="article-title sea-center" style="border-left:0" itemprop="name">
-  实现Dockerfile，打包python3.9的编译过程
+  用Go实现ORM框架
 </h1>
  
 
     </header>
      
     <div class="article-meta">
-      <a href="/2022/09/08/%E5%AE%9E%E7%8E%B0Dockerfile%EF%BC%8C%E6%89%93%E5%8C%85python3.9%E7%9A%84%E7%BC%96%E8%AF%91%E8%BF%87%E7%A8%8B/" class="article-date">
-  <time datetime="2022-09-08T07:51:52.000Z" itemprop="datePublished">2022-09-08</time>
+      <a href="/2022/10/06/%E7%94%A8Go%E5%AE%9E%E7%8E%B0orm%E6%A1%86%E6%9E%B6/" class="article-date">
+  <time datetime="2022-10-06T03:51:52.000Z" itemprop="datePublished">2022-10-06</time>
 </a> 
   <div class="article-category">
     <a class="article-category-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
@@ -70,7 +70,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-quill-pen-line"></i>
             <span class="post-meta-item-text"> 字数统计:</span>
-            <span class="post-count">634</span>
+            <span class="post-count">956</span>
         </span>
     </span>
 
@@ -79,7 +79,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-book-open-line"></i>
             <span class="post-meta-item-text"> 阅读时长≈</span>
-            <span class="post-count">2 分钟</span>
+            <span class="post-count">3 分钟</span>
         </span>
     </span>
 </div>
@@ -94,26 +94,51 @@
   
     <div class="article-entry" itemprop="articleBody">
        
-  <h1 id="实现Dockerfile，打包python3-9的编译过程"><a href="#实现Dockerfile，打包python3-9的编译过程" class="headerlink" title="实现Dockerfile，打包python3.9的编译过程"></a>实现Dockerfile，打包python3.9的编译过程</h1><h2 id="1-什么是Dockerfile"><a href="#1-什么是Dockerfile" class="headerlink" title="1.什么是Dockerfile"></a>1.什么是Dockerfile</h2><p>Dockerfile是一个文本文件，其内包含了多条指令，每一条指令构建一层。因此每一条指令的内容，就是描述该层应当如何构建。有了Dockerfile之后，我们需要构建自己的额外需求时，只需要在Dockerfile上添加或者修改指令，重新生成镜像即可，省去了敲命令的麻烦。</p>
-<h2 id="2-Dockerfile文件格式"><a href="#2-Dockerfile文件格式" class="headerlink" title="2.Dockerfile文件格式"></a>2.Dockerfile文件格式</h2><p>Dockerfile分为四部分：</p>
-<blockquote>
-<p>基础镜像信息</br><br>维护者信息</br><br>镜像操作命令</br><br>容器启动执行命令</br></p>
+  <h1 id="用Go实现ORM框架"><a href="#用Go实现ORM框架" class="headerlink" title="用Go实现ORM框架"></a>用Go实现ORM框架</h1><h2 id="1-浅谈ORM框架"><a href="#1-浅谈ORM框架" class="headerlink" title="1.浅谈ORM框架"></a>1.浅谈ORM框架</h2><blockquote>
+<p>对象关系映射(Object Relational Mapping, 简称ORM)是通过使用描述对象和数据库之间映射的原数据，将面向对象语言程序中的对象自动持久化到关系数据库中</p>
 </blockquote>
-<p>值得注意的是，Dockerfile的指令每执行一次都会在docker上新建一层。所以过多无意义的层，会造成镜像膨胀。<br>例如：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">FROM centos</span><br><span class="line">RUN yum install wget</span><br><span class="line">RUN wget -O redis.tar.gz &quot;http:&#x2F;&#x2F;download.redis.io&#x2F;releases&#x2F;redis-5.0.3.tar.gz&quot;</span><br><span class="line">RUN tar -xvf redis.tar.gz</span><br></pre></td></tr></table></figure>
-<p>以上执行方式会创建层镜像，推荐简化为以下形式：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">FROM centos</span><br><span class="line">RUN yum install wget \</span><br><span class="line">    &amp;&amp; wget -O redis.tar.gz &quot;http:&#x2F;&#x2F;download.redis.io&#x2F;releases&#x2F;redis-5.0.3.tar.gz&quot; \</span><br><span class="line">    &amp;&amp; tar -xvf redis.tar.gz</span><br></pre></td></tr></table></figure>
-<h2 id="3-构建docker镜像相关命令"><a href="#3-构建docker镜像相关命令" class="headerlink" title="3.构建docker镜像相关命令"></a>3.构建docker镜像相关命令</h2><p>docker build命令会根据Dockerfile文件已经上下文构建新的Docker镜像。构建上下文是指Dockerfile所在的本地路径或者一个url<br>使用当前目录的Dockerfile构建镜像，指定标签。</br><br>上下文路径是指docker在构建镜像，若想使用本机的文件，docker build命令获得这个路径后，会将路径下所有文件进行打包</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker build -t &lt;镜像名&gt;:&lt;tag&gt; .</span><br></pre></td></tr></table></figure>
-<p>根据指定镜像构建容器，并在后台运行</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run --name &lt;容器的指定名称&gt; -d -i -t &lt;镜像名&gt;:&lt;tag&gt; &#x2F;bin&#x2F;bash</span><br></pre></td></tr></table></figure>
-<h2 id="4-Dockerfile中的层机制"><a href="#4-Dockerfile中的层机制" class="headerlink" title="4.Dockerfile中的层机制"></a>4.Dockerfile中的层机制</h2><p>Dockerfile中每个<code>RUN</code>命令都会在新的容器中运行，以下列代码为例：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">RUN cd cosign-master</span><br><span class="line">RUN autoconf</span><br><span class="line">RUN .&#x2F;configure --enable-apache2&#x3D;&#96;which apxs&#96;</span><br></pre></td></tr></table></figure>
-<p>这三条命令会在三个独立的容器中运行，所以对下一个容器,<code>cd cosign-master</code>命令没有改变工作目录。</br><br>生成镜像有如下两条建议：</br></p>
+<h5 id="其基本的映射关系如下表所示："><a href="#其基本的映射关系如下表所示：" class="headerlink" title="其基本的映射关系如下表所示："></a>其基本的映射关系如下表所示：</h5><table>
+<thead>
+<tr>
+<th>面向对象的编程语言</th>
+<th>数据库</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>类(class/struct)</td>
+<td>表(table)</td>
+</tr>
+<tr>
+<td>对象(object)</td>
+<td>记录(record, row)</td>
+</tr>
+<tr>
+<td>对象属性(attribute)</td>
+<td>字段(field, column)</td>
+</tr>
+</tbody></table>
+<h5 id="举一个具体的例子，来理解ORM："><a href="#举一个具体的例子，来理解ORM：" class="headerlink" title="举一个具体的例子，来理解ORM："></a>举一个具体的例子，来理解ORM：</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE &#96;User&#96; (&#96;Name&#96; text, &#96;Age&#96; integer);</span><br><span class="line">INSERT INTO &#96;User&#96; (&#96;Name&#96;, &#96;Age&#96;) VALUES (&#96;Tom&#96;, &#96;18&#96;);</span><br><span class="line">SELECT * FROM &#96;User&#96;;</span><br></pre></td></tr></table></figure>
+<p>其中第一条SQL语句，在数据库中创建了表User，并且定义了两个字段Name和Age；第二条SQL语句往表中添加了一条记录;最后一条语句返回表中的所有记录。</br><br>加入我们使用了ORM框架，可以这么写：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">type User struct&#123;</span><br><span class="line">    Name string</span><br><span class="line">    Age int</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">orm.CreateTable(&amp;User&#123;&#125;)</span><br><span class="line">orm.Save(&amp;User&#123;&quot;Tom&quot;, 18&#125;)</span><br><span class="line">var users []User</span><br><span class="line">orm.Find(&amp;users)</span><br></pre></td></tr></table></figure>
 <blockquote>
-<p>1.一条指令应该执行多条命令，来减少最终镜像的层数，因为每条指令都会生成新的一层。</br><br>2.应清理中间文件或软件来减小最终镜像的大小。<br>对于上面的代码，推荐更换成如下形式：</p>
+<p>ps:一直使用的Django用到的就是orm框架</p>
 </blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">RUN cd cosign-master \</span><br><span class="line">    &amp;&amp; autoconf \</span><br><span class="line">    &amp;&amp; .&#x2F;configure --enable-apache2&#x3D;&#96;which apxs&#96; \</span><br><span class="line">    &amp;&amp; make \</span><br><span class="line">    &amp;&amp; make install</span><br></pre></td></tr></table></figure> 
+<h5 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h5><p>ORM框架相当于对象和数据库之间的一个桥梁，<strong>借助ORM可以避免写繁琐的SQL语言</strong>，仅仅通过操作具体的对象，就能够完成对关系型数据库的操作。</p>
+<h5 id="那我们如何实现一个ORM框架呢？"><a href="#那我们如何实现一个ORM框架呢？" class="headerlink" title="那我们如何实现一个ORM框架呢？"></a>那我们如何实现一个ORM框架呢？</h5><ol>
+<li>CreateTable方法需要从参数&amp;User{}得到对应的结构体的名称User作为表名，成员变量Name，Age作为列名，同时还需要知道成员变量对应的类型。</br></li>
+<li>Save方法需要知道每个成员变量的值。</br></li>
+<li>Find方法仅从传入的空切片&amp;[]User，得到对应的结构体名也就是表名User，并从数据库中取到所有的记录，将其转换成User对象，添加到切片中。<h5 id="进行orm设计前我们需要考虑的问题："><a href="#进行orm设计前我们需要考虑的问题：" class="headerlink" title="进行orm设计前我们需要考虑的问题："></a>进行orm设计前我们需要考虑的问题：</h5></li>
+<li>Mysql, PostgreSQL, SQlite等数据库的sql语句是有区别的， ORM框架如何在开发者不感知的情况下完成多种数据库的适配？</br></li>
+<li>如果对象的字段发生改变，数据库表是否能够自动更新，即是否支持数据库自动迁移(migrate)?</br></li>
+<li>数据库支持的事务很多，ORM框架能实现哪些？<h2 id="2-对象表结构映射"><a href="#2-对象表结构映射" class="headerlink" title="2.对象表结构映射"></a>2.对象表结构映射</h2><h5 id="设计目的"><a href="#设计目的" class="headerlink" title="设计目的"></a>设计目的</h5><blockquote>
+<p>1.使用dialect隔离不同数据库之间的差异，便于扩展。</br><br>2.使用反射(reflect)获取任意struct对象的名称和字段，映射为数据库中的表。</br><br>3.数据库表的创建(create)、删除(drop)</br></p>
+</blockquote>
+<h5 id="Dialect"><a href="#Dialect" class="headerlink" title="Dialect"></a>Dialect</h5>&emsp;&emsp;SQL语句中的类型和Go语言中的类型是不同的，例如Go语言中的int\int8\int16等类型均对应Sqlite中的integer类型。因此实现ORM映射的第一步，需要思考如何将GO语言的类型映射为数据库中的类型。</br><br>&emsp;&emsp;同时，不同数据库支持的数据类型也是有差一点，即使功能相同，在SQL语句的表达上也可能有差异。ORM框架往往需要兼容多种数据库，因此我们需要将差异的这一部分提取出来，每一种数据库分别实现-&gt;interface。实现最大程度的复用和解耦，这部分代码称之为<strong>dialect</strong>。<h5 id="Schema"><a href="#Schema" class="headerlink" title="Schema"></a>Schema</h5>ORM框架中最为核心的转换是：给定一个任意的对象，转换为关系型数据库中的表结构。<br>在数据库中创建一张表需要哪些要素呢？<blockquote>
+<p>表名(table name) – 结构体名(struct name)</br><br>字段名和字段类型 –成员变量和类型</br><br>额外的约束条件（例如非空，主键等）–成员变量的Tag（Go语言通过Tag实现， Java\Python等语言通过注解实现）</p>
+</blockquote>
+</li>
+</ol>
+ 
       <!-- reward -->
       
     </div>
@@ -177,12 +202,12 @@
     <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://twilight2017.github.io/2022/09/08/%E5%AE%9E%E7%8E%B0Dockerfile%EF%BC%8C%E6%89%93%E5%8C%85python3.9%E7%9A%84%E7%BC%96%E8%AF%91%E8%BF%87%E7%A8%8B/" alt="微信分享二维码">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://twilight2017.github.io/2022/10/06/%E7%94%A8Go%E5%AE%9E%E7%8E%B0orm%E6%A1%86%E6%9E%B6/" alt="微信分享二维码">
     </div>
 </div>
 
 <div id="share-mask"></div>  
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Django/" rel="tag">Django</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%8A%80%E6%9C%AF/" rel="tag">技术</a></li></ul>
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Go/" rel="tag">Go</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%8A%80%E6%9C%AF/" rel="tag">技术</a></li></ul>
 
     </footer>
   </div>
@@ -190,19 +215,10 @@
    
   <nav class="article-nav">
     
+    
       <a href="/2022/09/26/Go%E8%AF%AD%E8%A8%80http%E5%8C%85/" class="article-nav-link">
-        <strong class="article-nav-caption">上一篇</strong>
-        <div class="article-nav-title">
-          
-            Go语言http包
-          
-        </div>
-      </a>
-    
-    
-      <a href="/2022/08/08/Python%E6%8E%A5%E5%8F%A3%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95%E5%AE%9E%E6%88%98%E6%95%99%E7%A8%8B/" class="article-nav-link">
         <strong class="article-nav-caption">下一篇</strong>
-        <div class="article-nav-title">Python接口自动化测试实战教程</div>
+        <div class="article-nav-title">Go语言http包</div>
       </a>
     
   </nav>
