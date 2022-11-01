@@ -141,6 +141,183 @@
     
     
     <article
+  id="post-Django REST Framework(DRF)学习笔记"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2022/11/01/Django%20REST%20Framework(DRF)%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"
+    >Django REST Framework(DRF)学习笔记</a> 
+</h2>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2022/11/01/Django%20REST%20Framework(DRF)%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" class="article-date">
+  <time datetime="2022-11-01T11:31:52.000Z" itemprop="datePublished">2022-11-01</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+  </div>
+   
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="Django-REST-Framework-DRF-学习笔记"><a href="#Django-REST-Framework-DRF-学习笔记" class="headerlink" title="Django REST Framework(DRF)学习笔记"></a>Django REST Framework(DRF)学习笔记</h1><blockquote>
+<p>前言：</br><br>&emsp;&emsp;Django本身不是为了开发符合REST规范的Web API而设计，不过借助Django REST Framework这个神器我们可以快速开发出来优秀且符合规范的Web API来。Django REST Framework给Django提供了用于构建Web API的强大而灵活的工具包。包括序列化器、认证、权限、分页、过滤和限流。所以，我们应该感谢DRF，因为它，Django的应用前景更广了，减少了被淘汰的风险。</p>
+</blockquote>
+<h2 id="安装与使用指南"><a href="#安装与使用指南" class="headerlink" title="安装与使用指南"></a>安装与使用指南</h2><p>安装命令如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install djangorestframework</span><br></pre></td></tr></table></figure>
+<p>如果想要获得一个图形化的界面来操作API，需要将rest_framework注册到项目的INSTALL_APPS中，如下所示：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">INSTALLED_APPS &#x3D; [</span><br><span class="line">    &#96;django.contrib.admin&#96;,</span><br><span class="line">    &#96;django.contrib.auth&#96;,</span><br><span class="line">    &#96;django.contrib.contenttypes&#96;,</span><br><span class="line">    &#96;django.contrib.sessions&#96;,</span><br><span class="line">    &#96;django.contrib.messages&#96;,</span><br><span class="line">    &#96;django.contrib.staticfiles&#96;,</span><br><span class="line">    &#96;rest_framework&#96;,</span><br><span class="line">    &#96;your_app&#96;,</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+<h2 id="序列化及RESTful规范基础知识"><a href="#序列化及RESTful规范基础知识" class="headerlink" title="序列化及RESTful规范基础知识"></a>序列化及RESTful规范基础知识</h2><h4 id="序列化基础知识"><a href="#序列化基础知识" class="headerlink" title="序列化基础知识"></a>序列化基础知识</h4><p>每种编程语言都有各自的数据类型，将属于自己语言的数据类型或对象转换为可以通过网络传输或可以存储到本地磁盘的数据格式（如：XML、JSON或特定格式的字符串）的过程称为序列化(serialization)；反之称为反序列化</p>
+<h4 id="python数据序列化"><a href="#python数据序列化" class="headerlink" title="python数据序列化"></a>python数据序列化</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">import json</span><br><span class="line">json.dump(&#123;&quot;name&quot;: &quot;John&quot;, &quot;score&quot;: 112&#125;)</span><br><span class="line">&#39;&#123;&quot;name&quot;: &quot;John&quot;, &quot;score&quot;: 112&#125;&#39;</span><br></pre></td></tr></table></figure>
+<p>从上述代码可以看出，生成的json格式数据外面都加了单引号，这说明dict类型都被转化为了json字符串</p>
+<h4 id="Django查询集序列化"><a href="#Django查询集序列化" class="headerlink" title="Django查询集序列化"></a>Django查询集序列化</h4><p>以上所介绍的序列化方法对Django也是适用的。不同的是Django还有自己专属的数据类型比如查询集QuerySet和ValueQuerySet类型数据，还提供了自带的serializer类。使用Django自带的serializer类也可以轻易将QuerySet格式的数据转化为json格式。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># Django QuerySet数据 to Json</span><br><span class="line">from django.core import serializers</span><br><span class="line">data &#x3D; serializers.serialize(&quot;json&quot;, SomeModel.objects.all())</span><br></pre></td></tr></table></figure>
+<p>有时候我们只需要查询结果集的部分字段，可以使用values(‘字段名’, ‘字段名2’)来要求返回所需要的数据，可以提升些性能，但是返回来的结果需要先转换成列表格式，再用json.dumps()方法序列化成json格式，示例代码如下所示：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">import json</span><br><span class="line">from django.core.serializers.json import DjangoJSONEncoder</span><br><span class="line"></span><br><span class="line">queryset &#x3D; myModel.objects.filter(foo_icontains&#x3D;bar).values(&#39;f1&#39;, &#39;f2&#39;, &#39;f3&#39;)</span><br><span class="line">data4&#x3D;json.dump(list(queryset), cls&#x3D;DjangoJSONEncoder)</span><br></pre></td></tr></table></figure>
+<h4 id="什么是符合RESTful规范的API？"><a href="#什么是符合RESTful规范的API？" class="headerlink" title="什么是符合RESTful规范的API？"></a>什么是符合RESTful规范的API？</h4><p>REST是REpresentational State Transfer三个单词的缩写，由Roy Fielding于2000年在论文中提出。简单来说，就是用URI表示资源，用HTTP方法（GET，POST，PUT，DELETE）表征对这些资源进行增删改查的操作。而如果你自己开发的API被称为RESTful API，就需要遵守其规定的约束。</p>
+<h4 id="RESTful-APi设计指南"><a href="#RESTful-APi设计指南" class="headerlink" title="RESTful APi设计指南"></a>RESTful APi设计指南</h4><blockquote>
+<p>前言：目前web应用程序的发展趋势，就是前端设备层出不穷(手机、平板、桌面电脑)。因此，必须有一种统一的机制，方便不同的前端设备与后端通信，这导致了API架构的流行，甚至出现了<code>API first</code>的思想。<code>RESTful API</code>是目前比较成熟的一套互联网应用程序的API设计理论</p>
+</blockquote>
+<h5 id="1-路径"><a href="#1-路径" class="headerlink" title="1.路径"></a>1.路径</h5><p>路径又称为endpoint，表示API的具体网址。</br><br>在RESTful架构中，每个网址代表一种资源，所以网址中不能有动词，只能有名词，而且所用的名词往往与数据库的表格名对应。</p>
+<h5 id="2-HTTP动词"><a href="#2-HTTP动词" class="headerlink" title="2.HTTP动词"></a>2.HTTP动词</h5><p>常用的HTTP动词有下面5个，展示对资源的具体操作类型，括号里展示对应的SQL语句</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">1.GET(SELECT)：从服务器取出一个资源（一项或多项）</span><br><span class="line">2.POST(CREATE)：在服务器新建一个资源。</span><br><span class="line">3.PUT(UPDATE)：在服务器更新资源(客户端提供改变后的完整资源)。</span><br><span class="line">4.PATCH(UPDATE)：在服务器更新资源（客户端提供改变的属性）。</span><br><span class="line">5.DELETE(DELETE)：从服务器删除资源</span><br></pre></td></tr></table></figure>
+<h5 id="3-状态码-STATUS-CODE"><a href="#3-状态码-STATUS-CODE" class="headerlink" title="3.状态码(STATUS_CODE)"></a>3.状态码(STATUS_CODE)</h5><p>服务器向用户返回的状态码和提示信息，常见的有以下一些(方括号中是该状态码对应的HTTP动词)。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">200 OK - [GET]：服务器成功返回用户请求的数据，该操作是幂等的（Idempotent）。</span><br><span class="line">201 CREATED - [POST&#x2F;PUT&#x2F;PATCH]：用户新建或修改数据成功。</span><br><span class="line">202 Accepted - [*]：表示一个请求已经进入后台排队（异步任务）</span><br><span class="line">204 NO CONTENT - [DELETE]：用户删除数据成功。</span><br><span class="line">400 INVALID REQUEST - [POST&#x2F;PUT&#x2F;PATCH]：用户发出的请求有错误，服务器没有进行新建或修改数据的操作，该操作是幂等的。</span><br><span class="line">401 Unauthorized - [*]：表示用户没有权限（令牌、用户名、密码错误）。</span><br><span class="line">403 Forbidden - [*] 表示用户得到授权（与401错误相对），但是访问是被禁止的。</span><br><span class="line">404 NOT FOUND - [*]：用户发出的请求针对的是不存在的记录，服务器没有进行操作，该操作是幂等的。</span><br><span class="line">406 Not Acceptable - [GET]：用户请求的格式不可得（比如用户请求JSON格式，但是只有XML格式）。</span><br><span class="line">410 Gone -[GET]：用户请求的资源被永久删除，且不会再得到的。</span><br><span class="line">422 Unprocesable entity - [POST&#x2F;PUT&#x2F;PATCH] 当创建一个对象时，发生一个验证错误。</span><br><span class="line">500 INTERNAL SERVER ERROR - [*]：服务器发生错误，用户将无法判断发出的请求是否成功。</span><br></pre></td></tr></table></figure>
+<h4 id="4-自定义序列化器-serializers"><a href="#4-自定义序列化器-serializers" class="headerlink" title="4.自定义序列化器(serializers)"></a>4.自定义序列化器(serializers)</h4><p>&emsp;&emsp;利用DRF开发Web API的第一步是自定义序列化器(serializers)，序列化器的作用是将模型实例(比如用户、文章)序列化和反序列化为诸如<code>json</code>之类的表示形式。一个模型实例可能有许多个字段属性，但一般情况下是不需要把所有字段信息以JSON格式数据返回给用户。<b>序列化器定义了需要对一个模型实例的哪些字段进行序列化/反序列化，并可对客户端发送过来的数据进行验证和存储。</b></br><br>&emsp;&emsp;就像Django提供了Form类和ModelForm类两种自定义表单一样， REST framework提供了Serializer类和ModelSerializer类两种方式供开发者自定义序列化器。前者需要手动指定序列化和反序列化的字段，后者根据模型(Model)生成需要序列化和反序列化的字段，可以使代码更简洁</p>
+<h4 id="5-DRF认证方案"><a href="#5-DRF认证方案" class="headerlink" title="5.DRF认证方案"></a>5.DRF认证方案</h4><p>Django默认支持session的认证方式，实际前后端分离开发项目中后台采用的是token(令牌认证)</p>
+<h6 id="5-1-身份验证"><a href="#5-1-身份验证" class="headerlink" title="5.1 身份验证"></a>5.1 身份验证</h6><p>&emsp;&emsp;是将传入的请求对象(request)与一组标识凭证(例如用户名+密码或者令牌token)相关联的机制。REST framwork提供了一些开箱即用的身份验证方案，并且还允许实现自定义的方案。</br><br>&emsp;&emsp;DRF的每个认证方案实际上是一个类。即我们可以在视图中使用一个或多个认证方案类。REST framework将尝试使用列表中的每个类进行身份验证，并使用成功完成验证的第一个类的返回的元组设置<code>request.user</code>和<code>request.auth</code>。</br><br>&emsp;&emsp;用户通过认证后<code>request.user</code>返回Django的User实例，否则返回<code>AnonymousUser</code>的实例。<code>request.auth</code>通常为None。如果使用token认证。<code>request.auth</code>可以包含认证过的token</p>
+<h6 id="5-2-DRF自带认证方案"><a href="#5-2-DRF自带认证方案" class="headerlink" title="5.2 DRF自带认证方案"></a>5.2 DRF自带认证方案</h6><p>Django REST Framework提供了以下几种认证方案：</p>
+<ul>
+<li>Session认证<code>SessionAuthentication</code>类：此认证方案使用Django的默认session后端进行身份验证。当客户端发送登录请求通过验证后，Django通过session将用户信息的请求状态。Session身份验证适用于与你的网站在相同的Session环境中运行的AJAX客户端上。(这也是Session认证的最大弊端)</li>
+<li>基本认证<code>BasicAuthentication</code>类：此认证方案使用HTTP基本认证，针对用户的用户名和密码进行认证。使用这种方式浏览器会跳出登录框让用户输入用户名和密码认证。基本认证通常只适用于测试。</li>
+<li>远程认证<code>RemoteAuthentication</code>类：此认证方案为用户名不存在的用户自动创建用户实例。这个方法较少使用</li>
+<li>Token认证<code>TokenAuthentication</code>类：该认证方案是DRF提供的使用简单的基于Token的HTTP认证方案。当客户端发送登录请求后，服务器便会生成一个Token并将该Token返回给客户端，作为客户端进行请求的一个表示以后客户端只需带上这个Token前来请求数据即可，无需再次带上用户名和密码<blockquote>
+<p>注：如果是在生产环境下使用<code>BasicAuthentication</code>和<code>TokenAuthentication</code>认证，必须确保API仅在<code>https</code>可用</p>
+</blockquote>
+</li>
+</ul>
+<p>DRF自带权限类还包括：</p>
+<ul>
+<li><code>IsAuthenticated</code>类：仅限已经通过身份验证的用户访问</li>
+<li><code>AllowAny</code>类：允许任何用户访问</li>
+<li><code>IsAdminUser</code>类：仅限管理员访问</li>
+<li><code>DjangoModelPermission</code>类：只有在用户经过身份验证并分配了相关模型权限时，才会获得授权访问相关模型。</li>
+<li><code>DjangoModelPermissionReadOnly</code>类：与前者类似，但可以给匿名用户访问API的可读权限。</li>
+<li><code>DjangoObjectPermission</code>类：只有在用户经过身份验证并分配了相关对象权限时，才会获得授权访问相关对象。通常与<code>django-gaurdian</code>联用实现对象级别的权限控制<h6 id="5-3权限设置"><a href="#5-3权限设置" class="headerlink" title="5.3权限设置"></a>5.3权限设置</h6>在<code>permission_classes</code>中可以限制谁可以访问特定的视图。以下例子使用的是<code>IsAuthenticatedOrReadOnly</code>类，它将确保经过身份验证的请求获得读写访问权限，未经身份验证的请求将获得只读的权限。<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">from rest_framework import generics</span><br><span class="line">from rest_framwork import permissions</span><br><span class="line">from .permissions import IsOwnerOrReadOnly</span><br><span class="line"></span><br><span class="line">class ArticleList(generics.ListCreteAPIViews):</span><br><span class="line">     queryset &#x3D; Article.objects.all()</span><br><span class="line">     serializer_class &#x3D; ArticleSerializer</span><br><span class="line">     permission_classes &#x3D; (permissions.IsAuthenticatedOrReadOnly,)</span><br></pre></td></tr></table></figure>
+<h6 id="5-4更多设置权限方式"><a href="#5-4更多设置权限方式" class="headerlink" title="5.4更多设置权限方式"></a>5.4更多设置权限方式</h6>在前面的案例中，我们都是在基于类的API视图里通过<code>permission_classes</code>属性设置的权限类。如果你有些权限是全局或全站通用的，你还可以在settings.py中使用<code>DEFAULT_PERMISSION_CLASSES</code>全局设置默认权限策略。<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">REST_FRAMEWORK &#x3D; &#123;</span><br><span class="line">    &#39;DEFAULT_PERMISSION_CLASSES&#39;:(</span><br><span class="line">        &#39;rest_framework.permissions.IsAuthenticated&#39;,</span><br><span class="line">    )</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+如果未指定，则此设置默认为允许无限制访问<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&#39;DEFAULT_PERMISSION_CLASSES&#39;: (</span><br><span class="line">&#39;rest_framework.permissions.AllowAny&#39;)</span><br></pre></td></tr></table></figure>
+<h4 id="6-认证详解与Token认证"><a href="#6-认证详解与Token认证" class="headerlink" title="6.认证详解与Token认证"></a>6.认证详解与Token认证</h4><h6 id="6-1-什么是认证-Authentication-？"><a href="#6-1-什么是认证-Authentication-？" class="headerlink" title="6.1 什么是认证(Authentication)？"></a>6.1 什么是认证(Authentication)？</h6>&emsp;&emsp;身份验证是将传入的请求对象(rquest)与一组标识凭据(例如用户名+密码或者令牌token)相关联的机制。REST framwork提供了一些开箱即用的身份验证方案，并且还允许程序设计者实现自定义方案。</br><br>&emsp;&emsp;DRF的每个认证方案实际上是一个类，你可以在视图里使用一个或多个认证方案类。REST framework将尝试使用列表中每个类进行身份验证。并使用成功完成验证的第一个类的返回的元组设置<code>request.user</code>和<code>request.auth</code>。</br><br>&emsp;&emsp;用户通过认证后<code>request.user</code>返回Django的User实例，否则返回<code>AnonymousUser</code>的实例。<code>request.auth</code>通常为None，如果使用token认证，<code>request.auth</code>可以包含认证过的token.<blockquote>
+<p>注： 认证一般发生在权限校验之前</p>
+</blockquote>
+<h6 id="6-2-如何在DRF中设置认证方案？"><a href="#6-2-如何在DRF中设置认证方案？" class="headerlink" title="6.2 如何在DRF中设置认证方案？"></a>6.2 如何在DRF中设置认证方案？</h6></li>
+</ul>
+<ol>
+<li>设置默认的全局认证方案<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"># settings.py</span><br><span class="line">REST_FRAMEWORK &#x3D; &#123;</span><br><span class="line">    &#39;DEFAULT_AUTHENTICATION_CLASSES&#39;:(</span><br><span class="line">        &#39;rest_framework.authentication.BasicAuthentication&#39;,</span><br><span class="line">        &#39;rest_framework.authentication.SessionAuthentication&#39;,</span><br><span class="line">    )</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+在基于类的视图(CBV)中使用<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">from rest_framework.authentication import SessionAuthentication, BasicAuthentication</span><br><span class="line">from rest_framework.permissions import IsAuthenticated</span><br><span class="line">from rest_framework.response import Response</span><br><span class="line">from rest_framework.views import APIView</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class ExampleView(APIView):</span><br><span class="line">    authentication_classes &#x3D; (SessionAuthentication, BasicAuthentication)</span><br><span class="line">    permission_classes &#x3D; (IsAuthenticated, )</span><br></pre></td></tr></table></figure>
+在基于函数的视图中使用<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">from rest_framework.decorators import api_view, authentication_classes, permission_classes</span><br><span class="line"></span><br><span class="line">@api_view([&#39;GET&#39;])</span><br><span class="line">@authentication_classes(SessionAuthentication, BasicAuthentication)</span><br><span class="line">@permission_classes((IsAuthenticated,))</span><br><span class="line">def example_view(request, format&#x3D;None):</span><br><span class="line">    content &#x3D; &#123;</span><br><span class="line">        &#39;user&#39;: unicode(request.user), # django.contrib.auth.User实例</span><br><span class="line">        &#39;auth&#39;: unicode(request.auth),</span><br><span class="line">        # None</span><br><span class="line">    &#125;</span><br><span class="line">    return Response(content)</span><br></pre></td></tr></table></figure>
+<h6 id="6-3-前后端分离时为何推荐token认证？"><a href="#6-3-前后端分离时为何推荐token认证？" class="headerlink" title="6.3 前后端分离时为何推荐token认证？"></a>6.3 前后端分离时为何推荐token认证？</h6><blockquote>
+<ul>
+<li>Token无需存储降低服务器成本，session是将用户信息存储在服务器的，当用户量增大时服务器的压力也会随之增大。</br></li>
+<li>防御CSRF跨站伪造请求攻击，session是基于cookie进行用户识别的，cookie如果被截获，用户信息就容易泄露。</br></li>
+<li>扩展性强，session需要存储无法共享，当搭建了多个服务器时其他服务器无法获取到session中的验证数据用户无法验证成功。Token可以实现服务器间共享，这样不管在哪里都可以访问到。</li>
+<li>Token可以减轻服务器的压力，减少频繁的查询数据库。</li>
+<li>支持跨域访问，适用于移动平台应用</li>
+</ul>
+</blockquote>
+<h6 id="6-4-如何使用TokenAuthentication"><a href="#6-4-如何使用TokenAuthentication" class="headerlink" title="6.4 如何使用TokenAuthentication"></a>6.4 如何使用TokenAuthentication</h6>DRF自带的<code>TokenAuthentication</code>方案可以实现基本的token认证，整个流程如下：</br><br>首先，你需要修改<code>settings.py</code>，加入以下app<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">INSTALLED_APP &#x3D; (</span><br><span class="line">    ...</span><br><span class="line">    &#39;rest_framework.authtoken&#39;</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+其次，你需要为你的用户生成令牌(token)。如果你希望在创建用户时自动生成token，可以借助Django的signal实现，如下所示：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">from django.conf import settings</span><br><span class="line">from django.db.models.signals import post_save</span><br><span class="line">from django.dispatch import receiver</span><br><span class="line">from rest_framework.authentication.models import Token</span><br><span class="line"></span><br><span class="line">@receiver(post_save, sender&#x3D;settings.AUTH_USER_MODEL)</span><br><span class="line">def create_auth_token(sender, instance&#x3D;None, created&#x3D;False, **kwargs):</span><br><span class="line">    if created:</span><br><span class="line">        Token.objects.create(user&#x3D;instance)</span><br></pre></td></tr></table></figure>
+如果已经有了一些用户，则可以打开shell为所有现有用户生成令牌，如下所示：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">from django.contrib.auth.models import User</span><br><span class="line">from rest_framework.authtoken.models import Token</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">for user in User.objects.all():</span><br><span class="line">    Token.objects.get_or_create(user&#x3D;user)</span><br></pre></td></tr></table></figure>
+还可以在<code>admin.py</code>中给用户创建token，如下所示：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">from restframework.authtoken import TokenAdmin</span><br><span class="line">TokenAdmin.raw_id_fields &#x3D; [&#39;user&#39;]</span><br></pre></td></tr></table></figure>
+对Django来说，还可以用以下命令为一个用户新建或重置token<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">.&#x2F;manage.py drf_create_token &lt;username&gt; # 新建</span><br><span class="line">.&#x2F;manage.py drf_create_token -r &lt;username&gt; #重置</span><br></pre></td></tr></table></figure>
+接下来，我们需要暴露用户获取token的url地址(API端点)<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">from rest_framework.authtoken import views</span><br><span class="line">urlpattern +&#x3D; [</span><br><span class="line">    url(r&#39;^api-token-auth&#x2F;&#39;, views.obtain_auth_token)</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+这样每当用户使用form表单或者JSON将有效的username和password字段POST提交到以上视图时，obtain_auth_token视图将返回以下的JSON响应：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#39;token&#39;: &#39;9944b09199c62bcf9418ad846dd0e4bbdfc6ee4b&#39;&#125;</span><br></pre></td></tr></table></figure>
+客户端拿到token后可以将其存储在本地cookie或localstorage里，下次发送请求时把token包含在<code>Authorization</code>HTTP头中即可，如下所示：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Authorization: Token 9944b09199c62bcf9418ad846dd0e4bbdfc6ee4b</span><br></pre></td></tr></table></figure>
+我们可以借助```curl``工具来进行简单的测试<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -X GET http:&#x2F;&#x2F;127.0.0.1:8000&#x2F;api&#x2F;example -H &#39;Authorization: Token 9944b09199c62bcf9418ad846dd0e4bbdfc6ee4b&#39;</span><br></pre></td></tr></table></figure>
+<h6 id="6-5自定义Token返回信息"><a href="#6-5自定义Token返回信息" class="headerlink" title="6.5自定义Token返回信息"></a>6.5自定义Token返回信息</h6>默认的<code>obtain_auth_token</code>视图返回的json响应数据是非常简单的，只有token一项。如果希望返回更多的信息，比如用户的id或email，就要继承ObtainAuthToken类量身定制这个视图，如下所示：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">from rest_framework.authtoken.views import ObtainAuthToken</span><br><span class="line">from rest_framework.authtoken.models import Token</span><br><span class="line">from rest_framework.response import Response</span><br><span class="line"></span><br><span class="line">class CustomAuthToken(ObtainAuthToken):</span><br><span class="line">    def post(self, request, *args, **kwargs):</span><br><span class="line">    serializer &#x3D; self.serializer_class(data&#x3D;request.data, context&#x3D;&#123;&#39;request&#39;: request&#125;)</span><br><span class="line">    serializer.is_valid(raise_exception&#x3D;False)</span><br><span class="line">    user &#x3D; serializer.validated_data[&#39;user&#39;]</span><br><span class="line">    token, created &#x3D; Token.objects.get_or_create(user&#x3D;user)</span><br><span class="line">    return Response(&#123;</span><br><span class="line">        &#39;token&#39;: token.key,</span><br><span class="line">        &#39;user_id&#39;: user.pk,</span><br><span class="line">        &#39;email&#39;: user.email</span><br><span class="line">    &#125;)</span><br></pre></td></tr></table></figure>
+最后一步，DRF的<code>TokenAuthentication</code>类会从请求头中获取Token，验证其有效性。如果token有效，返回<code>request.user</code>。至此，整个token的签发和验证过程就完成了。<h4 id="7-JWT认证"><a href="#7-JWT认证" class="headerlink" title="7.JWT认证"></a>7.JWT认证</h4><blockquote>
+<p>前言：JSON Web Token(JWT)是一种更新的使用token进行身份认证的标准。与DRF内置的TokenAuthentication方案不同，JWT身份验证不需要使用数据库来验证令牌，而且可以轻松设置token失效期或刷新token，是API开发中当前最流行的跨域认证解决方案。本文将详细介绍JWT认证的工作原理已经如何通过<code>djangorestframework-simplejwt</code>这个第三方包轻松实现JWT认证。</p>
+</blockquote>
+<h6 id="7-1什么是Json-Web-Token"><a href="#7-1什么是Json-Web-Token" class="headerlink" title="7.1什么是Json Web Token?"></a>7.1什么是Json Web Token?</h6>&emsp;&emsp;JSON Web Token(JWT)是一种开放标准，它定义了一种<b>紧凑且自包含</b>的方式，用于各方之间安全地将信息以JSON对象传输。由于此信息是经过数字签名的，因此可以被验证和信任。JWT用于为应用程序创建访问token，通常适用于API身份验证和服务器到服务器的授权。</li>
+</ol>
+<ul>
+<li>紧凑：数据量较少，可以通过url参数，http请求提交的数据以及http header多种方式来传递。</li>
+<li>自包含：这个字符串可以包含很多信息，比如用户id，用户名，订单号id登，如果其他人拿到该信息，就可以拿到关键业务信息。</li>
+</ul>
+<p>&emsp;&emsp;客户端提交用户登录信息验证身份通过后，服务器生成一个用于证明用户身份的令牌(token)，也就是一个加密后的长字符串，并且将其发送给客户端。在后续请求中，客户端以各种方式(比如通过url参数或者请求头)将这个令牌发送给服务器，服务器就知道请求来自哪个特定身份的用户了。<br>JSON Web Token由三部分组成，这些部分由点(.)分隔，分别是header(头部)， payload(有效负载)和signature(签名)。</p>
+<ul>
+<li>header(头部)：识别以何种算法来生成签名。</li>
+<li>pyload(有效负载)：用来存放实际需要传递的数据。</li>
+<li>signature(签名)：安全验证token的有效性，防止数据被篡改。</li>
+</ul>
+<p>通过http传输的数据实际上是加密后的JWT</p>
+<h6 id="7-2-DRF中如何使用JWT认证"><a href="#7-2-DRF中如何使用JWT认证" class="headerlink" title="7.2 DRF中如何使用JWT认证"></a>7.2 DRF中如何使用JWT认证</h6><p>安装</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install djangorestframework-simplejwt</span><br></pre></td></tr></table></figure>
+<p>其次，需要告诉DRF我们使用jwt认证作为后台认证方案，修改<code>settings.py</code>文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">REST_FRAMEWORK &#x3D; &#123;</span><br><span class="line">    &#39;DEFAULT_AUTHENTICATION_CLASSES&#39;:[</span><br><span class="line">        &#39;rest_framework_simplejwt.authentication.JWTAuthentication&#39;</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>最后，我们需要提供用户可以获取和刷新token的urls地址，这两个urls地址分别对应<code>TokenObtainPaireView</code>和<code>TokenRefreshView</code>两个视图。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">from rest_framework_simplejwt.views import (</span><br><span class="line">    TokenObtainPaireView，</span><br><span class="line">    TokenRefreshView，</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">urlpatterns &#x3D; [</span><br><span class="line">    path(&#39;token&#x2F;&#39;, TokenObtainPairView.as_view(), name&#x3D;&#39;token_obtain_pair&#39;),</span><br><span class="line">    path(&#39;token&#x2F;refresh&#39;, TokenRefreshView.as_view(), name&#x3D;&#39;token_refresh&#39;)</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+<p>若我们对Simple JWT返回的<code>access token</code>进行解码，这个token的payload数据部分包括token类型,token失效时间，jti和user_id。如果我们要在payload部分提供更多的信息，比如用户的username，这时候就要自定义令牌(token)了。</p>
+<h6 id="7-3-如何自定义token"><a href="#7-3-如何自定义token" class="headerlink" title="7.3 如何自定义token"></a>7.3 如何自定义token</h6><p>首先，编写<code>myapp/serializer.py</code>，添加如下代码，该序列化器继承了<code>TokenObtainPairSerializer</code>类</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">from rest_framework_simplejwt.serializers import TokenObtainPairSerializer</span><br><span class="line"></span><br><span class="line">class MyTokenObtainPairSerializer(TokenObtainPairSerializer):</span><br><span class="line">    @classmethod</span><br><span class="line">    def get_token(cls, user):</span><br><span class="line">        token &#x3D; super(MyTokenObtainSerializer, cls).get_token(user)</span><br><span class="line">        </span><br><span class="line">        # add extra info</span><br><span class="line">        token[&#39;username&#39;] &#x3D; user.username</span><br><span class="line">        return token</span><br></pre></td></tr></table></figure>
+<p>其次，不使用Simple JWT提供的默认视图，使用自定义视图。修改<code>myapp/views.py</code>，添加如下代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">from rest_framework_simplejwt.views import TokenObtainPairView</span><br><span class="line">from rest_framework.permissions import AllowAny</span><br><span class="line">from .serializers import MyTokenObtainPairSerializer</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class MyObtainTokenPairView(TokenObtainPairView):</span><br><span class="line">    permisssion_classes &#x3D; (AllowAny, )</span><br><span class="line">    serializer_class &#x3D; MyTokenObtainPairSerializer</span><br></pre></td></tr></table></figure>
+<p>最后，修改<code>urls.py</code>添加如下代码，将/token/指向新的自定义的视图。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line">urlpatterns &#x3D; [</span><br><span class="line">    path(&#39;token&#x2F;&#39;, MyObtainTokenPairView.as_view(), name&#x3D;&#39;token_obtain_pair&#39;)</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+<h6 id="7-4-自定义认证后台-Backend"><a href="#7-4-自定义认证后台-Backend" class="headerlink" title="7.4 自定义认证后台(Backend)"></a>7.4 自定义认证后台(Backend)</h6><p>&emsp;&emsp;通常情况下，我们使用的方法是使用用户名和密码登录，如果我们希望后台同时支持邮箱/密码，手机/密码组合登录，则我们需要自定义认证后台(Backend)<br>首先，修改<code>views.py</code>添加如下代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">from django.contrib.auth.backends import ModelBackend</span><br><span class="line">from django.db.models import Q</span><br><span class="line">from django.contrib.auth import get_user_model</span><br><span class="line"></span><br><span class="line">User &#x3D; get_user_model()</span><br><span class="line"></span><br><span class="line">class MyCustomBackend(ModelBackend):</span><br><span class="line">    def authenticate(self, request, username&#x3D;None, password&#x3D;None, **kwargs):</span><br><span class="line">        try:</span><br><span class="line">            user &#x3D; User.objects.get(Q(username&#x3D;username) | Q(email&#x3D;username))</span><br><span class="line">            if user.check_password(password):</span><br><span class="line">                return user</span><br><span class="line">        except Exception as e:</span><br><span class="line">            return None</span><br></pre></td></tr></table></figure>
+<p>最后，修改<code>settings.py</code>，把自定义的验证方法添加到<code>AUTHENTICATION_BAKENDS</code>里去</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">AUTHENTICATION_BACKENDS &#x3D; (</span><br><span class="line">    &#39;user.views.MyCustomBackend&#39;</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<h4 id="8-分页"><a href="#8-分页" class="headerlink" title="8.分页"></a>8.分页</h4><h6 id="8-1分页的目的"><a href="#8-1分页的目的" class="headerlink" title="8.1分页的目的"></a>8.1分页的目的</h6><p>当数据库的数据量非常大时，如果一次将这些数据查询出来，必然加大了服务器内存的负载，降低系统的运行速度。一种更好的设计方式是将数据分段的展示给用户，如果用户再展示的分段数据中没有找到自己的内容，可以通过指定页码或翻页的方式查看更多数据，直到找到自己想要的内容为止。</p>
+<h6 id="8-2DRF提供的分页"><a href="#8-2DRF提供的分页" class="headerlink" title="8.2DRF提供的分页"></a>8.2DRF提供的分页</h6><p>Django REST Framework提供了3中分页类</p>
+<ul>
+<li>PageNumberPagination：普通分页器。可输入page和size参数。通常还需要设置max_page_size数量，防止用户进行恶意查询。</li>
+<li>LimitOffsetPagination：偏移分页器。支持用户按limit和offset这种方式进行查询。offset是查询数据的起点，limit是每页展示数据的最大条数。</li>
+<li>CursorPagination类：加密分页器。这是DRF提供的加密分页查询，仅支持用户按响应提供的上一页和下一页链接进行分页查询。<h6 id="8-3-PageNumberPagination类"><a href="#8-3-PageNumberPagination类" class="headerlink" title="8.3 PageNumberPagination类"></a>8.3 PageNumberPagination类</h6>DRF中使用的默认分页类的最简单方式就是在<code>settings.py</code>中进行全局配置，如下所示：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">REST_FRAMEWORK &#x3D; &#123;</span><br><span class="line">    &#39;DEFAULT_PAGINATION_CLASS:&#39;rest_framework.pagination.PageNumberPagination&#39;,</span><br><span class="line">    &#39;PAGE_SIZE&#39;: 2</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+实际使用中，自定义分页器要比使用默认的分页类更常见，具体做法如下：</br><br>第一步，在app目录下新建<code>pagination.py</code>，添加如下代码：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">from rest_framework.pagination import PageNumberPagination</span><br><span class="line"></span><br><span class="line">class MyPageNumberPagination(PageNumberPagination):</span><br><span class="line">    page_size &#x3D; 2</span><br><span class="line">    page_size_query_param &#x3D; &#39;size&#39;</span><br><span class="line">    max_page_size &#x3D; 10 </span><br></pre></td></tr></table></figure>
+<h4 id="9-过滤和排序"><a href="#9-过滤和排序" class="headerlink" title="9.过滤和排序"></a>9.过滤和排序</h4><h6 id="9-1过滤方法一：重写get-queryset方法"><a href="#9-1过滤方法一：重写get-queryset方法" class="headerlink" title="9.1过滤方法一：重写get_queryset方法"></a>9.1过滤方法一：重写get_queryset方法</h6>此方法不依赖于任何第三方包，只适合于需要过滤的字段比较少的模型。如果这里希望对文章title进行过滤，我们只需要修改ArticleList视图函数类即可<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"># views.py</span><br><span class="line">from rest_framework import generics</span><br><span class="line">from rest_framework import permissions</span><br><span class="line">from .permissions import IsOwnerOrReadOnly</span><br><span class="line">from .pagination import MyPageNumberPagination</span><br><span class="line"></span><br><span class="line">class ArticleList(generics.ListCreateAPIView):</span><br><span class="line">    serializer_class &#x3D; ArticleSerializer</span><br><span class="line">    permission_classes &#x3D; (permissions.IsAuthenticatedOrReadOnly,)</span><br><span class="line">    pagination_class &#x3D; MyPageNumerPagination</span><br><span class="line">    </span><br><span class="line">    def get_queryset(self):</span><br><span class="line">        keyword &#x3D; self.request.query_params.get(&#39;q&#39;)</span><br><span class="line">        if not keyword:</span><br><span class="line">            queryset &#x3D; Article.objects.all()</span><br><span class="line">        else:</span><br><span class="line">            queryset &#x3D; Article.objects.filter(title_icontains&#x3D;keyword)</span><br><span class="line">        return queryset</span><br></pre></td></tr></table></figure>
+&emsp;&emsp;但当一个模型需要过滤的字段很多且不确定时，重写get_queryset方法将变得非常麻烦，更好的方式是使用django-filter这个第三方库实现过滤。<h6 id="7-2-使用django-filter"><a href="#7-2-使用django-filter" class="headerlink" title="7.2 使用django-filter"></a>7.2 使用django-filter</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">安装&#96;&#96;&#96;django-filter&#96;&#96;&#96;&lt;&#x2F;br&gt;</span><br></pre></td></tr></table></figure>
+pip install django-filter<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">把django-filter添加到INSTALLED_APPS中去</span><br></pre></td></tr></table></figure>
+INSTALLED_APPS = [<br>  …,<br>  django-filters,<br>]<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">接下来需要把&#96;&#96;&#96;DjangoFilterBackend&#96;&#96;&#96;设为过滤后台，可以在&#96;&#96;&#96;settings.py&#96;&#96;&#96;中进行全局配置</span><br></pre></td></tr></table></figure>
+REST_FRAMEWORK = {<br>  ‘DEFAULT_FILTER_BACKENDS’: [‘django_filters.rest_framework.DjangoFilterBackend’]<br>}<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">还可以在单个视图中使用它：</span><br></pre></td></tr></table></figure>
+from django_filters import rest_framework</li>
+</ul>
+<p>class ArticleList(generics.ListCreateAPIView):<br>    # new: filter backends and classes<br>    filter_backends = (rest_framework.DjangoFilterBackend,)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">在类视图中使用django-filter时，你可以直接通过&#96;&#96;&#96;filterset_fields&#96;&#96;&#96;设置需要过滤的字段，如下所示：</span><br></pre></td></tr></table></figure>
+<p>from django_filters import rest_framework</p>
+<p>class ArticleList(generics.ListCreateAPIView):<br>    # new: filter backends and classes<br>    filter_backends = (rest_framework.DjangoFilterBackend,)<br>    filterset_fields = [‘title’, ‘status’]<br>```</p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Django/" rel="tag">Django</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%8A%80%E6%9C%AF/" rel="tag">技术</a></li></ul>
+
+    </footer>
+  </div>
+
+    
+ 
+    
+</article>
+
+    
+    <article
   id="post-用Go实现orm框架"
   class="article article-type-post"
   itemscope
@@ -877,78 +1054,6 @@ version: “3”</li>
     <footer class="article-footer">
        
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Go/" rel="tag">Go</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%8A%80%E6%9C%AF/" rel="tag">技术</a></li></ul>
-
-    </footer>
-  </div>
-
-    
- 
-    
-</article>
-
-    
-    <article
-  id="post-Docker build的cache机制"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2022/04/17/Docker%20build%E7%9A%84cache%E6%9C%BA%E5%88%B6/"
-    >Docker build的cache机制</a> 
-</h2>
- 
-
-    </header>
-     
-    <div class="article-meta">
-      <a href="/2022/04/17/Docker%20build%E7%9A%84cache%E6%9C%BA%E5%88%B6/" class="article-date">
-  <time datetime="2022-04-17T11:15:03.000Z" itemprop="datePublished">2022-04-17</time>
-</a> 
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
-  </div>
-   
-    </div>
-      
-    <div class="article-entry" itemprop="articleBody">
-       
-  <h1 id="Docker-build的cache机制"><a href="#Docker-build的cache机制" class="headerlink" title="Docker build的cache机制"></a>Docker build的cache机制</h1><h3 id="docker-build命令简介"><a href="#docker-build命令简介" class="headerlink" title="docker build命令简介"></a>docker build命令简介</h3><p>以如下这个Dockerfile为例：</br></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">FROM Ubuntu:14.04</span><br><span class="line">RUN apt-get update ADD run.sh &#x2F; VOLUME &#x2F;data CMD[&quot;.&#x2F;run.sh&quot;]</span><br></pre></td></tr></table></figure>
-<p>随后执行下面一条命令：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker build -t&#x3D;&quot;my_new_image&quot;</span><br></pre></td></tr></table></figure>
-<p>&emsp;&emsp;即可将当前目录下的Dockerfile构建成一个名为my_new_image的镜像，镜像的默认tag是latest。对于以上的docker build请求，Docker Daemon新创建了4层镜像，除了FROM命令，其余的RUN、ADD、VOLUME以及CMD命令都会创建一层新的镜像。</p>
-<h3 id="镜像cache机制的介绍"><a href="#镜像cache机制的介绍" class="headerlink" title="镜像cache机制的介绍"></a>镜像cache机制的介绍</h3><p>&emsp;&emsp;Dockerfile可以通过<code>docker build</code>命令构建为一个新的镜像，Dockerfile中的每一条命令都会构建出一个新的镜像层。既然如此，构建成功后宿主机上的镜像层是否会不断增多，导致磁盘空间资源逐渐缩小？另外，一个Dockerfile如果构建多次，对于Dockerfile中的某一指定指令，是否会出现产生多个对应镜像层的情况呢？</p>
-<h3 id="docker-build的cache机制"><a href="#docker-build的cache机制" class="headerlink" title="docker build的cache机制"></a>docker build的cache机制</h3><p>&emsp;&emsp;Docker Daemon通过Dockerfile构建镜像时，当发现即将新构建出的镜像与已有的某镜像重复时，可以选择放弃构建新的镜像，也就是采取本地已经cache的镜像作为结果。</p>
-<h3 id="cache机制的实现原理："><a href="#cache机制的实现原理：" class="headerlink" title="cache机制的实现原理："></a>cache机制的实现原理：</h3><p>&emsp;&emsp;Docker镜像，由镜像层文件系统和镜像json文件组成，而这两者都含有一个相同的镜像ID。</br></p>
-<blockquote>
-<p>1.<code>FROM buntu:14.04</code>:FROM命令是Dockerfile中唯一不可缺少的命令，它为最终构建出的镜像设定了一个基础镜像(base image)。docker build命令解析Dockerfile的FROM命令时，可以立即获悉在哪一个镜像基础上完成下一条命令<code>RUN apt-get update</code>的镜像构建。此时，Docker Daemon获取Ubuntu: 14.04镜像的镜像ID，并提取该镜像json文件中的内容，以备下一条命令构建时使用。</br><br>2.<code>RUN apt-get update</code>:RUN命令是在上一层镜像(即ubuntu:14.04镜像)上运行apt-get update，所有对文件系统内容有更新的文件，都会保留于新构建的镜像层中，同时更新上一层镜像的json文件。</p>
-</blockquote>
-<h3 id="有关docker-build命令的事实："><a href="#有关docker-build命令的事实：" class="headerlink" title="有关docker build命令的事实："></a>有关docker build命令的事实：</h3><blockquote>
-<p>1.镜像关系：对于命令<code>RUN apt-get update</code>的构建，一定会产生一个新镜像，新镜像的父镜像ID为ubuntu:14.04的镜像ID。</br><br>2.镜像json文件更新：运行命令<code>apt-get update</code>后产生新镜像，新镜像json文件仅仅更新ubuntu:14.04镜像json文件的cmd属性，其他如config属性均不会修改。</br><br>3.镜像层文件系统内容更新：运行<code>apt-get update</code>后，对于容器可读写层的内容更新，全部将被打包进新镜像的镜像层文件系统内容。</br></p>
-</blockquote>
-<h3 id="cache机制的核心："><a href="#cache机制的核心：" class="headerlink" title="cache机制的核心："></a>cache机制的核心：</h3><p>&emsp;&emsp;遍历本地所有镜像，发现镜像与即将构建出的镜像一致时，将找到的镜像作为cache镜像，复用cache镜像作为构建结果。</p>
-<h3 id="cache机制注意事项"><a href="#cache机制注意事项" class="headerlink" title="cache机制注意事项"></a>cache机制注意事项</h3><p>&emsp;&emsp;cache机制很大程度上做到了镜像的复用，降低存储空间的同时，还大大缩短了构建时间。以下列出使用cache机制的几项注意事项：</p>
-<h5 id="ADD命令与COPY命令"><a href="#ADD命令与COPY命令" class="headerlink" title="ADD命令与COPY命令"></a>ADD命令与COPY命令</h5><p>&emsp;&emsp;判断ADD命令或者COPY命令后紧接的文件是否发生变化，成为是否沿用cache的重要依据。Docker采取的策略是：获取Dockerfile下的内容，计算出一个唯一的hash值，若hash值未发生变化，则可以认为文件内容没有发生变化，可以使用cache机制；反之亦然。</p>
-<h5 id="RUN命令存在外部依赖"><a href="#RUN命令存在外部依赖" class="headerlink" title="RUN命令存在外部依赖"></a>RUN命令存在外部依赖</h5><p>&emsp;&emsp;以命令<code>RUN apt-get update</code>为例，随着时间的推移，基于同一个基础镜像，一年前的<code>apt-get update</code>和一年后的<code>apt-get update</code>，由于软件源软件的更新，从而导致产生的镜像理论上应该不同。如果继续使用cache机制，将存在不满足用户需求的情况。</br><br>&emsp;&emsp;Docker采取的策略是：用户可以使用参数<code>--no-cache</code>确保获取最新的外部依赖。</br><br><code>docker build --no-cache -t=&quot;my_new_image&quot;</code></p>
-<h5 id="树状镜像的关系"><a href="#树状镜像的关系" class="headerlink" title="树状镜像的关系"></a>树状镜像的关系</h5><p>&emsp;&emsp;树状的镜像关系决定了，一次新镜像的成功构建将导致后续的cache机制全部失效。</br><br>&emsp;&emsp;一旦产生一个新的镜像，意味着产生一个新的镜像ID。而当前宿主机环境中肯定不会存在一个镜像，此镜像ID的父镜像ID是新产生镜像的ID。这也是为什么，书写Dockerfile的时候，应该将更多静态的安装、配置命令尽可能地放在Dockerfile的较前位置。</p>
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>&emsp;&emsp;docker build的cache机制实现了镜像的复用，不仅节省了镜像的存储空间，也为镜像构建节省了大量的时间。</p>
- 
-      <!-- reward -->
-      
-    </div>
-    
-
-    <!-- copyright -->
-    
-    <footer class="article-footer">
-       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/docker/" rel="tag">docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%8A%80%E6%9C%AF/" rel="tag">技术</a></li></ul>
 
     </footer>
   </div>
