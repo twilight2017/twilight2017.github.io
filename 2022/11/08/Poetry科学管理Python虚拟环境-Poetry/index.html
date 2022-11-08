@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+
+
+<head>
+  <meta charset="utf-8" />
+    
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>
+    Poetry科学管理Python虚拟环境-Poetry |  瑟兰迪尔
+  </title>
+  <meta name="generator" content="hexo-theme-ayer">
+  
+  <link rel="shortcut icon" href="/favicon.ico" />
+  
+  
+<link rel="stylesheet" href="/dist/main.css">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Shen-Yu/cdn/css/remixicon.min.css">
+  
+<link rel="stylesheet" href="/css/custom.css">
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+  
+  
+
+  
+
+</head>
+
+</html>
+
+<body>
+  <div id="app">
+    
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-Poetry科学管理Python虚拟环境-Poetry"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  Poetry科学管理Python虚拟环境-Poetry
+</h1>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2022/11/08/Poetry%E7%A7%91%E5%AD%A6%E7%AE%A1%E7%90%86Python%E8%99%9A%E6%8B%9F%E7%8E%AF%E5%A2%83-Poetry/" class="article-date">
+  <time datetime="2022-11-08T03:49:52.000Z" itemprop="datePublished">2022-11-08</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">2k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">8 分钟</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="Poetry科学管理Python虚拟环境-Poetry"><a href="#Poetry科学管理Python虚拟环境-Poetry" class="headerlink" title="Poetry科学管理Python虚拟环境-Poetry"></a>Poetry科学管理Python虚拟环境-Poetry</h1><h2 id="1-Poetry简介"><a href="#1-Poetry简介" class="headerlink" title="1.Poetry简介"></a>1.Poetry简介</h2><blockquote>
+<p>&emsp;&emsp;前言：最早使用的python虚拟环境管理方式是使用<code>pipenv</code>，来创建项目的特有python环境。但是，<code>pipenv</code>在实际使用时有：处理速度极慢，且在官方github上被提出了众多Bug，导致了一些不可描述的问题</br><br>&emsp;&emsp;虽然<code>pipenv</code>小火了一把，但由于被提出了糟糕的设计和使用体验。这篇文章介绍另一个python包管理工具<code>poetry</code>，使用它来创建我们的隔离环境。</br><br>&emsp;&emsp;<code>Poetry自带PYPI默认发布库</code>，可以直接将自己的包发布在pypi上。<code>poetry</code>的更新非常活跃。</p>
+</blockquote>
+<h2 id="2-安装与使用"><a href="#2-安装与使用" class="headerlink" title="2.安装与使用"></a>2.安装与使用</h2><p>windows 10系统使用如下命令即可进行一键安装：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;python-poetry&#x2F;poetry&#x2F;master&#x2F;get-poetry.py | python</span><br></pre></td></tr></table></figure>
+<p>linux系统使用如下命令进行一键安装：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -sSL https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;python-poetry&#x2F;poetry&#x2F;master&#x2F;get-poetry.py | python</span><br></pre></td></tr></table></figure>
+<p>使用如下命令验证安装是否成功：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">poetry --version</span><br></pre></td></tr></table></figure>
+<h2 id="3-基本使用"><a href="#3-基本使用" class="headerlink" title="3.基本使用"></a>3.基本使用</h2><h5 id="3-1最新添加的poetry-new命令可用于一键创建项目目录"><a href="#3-1最新添加的poetry-new命令可用于一键创建项目目录" class="headerlink" title="3.1最新添加的poetry new命令可用于一键创建项目目录"></a>3.1最新添加的<code>poetry new</code>命令可用于一键创建项目目录</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">poetry new newproject</span><br></pre></td></tr></table></figure>
+<p>创建的项目目录包括：</p>
+<ul>
+<li>newproject</li>
+<li>tests</li>
+<li>pyproject.toml<br>项目包含主目录、测试目录，最重要的是pyproject.toml文件，它包含了环境的依赖和配置<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">[tool.poetry]</span><br><span class="line">name &#x3D; &quot;newproject&quot; # 项目名</span><br><span class="line">version &#x3D; &quot;0.1.0&quot; # 项目版本</span><br><span class="line">description &#x3D; &quot;&quot; # 项目描述</span><br><span class="line">authors &#x3D; [&quot;&quot;] # 作者信息</span><br><span class="line"></span><br><span class="line">[tool.poetry.dependencies]</span><br><span class="line">python &#x3D; &quot;^3.8&quot; # 依赖包</span><br><span class="line"></span><br><span class="line">[tool.poetry.dev-dependencies]</span><br><span class="line">pytest &#x3D; &quot;^5.2&quot; # 开发环境依赖包</span><br><span class="line"></span><br><span class="line">[build-system]</span><br><span class="line">requires &#x3D; [&quot;poetry&gt;&#x3D;0.12&quot;]</span><br><span class="line">build-backend &#x3D; &quot;poetry.masonry.api&quot;</span><br></pre></td></tr></table></figure>
+这时，仅仅是创建了项目目录，python环境并没有被创建<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">poetry config --list</span><br></pre></td></tr></table></figure>
+使用该条命令来查看基础配置：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">cache-dir &#x3D; &quot;C:\\Users\\Admin\\AppData\\Local\\pypoetry\\Cache&quot;</span><br><span class="line">experimental.new-installer &#x3D; true</span><br><span class="line">experimental.system-git-client &#x3D; false</span><br><span class="line">installer.max-workers &#x3D; null</span><br><span class="line">installer.no-binary &#x3D; null</span><br><span class="line">installer.parallel &#x3D; true</span><br><span class="line">virtualenvs.create &#x3D; true</span><br><span class="line">virtualenvs.in-project &#x3D; null</span><br><span class="line">virtualenvs.options.always-copy &#x3D; false</span><br><span class="line">virtualenvs.options.no-pip &#x3D; false</span><br><span class="line">virtualenvs.options.no-setuptools &#x3D; false</span><br><span class="line">virtualenvs.options.system-site-packages &#x3D; false</span><br><span class="line">virtualenvs.path &#x3D; &quot;&#123;cache-dir&#125;\\virtualenvs&quot;  # C:\Users\Admin\AppData\Local\pypoetry\Cache\virtualenvs</span><br><span class="line">virtualenvs.prefer-active-python &#x3D; false</span><br><span class="line">virtualenvs.prompt &#x3D; &quot;&#123;project_name&#125;-py&#123;python_version&#125;&quot;</span><br></pre></td></tr></table></figure></li>
+<li>cache-dir：缓存目录(之后下载的包缓存，如果其他项目使用相同的包就不会重复下载)</li>
+<li>repositories.foo.url：自定义存储库(使用pip时的安装源)</li>
+<li>virtualenvs.create：是否创建虚拟环境，即当安装新包进入此项目时，是否为此项目创建独立的虚拟环境。</li>
+<li>virtualenvs.in-project：虚拟环境是否在项目主目录内</li>
+<li>virtualenvs.path：创建环境的路径<h5 id="3-2修改安装源"><a href="#3-2修改安装源" class="headerlink" title="3.2修改安装源"></a>3.2修改安装源</h5></li>
+<li>poetry config repositories.tuna <a target="_blank" rel="noopener" href="https://pypi.tsinghua.edu.cn/simple">https://pypi.tsinghua.edu.cn/simple</a></li>
+<li>上面的是安装源别名，可以随意修改</li>
+<li>使用<code>poetry config repositories.tuna --unset</code>可以删除配置<h5 id="3-3-初始化项目"><a href="#3-3-初始化项目" class="headerlink" title="3.3 初始化项目"></a>3.3 初始化项目</h5>我们可以删除上述步骤中的<code>poetry.toml</code>文件，使用<code>poetry init</code>命令来初始化项目<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line">$ poetry init</span><br><span class="line"></span><br><span class="line"># 这个命令会创建你的.toml文件</span><br><span class="line">This command will guide you through creating your pyproject.toml config.</span><br><span class="line"># 输入项目名称、版本、描述、作者、许可，选择python版本(默认为系统里的最新版本)</span><br><span class="line"></span><br><span class="line">Package name [syncer]: </span><br><span class="line">Version [0.1.0]: </span><br><span class="line">Description []: </span><br><span class="line">Author [twilight2017 &lt;liuzixuanp@163.com&gt;, n to skip]: </span><br><span class="line">License []: </span><br><span class="line">Compatible Python versions [^3.9]: </span><br><span class="line"></span><br><span class="line">Would you like to define your main dependencies interactively? (yes&#x2F;no) [yes]</span><br><span class="line">You can specify a package in the following forms:</span><br><span class="line">  - A single name (requests): this will search for matches on PyPI</span><br><span class="line">  - A name and a constraint (requests@^2.23.0)</span><br><span class="line">  - A git url (git+https:&#x2F;&#x2F;github.com&#x2F;python-poetry&#x2F;poetry.git)</span><br><span class="line">  - A git url with a revision (git+https:&#x2F;&#x2F;github.com&#x2F;python-poetry&#x2F;poetry.git#develop)</span><br><span class="line">  - A file path (..&#x2F;my-package&#x2F;my-package.whl)</span><br><span class="line">  - A directory (..&#x2F;my-package&#x2F;)</span><br><span class="line">  - A url (https:&#x2F;&#x2F;example.com&#x2F;packages&#x2F;my-package-0.1.0.tar.gz)</span><br><span class="line"></span><br><span class="line">Package to add or search for (leave blank to skip):</span><br><span class="line"></span><br><span class="line"># 是否选择定义你的开发环境主依赖包</span><br><span class="line">Would you like to define your development dependencies interactively? (yes&#x2F;no) [yes]</span><br><span class="line">Package to add or search for (leave blank to skip):</span><br><span class="line"></span><br><span class="line">Generated file</span><br><span class="line"></span><br><span class="line">[tool.poetry]</span><br><span class="line">name &#x3D; &quot;syncer&quot;</span><br><span class="line">version &#x3D; &quot;0.1.0&quot;</span><br><span class="line">description &#x3D; &quot;&quot;</span><br><span class="line">authors &#x3D; [&quot;twilight2017 &lt;liuzixuanp@163.com&gt;&quot;]</span><br><span class="line">readme &#x3D; &quot;README.md&quot;</span><br><span class="line"></span><br><span class="line">[tool.poetry.dependencies]</span><br><span class="line">python &#x3D; &quot;^3.9&quot;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">[build-system]</span><br><span class="line">requires &#x3D; [&quot;poetry-core&quot;]</span><br><span class="line">build-backend &#x3D; &quot;poetry.core.masonry.api&quot;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Do you confirm generation? (yes&#x2F;no) [yes]</span><br></pre></td></tr></table></figure></li>
+<li>签名的是一般项目的信息填写。当选择python版本时，必须确保当前系统内有此版本</li>
+<li>接下来会让你定义主依赖包(main dependencies)，比如当前项目是拿django开发的，输入yes后可以输入django,他会将此依赖添加到[tool.poetry.dependencies]</li>
+<li>然后是定义开发环境主要依赖，比如需要添加一些测试，如pytest，会将此包依赖添加到[tool.poetry.dev-denpendencies]<h2 id="4-创建环境"><a href="#4-创建环境" class="headerlink" title="4.创建环境"></a>4.创建环境</h2></li>
+<li>做完项目初始化后，使用<code>poetry install</code>，即可以一键生成虚拟环境，执行该操作会在项目主目录下生成一个<code>.venv</code>文件夹，里面装的就是虚拟环境。</li>
+<li>当项目完成时，可以使用<code>poetry install --no-dev</code>，来创建生产环境<h5 id="4-1-添加包"><a href="#4-1-添加包" class="headerlink" title="4.1 添加包"></a>4.1 添加包</h5></li>
+<li><code>poetry add pkg_name</code>,例如： <code>poetry add flask</code><h5 id="4-2-查看项目依赖"><a href="#4-2-查看项目依赖" class="headerlink" title="4.2 查看项目依赖"></a>4.2 查看项目依赖</h5></li>
+<li>使用<code>poetry show</code>可以查看当前项目已经安装的主要包(依赖)<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ poetry show</span><br><span class="line">asgiref  3.5.2  ASGI specs, helper code, and adapters</span><br><span class="line">django   4.1.3  A high-level Python web framework that encourages rapid development and clean, pragmatic design.</span><br><span class="line">sqlparse 0.4.3  A non-validating SQL parser.</span><br><span class="line">tzdata   2022.6 Provider of IANA time zone data</span><br></pre></td></tr></table></figure></li>
+<li>到这一步可能会发现，项目里多了一个<code>poetry.lock</code>文件，它会存储你的主要依赖所需要的依赖结构和一些包的hash值，以保证项目环境的一致性。<br>(1)当我们拿着<code>pyproject.toml</code>移植到另一台机器，没有带上<code>poetry.lock</code>文件时，执行<code>poetry install</code>，会根据主依赖下载最新的包版本。(2)当同时拿着<code>pyproject.toml</code>和<code>poetry.lock</code>移植到另一台机器，执行<code>poetry install</code>，会根据<code>poetry.lock</code>内的值，下载创建项目时的包版本，即使在开发过程中所依赖的包有更新，也不会导致项目冲突。</li>
+<li>使用<code>poetry show -t</code>可以详细的看到，各主依赖的依赖关系</li>
+<li>这样明确的依赖关系会使管理包非常的方便，不会出现卸载不干净的情况</li>
+<li>使用<code>poetry remove pkg_name</code>卸载包时，会将此包的依赖一同卸载。</li>
+</ul>
+<p><b>干净、漂亮！</b></p>
+<h2 id="5-运行python脚本"><a href="#5-运行python脚本" class="headerlink" title="5.运行python脚本"></a>5.运行python脚本</h2><ul>
+<li>你并不需要激活环境来运行python脚本，使用<code>poetry run python xxxxx</code>即可运行自己的python文件，poetry会自动查找项目中的虚拟环境。</li>
+<li>也可以使用<code>poetry shell</code>激活一个环境来运行我们的python脚本</li>
+</ul>
+<h2 id="6-自定义命令"><a href="#6-自定义命令" class="headerlink" title="6.自定义命令"></a>6.自定义命令</h2><ul>
+<li>在<code>pyproject.toml</code>文件中可以添加自定义命令，从而通过<code>poetry run</code>来快速执行</li>
+<li>如：添加一个flask的快速启动命令</li>
+<li>命名格式为：<code>命令名称 = &quot;包名.模块名：模块中的函数或方法</code><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[tool.poetry.scripts]</span><br><span class="line">my-flask &#x3D; &quot;newproject.app:main&quot;</span><br></pre></td></tr></table></figure>
+对应项目启动入口点为：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">from flask import Flask</span><br><span class="line"></span><br><span class="line">app &#x3D; Flask(__name__)</span><br><span class="line"></span><br><span class="line">@app.route(&#39;&#x2F;&#39;)</span><br><span class="line">def Hello():</span><br><span class="line">    return &quot;start success&quot;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def main():</span><br><span class="line">    app.run()</span><br></pre></td></tr></table></figure>
+<h2 id="7-环境管理"><a href="#7-环境管理" class="headerlink" title="7.环境管理"></a>7.环境管理</h2></li>
+<li>默认情况下，poetry将尝试使用当前激活的python版本为当前项目创建虚拟环境<br>运行<code>poetry env info</code>可以显示当前的环境信息<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">Virtualenv</span><br><span class="line">Python:         3.9.11</span><br><span class="line">Implementation: CPython</span><br><span class="line">Path:           D:\2021_practice\syncer\venv</span><br><span class="line">Executable:     D:\2021_practice\syncer\venv\Scripts\python.exe</span><br><span class="line">Valid:          True</span><br><span class="line"></span><br><span class="line">System</span><br><span class="line">Platform:   win32</span><br><span class="line">OS:         nt</span><br><span class="line">Python:     3.9.11</span><br><span class="line">Path:       C:\Users\Admin\AppData\Local\Programs\Python\Python39</span><br><span class="line">Executable: C:\Users\Admin\AppData\Local\Programs\Python\Python39\python.exe</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+如果想删除现有的虚拟环境，可以使用如下命令：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">poetry env remove</span><br></pre></td></tr></table></figure>
+将环境安装在项目目录时，直接删除<code>.venv</code>目录即可<h2 id="8-与poetry相关的其他一些命令"><a href="#8-与poetry相关的其他一些命令" class="headerlink" title="8.与poetry相关的其他一些命令"></a>8.与poetry相关的其他一些命令</h2></li>
+<li><code>poetry self update</code>更新poetry到最新版本</li>
+<li><code>poetry update pkg_name</code> 更新项目内的某个包</li>
+<li><code>poetry publish</code>将包发布到pypi</li>
+<li><code>poetry lock</code>锁定依赖项</li>
+<li><code>poetry search pkg_name</code>在远程索引上搜索包</li>
+<li><code>poetry check</code> 验证<code>pyproject.toml</code>文件的结构，并在出现任何错误时返回详细的报告<br>  filterset_fields = [‘title’, ‘status’]<br>```</li>
+</ul>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <div class="declare">
+      <ul class="post-copyright">
+        <li>
+          <i class="ri-copyright-line"></i>
+          <strong>版权声明： </strong>
+          
+          本博客所有文章除特别声明外，著作权归作者所有。转载请注明出处！
+          
+        </li>
+      </ul>
+    </div>
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://twilight2017.github.io/2022/11/08/Poetry%E7%A7%91%E5%AD%A6%E7%AE%A1%E7%90%86Python%E8%99%9A%E6%8B%9F%E7%8E%AF%E5%A2%83-Poetry/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/python/" rel="tag">python</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%8A%80%E6%9C%AF/" rel="tag">技术</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+    
+      <a href="/2022/11/01/Django%20REST%20Framework(DRF)%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">Django REST Framework(DRF)学习笔记</div>
+      </a>
+    
+  </nav>
+
+   
+<!-- valine评论 -->
+<div id="vcomments-box">
+  <div id="vcomments"></div>
+</div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js"></script>
+<script>
+  new Valine({
+    el: "#vcomments",
+    app_id: "",
+    app_key: "",
+    path: window.location.pathname,
+    avatar: "monsterid",
+    placeholder: "给我的文章加点评论吧~",
+    recordIP: true,
+  });
+  const infoEle = document.querySelector("#vcomments .info");
+  if (infoEle && infoEle.childNodes && infoEle.childNodes.length > 0) {
+    infoEle.childNodes.forEach(function (item) {
+      item.parentNode.removeChild(item);
+    });
+  }
+</script>
+<style>
+  #vcomments-box {
+    padding: 5px 30px;
+  }
+
+  @media screen and (max-width: 800px) {
+    #vcomments-box {
+      padding: 5px 0px;
+    }
+  }
+
+  #vcomments-box #vcomments {
+    background-color: #fff;
+  }
+
+  .v .vlist .vcard .vh {
+    padding-right: 20px;
+  }
+
+  .v .vlist .vcard {
+    padding-left: 10px;
+  }
+</style>
+
+ 
+   
+     
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2015-2022
+        <i class="ri-heart-fill heart_icon"></i> twilight2017
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        
+        由 <a href="https://hexo.io" target="_blank">Hexo</a> 强力驱动
+        <span class="division">|</span>
+        主题 - <a href="https://github.com/Shen-Yu/hexo-theme-ayer" target="_blank">Ayer</a>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></s>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>
+      <div class="float_btns">
+        <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+      </div>
+    </main>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="瑟兰迪尔"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E6%8A%80%E6%9C%AF">技术</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E8%AF%BB%E4%B9%A6">读书</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/travels">旅行</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E9%9A%8F%E7%AC%94">随笔</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/friends">友链</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/about">关于我</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <script>
+      if (window.matchMedia("(max-width: 768px)").matches) {
+        document.querySelector('.content').classList.remove('on');
+        document.querySelector('.sidebar').classList.remove('on');
+      }
+    </script>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="https://cdn.jsdelivr.net/gh/Shen-Yu/cdn/img/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="https://cdn.jsdelivr.net/gh/Shen-Yu/cdn/img/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-2.0.3.min.js"></script>
+
+
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+
+
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: '.tocbot',
+    contentSelector: '.article-entry',
+    headingSelector: 'h1, h2, h3, h4, h5, h6',
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: 'main',
+    positionFixedSelector: '.tocbot',
+    positionFixedClass: 'is-position-fixed',
+    fixedSidebarOffset: 'auto'
+  });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.css">
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css">
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script>
+
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+
+
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+
+
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+
+
+<link rel="stylesheet" href="/css/clipboard.css">
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+
+
+<!-- CanvasBackground -->
+
+
+    
+  </div>
+</body>
+
+</html>

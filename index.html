@@ -141,6 +141,116 @@
     
     
     <article
+  id="post-Poetry科学管理Python虚拟环境-Poetry"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2022/11/08/Poetry%E7%A7%91%E5%AD%A6%E7%AE%A1%E7%90%86Python%E8%99%9A%E6%8B%9F%E7%8E%AF%E5%A2%83-Poetry/"
+    >Poetry科学管理Python虚拟环境-Poetry</a> 
+</h2>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2022/11/08/Poetry%E7%A7%91%E5%AD%A6%E7%AE%A1%E7%90%86Python%E8%99%9A%E6%8B%9F%E7%8E%AF%E5%A2%83-Poetry/" class="article-date">
+  <time datetime="2022-11-08T03:49:52.000Z" itemprop="datePublished">2022-11-08</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+  </div>
+   
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="Poetry科学管理Python虚拟环境-Poetry"><a href="#Poetry科学管理Python虚拟环境-Poetry" class="headerlink" title="Poetry科学管理Python虚拟环境-Poetry"></a>Poetry科学管理Python虚拟环境-Poetry</h1><h2 id="1-Poetry简介"><a href="#1-Poetry简介" class="headerlink" title="1.Poetry简介"></a>1.Poetry简介</h2><blockquote>
+<p>&emsp;&emsp;前言：最早使用的python虚拟环境管理方式是使用<code>pipenv</code>，来创建项目的特有python环境。但是，<code>pipenv</code>在实际使用时有：处理速度极慢，且在官方github上被提出了众多Bug，导致了一些不可描述的问题</br><br>&emsp;&emsp;虽然<code>pipenv</code>小火了一把，但由于被提出了糟糕的设计和使用体验。这篇文章介绍另一个python包管理工具<code>poetry</code>，使用它来创建我们的隔离环境。</br><br>&emsp;&emsp;<code>Poetry自带PYPI默认发布库</code>，可以直接将自己的包发布在pypi上。<code>poetry</code>的更新非常活跃。</p>
+</blockquote>
+<h2 id="2-安装与使用"><a href="#2-安装与使用" class="headerlink" title="2.安装与使用"></a>2.安装与使用</h2><p>windows 10系统使用如下命令即可进行一键安装：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;python-poetry&#x2F;poetry&#x2F;master&#x2F;get-poetry.py | python</span><br></pre></td></tr></table></figure>
+<p>linux系统使用如下命令进行一键安装：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -sSL https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;python-poetry&#x2F;poetry&#x2F;master&#x2F;get-poetry.py | python</span><br></pre></td></tr></table></figure>
+<p>使用如下命令验证安装是否成功：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">poetry --version</span><br></pre></td></tr></table></figure>
+<h2 id="3-基本使用"><a href="#3-基本使用" class="headerlink" title="3.基本使用"></a>3.基本使用</h2><h5 id="3-1最新添加的poetry-new命令可用于一键创建项目目录"><a href="#3-1最新添加的poetry-new命令可用于一键创建项目目录" class="headerlink" title="3.1最新添加的poetry new命令可用于一键创建项目目录"></a>3.1最新添加的<code>poetry new</code>命令可用于一键创建项目目录</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">poetry new newproject</span><br></pre></td></tr></table></figure>
+<p>创建的项目目录包括：</p>
+<ul>
+<li>newproject</li>
+<li>tests</li>
+<li>pyproject.toml<br>项目包含主目录、测试目录，最重要的是pyproject.toml文件，它包含了环境的依赖和配置<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">[tool.poetry]</span><br><span class="line">name &#x3D; &quot;newproject&quot; # 项目名</span><br><span class="line">version &#x3D; &quot;0.1.0&quot; # 项目版本</span><br><span class="line">description &#x3D; &quot;&quot; # 项目描述</span><br><span class="line">authors &#x3D; [&quot;&quot;] # 作者信息</span><br><span class="line"></span><br><span class="line">[tool.poetry.dependencies]</span><br><span class="line">python &#x3D; &quot;^3.8&quot; # 依赖包</span><br><span class="line"></span><br><span class="line">[tool.poetry.dev-dependencies]</span><br><span class="line">pytest &#x3D; &quot;^5.2&quot; # 开发环境依赖包</span><br><span class="line"></span><br><span class="line">[build-system]</span><br><span class="line">requires &#x3D; [&quot;poetry&gt;&#x3D;0.12&quot;]</span><br><span class="line">build-backend &#x3D; &quot;poetry.masonry.api&quot;</span><br></pre></td></tr></table></figure>
+这时，仅仅是创建了项目目录，python环境并没有被创建<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">poetry config --list</span><br></pre></td></tr></table></figure>
+使用该条命令来查看基础配置：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">cache-dir &#x3D; &quot;C:\\Users\\Admin\\AppData\\Local\\pypoetry\\Cache&quot;</span><br><span class="line">experimental.new-installer &#x3D; true</span><br><span class="line">experimental.system-git-client &#x3D; false</span><br><span class="line">installer.max-workers &#x3D; null</span><br><span class="line">installer.no-binary &#x3D; null</span><br><span class="line">installer.parallel &#x3D; true</span><br><span class="line">virtualenvs.create &#x3D; true</span><br><span class="line">virtualenvs.in-project &#x3D; null</span><br><span class="line">virtualenvs.options.always-copy &#x3D; false</span><br><span class="line">virtualenvs.options.no-pip &#x3D; false</span><br><span class="line">virtualenvs.options.no-setuptools &#x3D; false</span><br><span class="line">virtualenvs.options.system-site-packages &#x3D; false</span><br><span class="line">virtualenvs.path &#x3D; &quot;&#123;cache-dir&#125;\\virtualenvs&quot;  # C:\Users\Admin\AppData\Local\pypoetry\Cache\virtualenvs</span><br><span class="line">virtualenvs.prefer-active-python &#x3D; false</span><br><span class="line">virtualenvs.prompt &#x3D; &quot;&#123;project_name&#125;-py&#123;python_version&#125;&quot;</span><br></pre></td></tr></table></figure></li>
+<li>cache-dir：缓存目录(之后下载的包缓存，如果其他项目使用相同的包就不会重复下载)</li>
+<li>repositories.foo.url：自定义存储库(使用pip时的安装源)</li>
+<li>virtualenvs.create：是否创建虚拟环境，即当安装新包进入此项目时，是否为此项目创建独立的虚拟环境。</li>
+<li>virtualenvs.in-project：虚拟环境是否在项目主目录内</li>
+<li>virtualenvs.path：创建环境的路径<h5 id="3-2修改安装源"><a href="#3-2修改安装源" class="headerlink" title="3.2修改安装源"></a>3.2修改安装源</h5></li>
+<li>poetry config repositories.tuna <a target="_blank" rel="noopener" href="https://pypi.tsinghua.edu.cn/simple">https://pypi.tsinghua.edu.cn/simple</a></li>
+<li>上面的是安装源别名，可以随意修改</li>
+<li>使用<code>poetry config repositories.tuna --unset</code>可以删除配置<h5 id="3-3-初始化项目"><a href="#3-3-初始化项目" class="headerlink" title="3.3 初始化项目"></a>3.3 初始化项目</h5>我们可以删除上述步骤中的<code>poetry.toml</code>文件，使用<code>poetry init</code>命令来初始化项目<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line">$ poetry init</span><br><span class="line"></span><br><span class="line"># 这个命令会创建你的.toml文件</span><br><span class="line">This command will guide you through creating your pyproject.toml config.</span><br><span class="line"># 输入项目名称、版本、描述、作者、许可，选择python版本(默认为系统里的最新版本)</span><br><span class="line"></span><br><span class="line">Package name [syncer]: </span><br><span class="line">Version [0.1.0]: </span><br><span class="line">Description []: </span><br><span class="line">Author [twilight2017 &lt;liuzixuanp@163.com&gt;, n to skip]: </span><br><span class="line">License []: </span><br><span class="line">Compatible Python versions [^3.9]: </span><br><span class="line"></span><br><span class="line">Would you like to define your main dependencies interactively? (yes&#x2F;no) [yes]</span><br><span class="line">You can specify a package in the following forms:</span><br><span class="line">  - A single name (requests): this will search for matches on PyPI</span><br><span class="line">  - A name and a constraint (requests@^2.23.0)</span><br><span class="line">  - A git url (git+https:&#x2F;&#x2F;github.com&#x2F;python-poetry&#x2F;poetry.git)</span><br><span class="line">  - A git url with a revision (git+https:&#x2F;&#x2F;github.com&#x2F;python-poetry&#x2F;poetry.git#develop)</span><br><span class="line">  - A file path (..&#x2F;my-package&#x2F;my-package.whl)</span><br><span class="line">  - A directory (..&#x2F;my-package&#x2F;)</span><br><span class="line">  - A url (https:&#x2F;&#x2F;example.com&#x2F;packages&#x2F;my-package-0.1.0.tar.gz)</span><br><span class="line"></span><br><span class="line">Package to add or search for (leave blank to skip):</span><br><span class="line"></span><br><span class="line"># 是否选择定义你的开发环境主依赖包</span><br><span class="line">Would you like to define your development dependencies interactively? (yes&#x2F;no) [yes]</span><br><span class="line">Package to add or search for (leave blank to skip):</span><br><span class="line"></span><br><span class="line">Generated file</span><br><span class="line"></span><br><span class="line">[tool.poetry]</span><br><span class="line">name &#x3D; &quot;syncer&quot;</span><br><span class="line">version &#x3D; &quot;0.1.0&quot;</span><br><span class="line">description &#x3D; &quot;&quot;</span><br><span class="line">authors &#x3D; [&quot;twilight2017 &lt;liuzixuanp@163.com&gt;&quot;]</span><br><span class="line">readme &#x3D; &quot;README.md&quot;</span><br><span class="line"></span><br><span class="line">[tool.poetry.dependencies]</span><br><span class="line">python &#x3D; &quot;^3.9&quot;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">[build-system]</span><br><span class="line">requires &#x3D; [&quot;poetry-core&quot;]</span><br><span class="line">build-backend &#x3D; &quot;poetry.core.masonry.api&quot;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Do you confirm generation? (yes&#x2F;no) [yes]</span><br></pre></td></tr></table></figure></li>
+<li>签名的是一般项目的信息填写。当选择python版本时，必须确保当前系统内有此版本</li>
+<li>接下来会让你定义主依赖包(main dependencies)，比如当前项目是拿django开发的，输入yes后可以输入django,他会将此依赖添加到[tool.poetry.dependencies]</li>
+<li>然后是定义开发环境主要依赖，比如需要添加一些测试，如pytest，会将此包依赖添加到[tool.poetry.dev-denpendencies]<h2 id="4-创建环境"><a href="#4-创建环境" class="headerlink" title="4.创建环境"></a>4.创建环境</h2></li>
+<li>做完项目初始化后，使用<code>poetry install</code>，即可以一键生成虚拟环境，执行该操作会在项目主目录下生成一个<code>.venv</code>文件夹，里面装的就是虚拟环境。</li>
+<li>当项目完成时，可以使用<code>poetry install --no-dev</code>，来创建生产环境<h5 id="4-1-添加包"><a href="#4-1-添加包" class="headerlink" title="4.1 添加包"></a>4.1 添加包</h5></li>
+<li><code>poetry add pkg_name</code>,例如： <code>poetry add flask</code><h5 id="4-2-查看项目依赖"><a href="#4-2-查看项目依赖" class="headerlink" title="4.2 查看项目依赖"></a>4.2 查看项目依赖</h5></li>
+<li>使用<code>poetry show</code>可以查看当前项目已经安装的主要包(依赖)<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ poetry show</span><br><span class="line">asgiref  3.5.2  ASGI specs, helper code, and adapters</span><br><span class="line">django   4.1.3  A high-level Python web framework that encourages rapid development and clean, pragmatic design.</span><br><span class="line">sqlparse 0.4.3  A non-validating SQL parser.</span><br><span class="line">tzdata   2022.6 Provider of IANA time zone data</span><br></pre></td></tr></table></figure></li>
+<li>到这一步可能会发现，项目里多了一个<code>poetry.lock</code>文件，它会存储你的主要依赖所需要的依赖结构和一些包的hash值，以保证项目环境的一致性。<br>(1)当我们拿着<code>pyproject.toml</code>移植到另一台机器，没有带上<code>poetry.lock</code>文件时，执行<code>poetry install</code>，会根据主依赖下载最新的包版本。(2)当同时拿着<code>pyproject.toml</code>和<code>poetry.lock</code>移植到另一台机器，执行<code>poetry install</code>，会根据<code>poetry.lock</code>内的值，下载创建项目时的包版本，即使在开发过程中所依赖的包有更新，也不会导致项目冲突。</li>
+<li>使用<code>poetry show -t</code>可以详细的看到，各主依赖的依赖关系</li>
+<li>这样明确的依赖关系会使管理包非常的方便，不会出现卸载不干净的情况</li>
+<li>使用<code>poetry remove pkg_name</code>卸载包时，会将此包的依赖一同卸载。</li>
+</ul>
+<p><b>干净、漂亮！</b></p>
+<h2 id="5-运行python脚本"><a href="#5-运行python脚本" class="headerlink" title="5.运行python脚本"></a>5.运行python脚本</h2><ul>
+<li>你并不需要激活环境来运行python脚本，使用<code>poetry run python xxxxx</code>即可运行自己的python文件，poetry会自动查找项目中的虚拟环境。</li>
+<li>也可以使用<code>poetry shell</code>激活一个环境来运行我们的python脚本</li>
+</ul>
+<h2 id="6-自定义命令"><a href="#6-自定义命令" class="headerlink" title="6.自定义命令"></a>6.自定义命令</h2><ul>
+<li>在<code>pyproject.toml</code>文件中可以添加自定义命令，从而通过<code>poetry run</code>来快速执行</li>
+<li>如：添加一个flask的快速启动命令</li>
+<li>命名格式为：<code>命令名称 = &quot;包名.模块名：模块中的函数或方法</code><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[tool.poetry.scripts]</span><br><span class="line">my-flask &#x3D; &quot;newproject.app:main&quot;</span><br></pre></td></tr></table></figure>
+对应项目启动入口点为：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">from flask import Flask</span><br><span class="line"></span><br><span class="line">app &#x3D; Flask(__name__)</span><br><span class="line"></span><br><span class="line">@app.route(&#39;&#x2F;&#39;)</span><br><span class="line">def Hello():</span><br><span class="line">    return &quot;start success&quot;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def main():</span><br><span class="line">    app.run()</span><br></pre></td></tr></table></figure>
+<h2 id="7-环境管理"><a href="#7-环境管理" class="headerlink" title="7.环境管理"></a>7.环境管理</h2></li>
+<li>默认情况下，poetry将尝试使用当前激活的python版本为当前项目创建虚拟环境<br>运行<code>poetry env info</code>可以显示当前的环境信息<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">Virtualenv</span><br><span class="line">Python:         3.9.11</span><br><span class="line">Implementation: CPython</span><br><span class="line">Path:           D:\2021_practice\syncer\venv</span><br><span class="line">Executable:     D:\2021_practice\syncer\venv\Scripts\python.exe</span><br><span class="line">Valid:          True</span><br><span class="line"></span><br><span class="line">System</span><br><span class="line">Platform:   win32</span><br><span class="line">OS:         nt</span><br><span class="line">Python:     3.9.11</span><br><span class="line">Path:       C:\Users\Admin\AppData\Local\Programs\Python\Python39</span><br><span class="line">Executable: C:\Users\Admin\AppData\Local\Programs\Python\Python39\python.exe</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+如果想删除现有的虚拟环境，可以使用如下命令：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">poetry env remove</span><br></pre></td></tr></table></figure>
+将环境安装在项目目录时，直接删除<code>.venv</code>目录即可<h2 id="8-与poetry相关的其他一些命令"><a href="#8-与poetry相关的其他一些命令" class="headerlink" title="8.与poetry相关的其他一些命令"></a>8.与poetry相关的其他一些命令</h2></li>
+<li><code>poetry self update</code>更新poetry到最新版本</li>
+<li><code>poetry update pkg_name</code> 更新项目内的某个包</li>
+<li><code>poetry publish</code>将包发布到pypi</li>
+<li><code>poetry lock</code>锁定依赖项</li>
+<li><code>poetry search pkg_name</code>在远程索引上搜索包</li>
+<li><code>poetry check</code> 验证<code>pyproject.toml</code>文件的结构，并在出现任何错误时返回详细的报告<br>  filterset_fields = [‘title’, ‘status’]<br>```</li>
+</ul>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/python/" rel="tag">python</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%8A%80%E6%9C%AF/" rel="tag">技术</a></li></ul>
+
+    </footer>
+  </div>
+
+    
+ 
+    
+</article>
+
+    
+    <article
   id="post-Django REST Framework(DRF)学习笔记"
   class="article article-type-post"
   itemscope
@@ -997,80 +1107,13 @@ version: “3”</li>
 </article>
 
     
-    <article
-  id="post-Go语言基础进阶教程(一)：bufio包"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2022/04/28/Go%E8%AF%AD%E8%A8%80%E5%9F%BA%E7%A1%80%E8%BF%9B%E9%98%B6%E6%95%99%E7%A8%8B(%E4%B8%80)%EF%BC%9Abufio%E5%8C%85/"
-    >Go语言基础进阶教程(一)：bufio包</a> 
-</h2>
- 
-
-    </header>
-     
-    <div class="article-meta">
-      <a href="/2022/04/28/Go%E8%AF%AD%E8%A8%80%E5%9F%BA%E7%A1%80%E8%BF%9B%E9%98%B6%E6%95%99%E7%A8%8B(%E4%B8%80)%EF%BC%9Abufio%E5%8C%85/" class="article-date">
-  <time datetime="2022-04-28T12:59:52.000Z" itemprop="datePublished">2022-04-28</time>
-</a> 
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
-  </div>
-   
-    </div>
-      
-    <div class="article-entry" itemprop="articleBody">
-       
-  <h2 id="1-bufio包原理"><a href="#1-bufio包原理" class="headerlink" title="1.bufio包原理"></a>1.bufio包原理</h2><h5 id="bufio是通过缓冲来提高效率的"><a href="#bufio是通过缓冲来提高效率的" class="headerlink" title="bufio是通过缓冲来提高效率的"></a>bufio是通过缓冲来提高效率的</h5><p>&emsp;&emsp;前言：io操作本身的效率并不低，低的是频繁访问本地磁盘的文件。所以bufio就提供了缓冲区（分配一块内存），读和写都先在缓冲区中进行，最后再读写文件，来降低访问本地磁盘的次数，从而提高效率。</br><br>&emsp;&emsp;缓冲区的设计是为了存储多次的写入，最后一口气把缓冲区内容写入文件。</br><br>&emsp;&emsp;bufio封装了io.Reader或io.Writer接口对象，并创建另一个也实现了该接口的对象.</br><br>&emsp;&emsp;io.Reader或io.Writer接口实现read()和write()方法，对于实现这个接口的对象都是可以使用这两个方法的。</br></p>
-<h5 id="Reader对象"><a href="#Reader对象" class="headerlink" title="Reader对象"></a>Reader对象</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; Reader implements buffering for an io.Reader object</span><br><span class="line">type Reader struct&#123;</span><br><span class="line">    buf   []byte</span><br><span class="line">    rd    io.Reader &#x2F;&#x2F;reader provided by the client</span><br><span class="line">    r, w  int</span><br><span class="line">    err   error</span><br><span class="line">    lastByte int&#x2F;&#x2F;last byte read for UnreadByte; -1 means invalid</span><br><span class="line">    lastRuneSize int &#x2F;&#x2F;size of last rune read for UnreadRune; -1 means invalid</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>读取规则如下：</br><br>bufio.Read(p []byte)相当于读取大小len(p)的内容：</p>
-<blockquote>
-<p>1.当缓存区有内容时，将缓存区内容全部填入p并清空缓存区。</br><br>2.若想要读取的内容比缓存区还要大，直接去文件读取即可。</br><br>3.当缓存区没有内容，且要读取的内容比缓存区小，缓存区从文件读取内容充满缓存区，并将p填满(此时缓存区有剩余内容)</br></p>
-</blockquote>
-<p>bufio.Writer是bufio中对io.Writer的封装：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F;After all data has been written, the client should call the Flush method to guarantee all data has been forwarded to the underlying io.Writer</span><br><span class="line">type Writer struct&#123;</span><br><span class="line">    err error</span><br><span class="line">    buf []byte</span><br><span class="line">    n int</span><br><span class="line">    wr io.Writer</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>bufio.Write(p []byte)的思路如下：</p>
-<blockquote>
-<p>1.判断buf中可用容量是否可以放下p。</br><br>2.如果能放下，直接把p拼接在buf后面，即把内容放到缓冲区。</br><br>3.如果缓冲区的容量不足以放下，且此时缓冲区是空的，直接把p写入文件即可。</br><br>4.如果缓冲区的容量不足以放下，且此时缓冲区有内容，则用p把缓冲区填满，把缓冲区所有内容写入文件，并清空缓冲区。</br><br>5.判断p的剩余内容大小是否能放入缓冲区，如果能放下，则把内容放到缓冲区。</br><br>6.如果p的剩余内容仍旧大于缓冲区，则把p的剩余内容直接写入文件。</p>
-</blockquote>
-<h5 id="b-flush-会将缓冲区内容写入文件，当所有写入完成后，因为缓存区会存储内容，所以需要手动flush-到文件"><a href="#b-flush-会将缓冲区内容写入文件，当所有写入完成后，因为缓存区会存储内容，所以需要手动flush-到文件" class="headerlink" title="b.flush()会将缓冲区内容写入文件，当所有写入完成后，因为缓存区会存储内容，所以需要手动flush()到文件"></a>b.flush()会将缓冲区内容写入文件，当所有写入完成后，因为缓存区会存储内容，所以需要手动flush()到文件</h5><h2 id="2-bufio包"><a href="#2-bufio包" class="headerlink" title="2.bufio包"></a>2.bufio包</h2><p>&emsp;&emsp;bufio包实现了有缓冲的I/O。它包装一个io.Reader或io.Writer对象，同时还提供了缓冲和一些文本I/O的帮助函数的对象。</br><br>&emsp;&emsp;bufio.Reader实现了如下接口：</br></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F;NewReaderSize将rd封装成一个带缓存的bufio.Reader对象，</span><br><span class="line">&#x2F;&#x2F;缓存大小由size指定（若小于16， 会被设置为16）</span><br><span class="line">&#x2F;&#x2F;如果rd的基类型就是由足够缓存的bufio.Reader类型，则直接将rd转换为基类型返回</span><br><span class="line">func NewReaderSize(rd io.Reader, size int) *Reader</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;NewReader相当于NewReaderSize(rd, 4096)</span><br><span class="line">func NewReader(rd io.Reader) *Reader</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;Peek返回缓存的一个切片，该切片引用缓存中前n个字节的数据，</span><br><span class="line">&#x2F;&#x2F;该操作不会将数据读出，只是引用，引用的数据在下一次读取操作之前</span><br><span class="line">&#x2F;&#x2F;是有效的，如果切片的长度小于n，则返回一个错误信息并说明原因</span><br><span class="line">&#x2F;&#x2F;如果n大于缓存的总大小，则返回ErrBufferFull</span><br><span class="line">func (b *Reader) Peek(n int)([]byte error)</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;Read从b中读出数据到p中，返回读出的字节数和遇到的错误</span><br><span class="line">&#x2F;&#x2F;如果缓存不为空，则只能读出缓存中的数据，不会从底层的io.Reader</span><br><span class="line">&#x2F;&#x2F;中读取数据，如果缓存为空，则：</span><br><span class="line">&#x2F;&#x2F;1.len(p) &gt;&#x3D;缓存大小，则跳过缓存，直接从底层io.Reader中</span><br><span class="line">&#x2F;&#x2F;读出到p中</span><br><span class="line">&#x2F;&#x2F;2.len(p)&lt;缓存大小，则先将数据从底层io.Reader中读取到缓存中，再从缓存读取到p中。</span><br><span class="line">func (b * Reader)Read(p []byte)(n int, err error)</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;Buffered返回缓存中未读取的数据的长度</span><br><span class="line">func (b *Reader)Buffered() int</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;ReadBytes功能同ReadSlice，只不过返回的是缓存的考本</span><br><span class="line">func (b *Reader)ReadBytes(delim byte)(line []byte, err error)</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;ReadString功能同ReadBytes，只不过返回的是字符串</span><br><span class="line">func (b *Reader) ReadString(delim byte) (line string, err error)</span><br></pre></td></tr></table></figure>
-<p>bufio.Write实现了如下接口：</br></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F;NewWriterSize将wr封装成一个带缓存的bufio.Writer对象，</span><br><span class="line">&#x2F;&#x2F;缓存大小由size决定（如果小于4096会被设置为4096）</span><br><span class="line">&#x2F;&#x2F;如果wr的基类型就是有足够缓存的bufio.Writer类型，则直接将</span><br><span class="line">&#x2F;&#x2F;wr转换为基类型返回</span><br><span class="line">func NewWriter(wr io.Writer, size int) *Writer</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;NewWriter相当于NewWrietrSize(wr, 4096)</span><br><span class="line">func NewWriter(wr io.Writer) *Writer</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;WriteString 功能同write</span><br><span class="line">func (b *Write) WriteString(s string) (int ,error)</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;WriteRune向b写入r的UTF-8编码，返回r的编码长度</span><br><span class="line">func (b *Write)WriteRune(r rune)(size int, err error)</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;Flush将缓存中的数据提交到底层的io.Writer中</span><br><span class="line">func (b *Writer) Flush() error</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;Available 返回缓存中未使用的空间的长度</span><br><span class="line">func (b *Writer)Available() int</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;Buffered返回缓存中未提交的数据的长度</span><br><span class="line">func (b *Writer)Buffered() int</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;Reset将b的底层Writer重新指定为w，同时丢弃缓存中的所有数据，复位</span><br><span class="line">&#x2F;&#x2F;所有标记和错误信息。相当于创建一个新的bufio.Writer</span><br><span class="line">func (b *Writer) Reset(w io.Writer)</span><br><span class="line"></span><br></pre></td></tr></table></figure> 
-      <!-- reward -->
-      
-    </div>
-    
-
-    <!-- copyright -->
-    
-    <footer class="article-footer">
-       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Go/" rel="tag">Go</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%8A%80%E6%9C%AF/" rel="tag">技术</a></li></ul>
-
-    </footer>
-  </div>
-
-    
- 
-    
-</article>
-
-    
   </article>
   
 
   
   <nav class="page-nav">
     
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">下一页</a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/">下一页</a>
   </nav>
   
 </section>
