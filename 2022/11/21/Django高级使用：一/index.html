@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+
+
+<head>
+  <meta charset="utf-8" />
+    
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>
+    Django高级使用：一 |  瑟兰迪尔
+  </title>
+  <meta name="generator" content="hexo-theme-ayer">
+  
+  <link rel="shortcut icon" href="/favicon.ico" />
+  
+  
+<link rel="stylesheet" href="/dist/main.css">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Shen-Yu/cdn/css/remixicon.min.css">
+  
+<link rel="stylesheet" href="/css/custom.css">
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+  
+  
+
+  
+
+</head>
+
+</html>
+
+<body>
+  <div id="app">
+    
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-Django高级使用：一"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  Django高级使用：一
+</h1>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2022/11/21/Django%E9%AB%98%E7%BA%A7%E4%BD%BF%E7%94%A8%EF%BC%9A%E4%B8%80/" class="article-date">
+  <time datetime="2022-11-21T13:08:52.000Z" itemprop="datePublished">2022-11-21</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">6.5k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">26 分钟</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="Django高级使用：一"><a href="#Django高级使用：一" class="headerlink" title="Django高级使用：一"></a>Django高级使用：一</h1><h2 id="一-Queryset特性及高级查询技巧"><a href="#一-Queryset特性及高级查询技巧" class="headerlink" title="一.Queryset特性及高级查询技巧"></a>一.Queryset特性及高级查询技巧</h2><blockquote>
+<p>前言：对中大型网站或Web app而言，最影响网站性能的就是数据库查询部分了。一是因为反复从数据库中读写数据很消耗时间和计算资源。二是当返回的查询数据集queryset非常大时还会占据很多的内存。本章将介绍Django下数据库接口QuerySet特性和使用技巧。</p>
+</blockquote>
+<h3 id="1-QuerySet"><a href="#1-QuerySet" class="headerlink" title="1.QuerySet"></a>1.QuerySet</h3><p>&emsp;&emsp;QuerySet是Django提供的强大的数据库接口(API)，通过它，我们才得以使用<code>filter</code>,<code>exclude</code>, <code>get</code>等方法进行数据库查询，而不需要使用原始的SQL语句与数据库进行交互。从数据库中取出来的结果一般是一个集合，这个集合就被称作是queryset</p>
+<h3 id="2-QuerySet的惰性"><a href="#2-QuerySet的惰性" class="headerlink" title="2.QuerySet的惰性"></a>2.QuerySet的惰性</h3><p>&emsp;&emsp;Django的QuerySet是惰性的，下例中的<code>article_list</code>试图从数据库查询一个标题含有Django字段的全部文章列表：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">article_list &#x3D; Article.objects.filter(title_contains&#x3D;&quot;django&quot;)</span><br></pre></td></tr></table></figure>
+<p>&emsp;&emsp;但是在定义<code>article_list</code>的时候，数据库没有执行任何查询操作。只有当我们需要对<code>article_list</code>做进一步运算时，Django才会执行相应的数据库查询。</br><br>&emsp;&emsp;这样的惰性是为了减少针对数据库的无效错误，比如查询了结果而不用是对计算资源很大的浪费。</p>
+<h3 id="3-QuerySet自带缓存"><a href="#3-QuerySet自带缓存" class="headerlink" title="3.QuerySet自带缓存"></a>3.QuerySet自带缓存</h3><p>&emsp;&emsp;当遍历<code>article_list</code>时，所有匹配的记录会从数据库中获取。这些结果会载入内存并保存在queryset的内置cache中，这样如果需要再次遍历或读取这个<code>article_list</code>，Django无需进行重复查询操作，这样减少了对数据库的查询操作，可以大大节省时间</p>
+<h3 id="4-统计查询结果数量优选count方法"><a href="#4-统计查询结果数量优选count方法" class="headerlink" title="4.统计查询结果数量优选count方法"></a>4.统计查询结果数量优选count方法</h3><p>len()与count()均能统计查询结果的数量。一般来说count更快，因为它时从数据库层面直接获取查询结果的数量，而非返回整个数据集。而len()导致了queryset的执行，需要整个queryset载入内存后才能统计其长度。当然如果queryset已经在缓存里了，使用len更快，因为无需再次和数据库打交道。</p>
+<h3 id="5-批量创建或更新数据请用bulk-create或bulk-update"><a href="#5-批量创建或更新数据请用bulk-create或bulk-update" class="headerlink" title="5.批量创建或更新数据请用bulk_create或bulk_update"></a>5.批量创建或更新数据请用bulk_create或bulk_update</h3><p>&emsp;&emsp;在Django中向数据库中插入或更新多条数据时，使用save或create方法保存一条就会执行一次SQL语句。而Django自带的<code>bulk_create</code>和<code>bulk_update</code>方法可以一次SQL添加或更新多条数据，效率会高很多。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># 内存生成多个对象实例</span><br><span class="line">articles  &#x3D; [Article(title&#x3D;&quot;title1&quot;, body&#x3D;&quot;body1&quot;), Article(title&#x3D;&quot;title2&quot;, body&#x3D;&quot;body2&quot;), Article(title&#x3D;&quot;title3&quot;, body&#x3D;&quot;body3&quot;)]</span><br><span class="line"></span><br><span class="line"># 执行一次SQL插入数据</span><br><span class="line">Article.objects.bulk_create(articles)</span><br></pre></td></tr></table></figure>
+<h3 id="6-专业地使用explain方法"><a href="#6-专业地使用explain方法" class="headerlink" title="6.专业地使用explain方法"></a>6.专业地使用explain方法</h3><p>Django 2.1中QuerySet新增了explain方法，可以统计一个查询所消耗的时间，这可以帮助程序员分析和优化查询结果</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">print(Blog.objects.filter(title&#x3D;&#39;My Blog&#39;).explain(verbose&#x3D;True))</span><br><span class="line"></span><br><span class="line">#output</span><br><span class="line">Seq Scan on public.blog  (cost&#x3D;0.00..35.50 rows&#x3D;10 width&#x3D;12) (actual time&#x3D;0.004..0.004 rows&#x3D;10 loops&#x3D;1)</span><br><span class="line">  Output: id, title</span><br><span class="line">  Filter: (blog.title &#x3D; &#39;My Blog&#39;::bpchar)</span><br><span class="line">Planning time: 0.064 ms</span><br><span class="line">Execution time: 0.058 ms</span><br></pre></td></tr></table></figure>
+<h3 id="7-总结"><a href="#7-总结" class="headerlink" title="7.总结"></a>7.总结</h3><p>Django QuerySet的惰性和缓存特性对于减少数据库访问次数非常有用。实际开发时，需要根据不同的应用场景选择合适的方法来减少数据库的访问，减少查询结果占用的内存空间从而提升网站的性能。</p>
+<h2 id="二-Django多种缓存配置方式"><a href="#二-Django多种缓存配置方式" class="headerlink" title="二.Django多种缓存配置方式"></a>二.Django多种缓存配置方式</h2><blockquote>
+<p>缓存(Cache)对于创建一个高性能的网站和提升用户体验来说是至关重要的。这一部分我们将介绍缓存Cache应用场景及工作原理，并详细介绍如何在Django中设置缓存Cache并使用它们。</p>
+</blockquote>
+<h3 id="1-缓存Cache"><a href="#1-缓存Cache" class="headerlink" title="1.缓存Cache"></a>1.缓存Cache</h3><p>&emsp;&emsp;对于中大型网站而言，使用缓存减少对数据库的访问次数是提升网站性能的关键之一。</br><br>&emsp;&emsp;Django使用缓存Cache的原因：<br>当用户请求到达Django的视图后，视图会从数据库中读取数据传递给模板进行渲染，返回给用户看到的网页。但如果用户每次请求都从数据库读取数据并进行渲染，将极大降低性能，不仅服务器压力大，而且客户端也无法及时获得响应。如果能将<b>数据库中读取的数据</b>或<b>动态生成网页</b>放到速度更快的缓存中，每次有请求过来，先检查缓存中是否有对应的资源。如果有，直接从缓存中取出来返回响应，节省读取数据和渲染数据的时间，不仅能大大提高系统性能，还能提高用户体验。</p>
+<h3 id="2-Django缓存设置"><a href="#2-Django缓存设置" class="headerlink" title="2.Django缓存设置"></a>2.Django缓存设置</h3><p>Django中提供了多种缓存方式，如果要使用缓存，需要在<code>settings.py</code>文件中进行设置，然后应用。根据缓存介质的不同，需要设置不同的缓存后台Backend。在生产环境中最常使用的缓存是Memcached和Redis。在开发环境中可以使用本地内存缓存进行测试。</p>
+<h4 id="2-1-Memcached缓存"><a href="#2-1-Memcached缓存" class="headerlink" title="2.1 Memcached缓存"></a>2.1 Memcached缓存</h4><p>Memcached是一个高性能的分布式内存对象缓存系统。是Django原生支持的最快最有效的缓存系统。Memcached的优点是速度快、属于分布式缓存，支持同时在多台服务器上运行，缺点是不支持数据持久化，服务器重启之后缓存数据就没了。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"># 本地缓存，使用localhost</span><br><span class="line">CACHES &#x3D; &#123;</span><br><span class="line">    &#39;default&#39;: &#123;</span><br><span class="line">        &#39;BACKEND&#39;: &#39;django.core.cache.backends.memcached.MemcachedCache&#39;,</span><br><span class="line">        &#39;LOCATION&#39;: &#39;127.0.0.1:11211&#39;,</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"># 使用unix soket通信</span><br><span class="line">CACHES &#x3D; &#123;</span><br><span class="line">    &#39;default&#39;: &#123;</span><br><span class="line">        &#39;BACKEND&#39;: &#39;django.core.cache.backends.memcached.MemcachedCache&#39;,</span><br><span class="line">        &#39;LOCATION&#39;: &#39;unix:&#x2F;tmp&#x2F;memcached.sock&#39;,</span><br><span class="line">    &#125;</span><br><span class="line">&#125;   </span><br><span class="line"></span><br><span class="line"># 分布式缓存，多台服务器，支持配置权重。</span><br><span class="line">CACHES &#x3D; &#123;</span><br><span class="line">    &#39;default&#39;: &#123;</span><br><span class="line">        &#39;BACKEND&#39;: &#39;django.core.cache.backends.memcached.MemcachedCache&#39;,</span><br><span class="line">        &#39;LOCATION&#39;: [</span><br><span class="line">            &#39;172.19.26.240:11211&#39;,</span><br><span class="line">            &#39;172.19.26.242:11211&#39;,</span><br><span class="line">        ]</span><br><span class="line">        # 我们也可以给缓存机器加权重，权重高的承担更多的请求，如下：</span><br><span class="line">        &#39;LOCATION&#39;: [</span><br><span class="line">            (&#39;172.19.26.240:11211&#39;,5),</span><br><span class="line">            (&#39;172.19.26.242:11211&#39;,1),</span><br><span class="line">        ]</span><br><span class="line">    &#125;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+<h4 id="2-2-Redis缓存"><a href="#2-2-Redis缓存" class="headerlink" title="2.2 Redis缓存"></a>2.2 Redis缓存</h4><p>Redis 是当今速度最快的内存型非关系型（NoSQL）型数据库。Redis不仅仅支持简单的key-value类型的数据，同时还提供list，set，zset，hash等多种数据结构的存储。与memcached相比，Redis不仅支持支持缓存数据在硬盘上的持久化，还支持master-slave模式的数据备份，有明显的优点。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">CACHES &#x3D; &#123;</span><br><span class="line">    </span><br><span class="line">    &#39;default&#39;: &#123;</span><br><span class="line">        &#39;BACKEND&#39;: &#39;django_redis.cache.RedisCache&#39;,</span><br><span class="line">        &#39;LOCATION&#39;: &#39;redis:&#x2F;&#x2F;your_host_ip:6379&#39;, # redis所在服务器或容器ip地址</span><br><span class="line">        &quot;OPTIONS&quot;: &#123;</span><br><span class="line">            &quot;CLIENT_CLASS&quot;: &quot;django_redis.client.DefaultClient&quot;,</span><br><span class="line">             &quot;PASSWORD&quot;: &quot;your_pwd&quot;, # 你设置的密码</span><br><span class="line">        &#125;,</span><br><span class="line">    &#125;,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们还可以在<code>settings.py</code>设置缓存默认过期时间</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">REDIS_TIMEOUT&#x3D;24*60*60</span><br><span class="line">CUBES_REDIS_TIMEOUT&#x3D;60*30</span><br><span class="line">NEVER_REDIS_TIMEOUT&#x3D;365*24*60*60</span><br></pre></td></tr></table></figure>
+<h3 id="3-Django权限分配"><a href="#3-Django权限分配" class="headerlink" title="3.Django权限分配"></a>3.Django权限分配</h3><h4 id="3-1-新增自定义权限"><a href="#3-1-新增自定义权限" class="headerlink" title="3.1 新增自定义权限"></a>3.1 新增自定义权限</h4><p>有时django自带的四种权限(增、删、改、查)满足不了设计的目的，这时候需要自定义权限，实现方式有以下两种：</p>
+<h5 id="1-在Model的meta属性中添加权限"><a href="#1-在Model的meta属性中添加权限" class="headerlink" title="1-在Model的meta属性中添加权限"></a>1-在Model的meta属性中添加权限</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">class Article(models.Model):</span><br><span class="line">    ...</span><br><span class="line">    class Meta:</span><br><span class="line">        permission &#x3D; (</span><br><span class="line">            (&#39;publish_artcile&#39;, &quot;Can publish aryicle&quot;)</span><br><span class="line">            (&#39;comment_article&#39;, &quot;Can comment article&quot;)</span><br><span class="line">        )</span><br></pre></td></tr></table></figure>
+<h5 id="2-使用ContentType程序化创建权限"><a href="#2-使用ContentType程序化创建权限" class="headerlink" title="2-使用ContentType程序化创建权限"></a>2-使用ContentType程序化创建权限</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">from blog.model import Article</span><br><span class="line">from django.contrib.auth.models import Permission</span><br><span class="line">from django.contrib.contentypes.models import ContentType</span><br><span class="line"></span><br><span class="line">content_type &#x3D; ContentType.objects.get_for_model(article)</span><br><span class="line">permission1 &#x3D; Permission.objects.create(</span><br><span class="line">    codename &#x3D; &quot;publish_article&quot;,</span><br><span class="line">    name&#x3D; &#39;CAn publish articles&#39;,</span><br><span class="line">    content_type &#x3D; content_type,</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">permission2 &#x3D; Permission.objects.create(</span><br><span class="line">    codename &#x3D; &#39;comment_article&#39;,</span><br><span class="line">    name &#x3D; &#39;Can comment article&#39;</span><br><span class="line">    content_type &#x3D; content_type,</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<h4 id="3-2-注意权限的缓存机制"><a href="#3-2-注意权限的缓存机制" class="headerlink" title="3.2 注意权限的缓存机制"></a>3.2 注意权限的缓存机制</h4><p>Django会缓存每个用户对象，包括其权限<code>user_permissions</code>。当我们在代码中手动改变一个用户的权限后，必须重新获取该用户对象，才能获取最新的权限</p>
+<h4 id="3-3-用户权限的验证"><a href="#3-3-用户权限的验证" class="headerlink" title="3.3 用户权限的验证"></a>3.3 用户权限的验证</h4><p>我们在分配好权限后，还需要在视图<code>views.py</code>和模板里验证用户是否具有相应的权限。</br><br>在视图中一个很好的加权限的方法是使用<code>@permission_required</code>这个装饰器。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">permission_required(perm, login_url&#x3D;None, raise_exception&#x3D;False)</span><br></pre></td></tr></table></figure>
+<p>如果在这里指定了<code>login_url</code>，用户被要求先进行登录，如果设置了<code>raise_exception=True</code>，会直接返回403无权限的错误。使用方法如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">from django.contrib.decorators import permission_required</span><br><span class="line"></span><br><span class="line">@permission_required(&#39;polls.can_vote&#39;)</span><br><span class="line">def my_view(request):</span><br><span class="line">    ...</span><br></pre></td></tr></table></figure>
+<p>如果使用基于类的视图， 而不是函数视图，需要混入<code>PermissionRequiredMixin</code>这个类：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">from django.contrib.auth.mixins import PermissionRequiredMixxin</span><br><span class="line"></span><br><span class="line">class MyView(PermissionRequiredMixin, View):</span><br><span class="line">    permission_required &#x3D; &#39;polls.can_vote&#39;</span><br><span class="line">    # Or multiple of permissions:</span><br><span class="line">    permission_required &#x3D; (&#39;polls.can_open&#39;, &#39;polls.can_edit&#39;)</span><br></pre></td></tr></table></figure>
+<h4 id="3-4-用户组"><a href="#3-4-用户组" class="headerlink" title="3.4 用户组"></a>3.4 用户组</h4><p>&emsp;&emsp;用户组(Group)和User是多对多关系。其作用在权限控制时可以批量对用户的权限进行管理和分配。当一个用户加入到一个Group中后，该User就拥有了该Group分配的所有权限。例如，如果一个用户组<code>editors</code>有权限<code>change_article</code>，那么所有属于editors组的用户都会拥有这个权限。</br><br>&emsp;&emsp;将用户添加到用户组或者给用户组添加权限，一般建议直接通过django admin进行。如果希望手动给group添加或删除权限，可以使用如下方法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">mygroup.permissions &#x3D; [permission_list]</span><br><span class="line">mygroup.permissions.add(permission1, permission2, ...)</span><br><span class="line">mygroup&#x2F;permissions.remove(permission1, permission2, ...)</span><br><span class="line">mygroup.permissions.clear()</span><br></pre></td></tr></table></figure>
+<h3 id="4-Django中间件原理及示例"><a href="#4-Django中间件原理及示例" class="headerlink" title="4.Django中间件原理及示例"></a>4.Django中间件原理及示例</h3><blockquote>
+<p>中间件(middleware)允许您在一个浏览器请求在到达Django视图之前处理它，以及在视图返回的响应到达浏览器之前处理这个响应。</p>
+</blockquote>
+<p>中间件(middleware)是一个镶嵌到Django的request(请求)/request(响应)处理机制中的一个钩子(hooks)框架，它是一个可以修改Django全局输入或输出的一个底层插件系统。</br><br>中间件常用于权限校验，限制用户请求、打印日志、改变输出内容等多种应用场景，比如：</p>
+<ul>
+<li>禁止特定ip地址的用户或未登录的用户访问我们的View视图函数。</li>
+<li>对同一ip地址单位时间内发送的请求数量做出限制</li>
+<li>在View视图函数执行前传递额外的变量或参数。</li>
+<li>在View视图函数执行前或执行后把特定信息打印到log日志</li>
+<li>在View视图函数执行后对response数据进行修改后返回给用户。 <h4 id="4-1Django自带中间件"><a href="#4-1Django自带中间件" class="headerlink" title="4.1Django自带中间件"></a>4.1Django自带中间件</h4>django的<code>settings.py</code>里的<code>MIDDLEWARE</code>列表已经注册了一些Django自带的中间件，每个中间件都负责一些特定的功能<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">MIDDLEWARE &#x3D; [</span><br><span class="line">    &#39;django.middleware.security.SecurityMiddleware&#39;,</span><br><span class="line">    &#39;django.contrib.sessions.middleware.SessionMiddleware&#39;,</span><br><span class="line">    &#39;django.middleware.common.CommonMiddleware&#39;,</span><br><span class="line">    &#39;django.middleware.csrf.CsrfViewMiddleware&#39;,</span><br><span class="line">    &#39;django.contrib.auth.middleware.AuthenticationMiddleware&#39;,</span><br><span class="line">    &#39;django.contrib.messages.middleware.MessageMiddleware&#39;,</span><br><span class="line">    &#39;django.middleware.clickjacking.XFrameOptionsMiddleware&#39;,</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+每个中间件的功能如下：</li>
+<li><code>SecurityMiddleware</code>：为request/response提供了几种安全改进</li>
+<li><code>SessionMiddleware</code>：开启session会话支持</li>
+<li><code>CommonMiddleware</code>：基于APPEND_SLASH和PREPEND_WWW的设置来重写URL，如果APPEND_SLASH设为True，并且初始URL 没有以斜线结尾以及在URLconf 中没找到对应定义，这时形成一个斜线结尾的新URL；</li>
+<li><code>CsrfViewMiddleware</code>：添加跨站点请求伪造的保护，通过向POST表单添加一个隐藏的表单字段，并检查请求中是否有正确的值。</li>
+<li><code>AuthenticationMiddleware</code>：在视图函数执行前向每个接收到的user对象添加HttpRequest属性，表示当前登录的用户，无它用不了request.user</li>
+<li><code>MessageMiddleware</code>：开启基于Cookie和会话的消息支持。</li>
+<li><code>XFrameOptionMiddleware</code>:对点击劫持的保护<h2 id="二-Django权限详解"><a href="#二-Django权限详解" class="headerlink" title="二.Django权限详解"></a>二.Django权限详解</h2><blockquote>
+<p>前言：Django实际使用场景下，常常需要对用户的权限进行管理和控制。Django自带的权限机制(permissions)与用户组(group)可以让我们很方便地对用户权限进行管理。在这一部分将介绍使用<code>Django-guardian</code>实现对象级别的权限管理</p>
+</blockquote>
+<h3 id="1-Django-Admin中的权限分配"><a href="#1-Django-Admin中的权限分配" class="headerlink" title="1.Django Admin中的权限分配"></a>1.Django Admin中的权限分配</h3>&emsp;&emsp;Django中的用户权限分配，主要通过Django自带的Admin界面进行维护的。Django的权限permission本质是<code>django.contrib.auth</code>中的一个模型，其与User的<code>user_permissions</code>字段是多对多的关系。当我们在<code>INSTALLED_APP</code>里添加好auth应用之后，Django就会为每一个你安装的app中的模型(Model)自动创建4个可选的权限：view, add, change和delete。在Django Admin后台中我们可以将这些权限分配给不同的用户。<h4 id="1-1-查看用户的权限"><a href="#1-1-查看用户的权限" class="headerlink" title="1.1.查看用户的权限"></a>1.1.查看用户的权限</h4>&emsp;&emsp;权限名一般由app名(app label)，权限动作和模型名组成。以blog应用为例，Django为Article模型自动创建的4个可选权限名分别为：</li>
+<li>查看文章(view)： blog.view_article</li>
+<li>创建文章(add): blog.add_article</li>
+<li>更改文章(change): blog.change_article</li>
+<li>删除文章(delete): blog.delete_article<br>在前例中，我们已经通过Admin给用户A(user_A)分配了创建文章和修改文章的权限，现在通过以下命令来查询用户是否已经拥有相应权限：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">user_A.has_perm(&#39;blog.add_article&#39;)</span><br><span class="line">user_A.has_perm(&#39;blog.change_article&#39;)</span><br></pre></td></tr></table></figure>
+两行代码都应该返回True。</br><br>&emsp;&emsp;如果我们要查看某个用户所在用户组的权限或某个用户的所有权限(包括从用户组获得的权限)，我们可以使用<code>get_group_permissions()</code>和<code>get_all_permissions()</code>方法。<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">user_A.get_group_permissions()</span><br><span class="line">user_A.get_all_permissions()</span><br></pre></td></tr></table></figure>
+<h4 id="2-新增自定义权限"><a href="#2-新增自定义权限" class="headerlink" title="2.新增自定义权限"></a>2.新增自定义权限</h4>有时django创建的4种可选权限满足不了我们的需要，这时需要进行自定义权限。<h5 id="2-1-方法1：在Model的meta属性中添加权限"><a href="#2-1-方法1：在Model的meta属性中添加权限" class="headerlink" title="2.1 方法1：在Model的meta属性中添加权限"></a>2.1 方法1：在Model的meta属性中添加权限</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">class Article(model.Model):</span><br><span class="line">    ...</span><br><span class="line">    class Meta:</span><br><span class="line">        permisions &#x3D; (</span><br><span class="line">            (&#39;publish_article&#39;, &quot;Can publish article&quot;),</span><br><span class="line">            (&#39;comment_article&#39;, &quot;Can comment article&quot;),</span><br><span class="line">        )</span><br></pre></td></tr></table></figure>
+<h5 id="2-2-方法2：使用ContentType程序化创建权限"><a href="#2-2-方法2：使用ContentType程序化创建权限" class="headerlink" title="2.2. 方法2：使用ContentType程序化创建权限"></a>2.2. 方法2：使用ContentType程序化创建权限</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">from blog.models import Article</span><br><span class="line">from django.contrib.auth.models import Permission</span><br><span class="line">from django.contrib.contenttypes.models import ContentType</span><br><span class="line"></span><br><span class="line">content_type &#x3D; ContentType.objects.get_for_model(article)</span><br><span class="line">permission1 &#x3D; Permission.objetcs.create(</span><br><span class="line">    codename&#x3D;&#39;publish_article&#39;,</span><br><span class="line">    name &#x3D; &#39;Cna publish articles&#39;,</span><br><span class="line">    content_type&#x3D;content_type,</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">permission1 &#x3D; Permission.objetcs.create(</span><br><span class="line">    codename&#x3D;&#39;comment_article&#39;,</span><br><span class="line">    name &#x3D; &#39;Cna comment articles&#39;,</span><br><span class="line">    content_type&#x3D;content_type,</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+当使用<code>python manage.py migrate</code>命令后，Django Admin的<code>user permissions</code>栏又多了两个可选项。</br><br>当然了，还可以通过代码手动给用户分配权限<h5 id="1-使用user-permissions-add方法增加权限"><a href="#1-使用user-permissions-add方法增加权限" class="headerlink" title="(1)使用user_permissions.add方法增加权限"></a>(1)使用user_permissions.add方法增加权限</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">myuser.user_permissions.add(permission1, permission2, ...)</span><br></pre></td></tr></table></figure>
+<h5 id="2-通过用户组-group-给用户增加权限"><a href="#2-通过用户组-group-给用户增加权限" class="headerlink" title="(2)通过用户组(group)给用户增加权限"></a>(2)通过用户组(group)给用户增加权限</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mygroup.permissions.add(permission1, permission2, ...)</span><br></pre></td></tr></table></figure>
+<h5 id="3-通过remove或者clear方法移除权限"><a href="#3-通过remove或者clear方法移除权限" class="headerlink" title="(3)通过remove或者clear方法移除权限"></a>(3)通过remove或者clear方法移除权限</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">myuser.user_permissions.remove(permissions1, permission2, ...)</span><br><span class="line">myuser.user_permissions.clear()</span><br></pre></td></tr></table></figure>
+<h5 id="2-3-注意权限的缓存机制"><a href="#2-3-注意权限的缓存机制" class="headerlink" title="2.3 注意权限的缓存机制"></a>2.3 注意权限的缓存机制</h5>Django会缓存每个用户对象，包括其权限<code>user_permissions</code>。当我们在代码中手动改变一个用户的权限后，你必须重新获取该用户对象，才能获取最新的权限，比如下例在代码中给用户手动增加了<code>change_blogpost</code>的权限，如果不重新载入用户，那么将显示用户还是没有<code>change_blogpost</code>的权限<h4 id="3-用户权限的验证"><a href="#3-用户权限的验证" class="headerlink" title="3.用户权限的验证"></a>3.用户权限的验证</h4><blockquote>
+<p>我们需要在视图views.py和模板里验证用户是否具有相应的权限</p>
+</blockquote>
+<h5 id="3-1视图中验证"><a href="#3-1视图中验证" class="headerlink" title="3.1视图中验证"></a>3.1视图中验证</h5>在视图中我们当然可以使用<code>user.has_perm</code>方法对一个用户的权限进行直接验证。当然一个更好的方法是使用<code>@permission_required</code>这个装饰器<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">permission_required(perm, login_url&#x3D;None, raise_exception&#x3D;False)</span><br></pre></td></tr></table></figure>
+如果我们指定了<code>login_url</code>，用户会被要求先登录。如果你设置了<code>raise_exception=True</code>，会直接返回403无权限的错误。具体使用方法如下所示：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">from django.contrib.auth.decorators import permission_required</span><br><span class="line"></span><br><span class="line">@permission_required(&#39;polls.can_vote&#39;)</span><br><span class="line">def my_view(request):</span><br><span class="line">    ...</span><br></pre></td></tr></table></figure>
+当然了，如果我们使用基于类的视图(Class Based View)，而不是函数视图，则需要混入<code>PermissionRequiredMixin</code>这个类或使用<code>method_decorator</code>装饰器，如下所示：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">from django.contrib.auth.mixin import PermissionRequiredMixin</span><br><span class="line"></span><br><span class="line">class MyView(PermissionRequiredMixin, view):</span><br><span class="line">    permission_required &#x3D; &#39;polls.can_vote&#39;</span><br><span class="line"></span><br><span class="line">from django.utils.decorators import method_decorator</span><br><span class="line">from django.core.urlresolvers import reverse_lazy</span><br><span class="line">from django.contrib.auth.decorators import user_passes_test</span><br><span class="line"></span><br><span class="line">@method_decorator(user_passes_test(lambda u: Group.objects.get(name&#x3D;&#39;admin&#39;) in u.groups.all()), name&#x3D;&#39;dispatch&#39;)</span><br><span class="line">class ItemDelete(DeleteView):</span><br><span class="line">    model&#x3D;Item</span><br><span class="line">    success_url &#x3D; reverse_lazy(&#39;items:index&#39;)</span><br></pre></td></tr></table></figure>
+<h3 id="2-Django自带的权限机制的不足"><a href="#2-Django自带的权限机制的不足" class="headerlink" title="2.Django自带的权限机制的不足"></a>2.Django自带的权限机制的不足</h3><blockquote>
+<p>Django自带的权限机制是针对模型的，如果一个用户对Article模型有change的权限。那么该用户获得对所有文章对象进行修改的权限。如果我们希望实现对单个文章对象的权限管理，我们需要借助第三方库<code>django-guardian</code></p>
+</blockquote>
+<h4 id="2-1-Django-guardian的使用"><a href="#2-1-Django-guardian的使用" class="headerlink" title="2.1 Django-guardian的使用"></a>2.1 Django-guardian的使用</h4>使用pip进行基础安装<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install django-guardian</span><br></pre></td></tr></table></figure>
+安装完成后，我们可以将<code>django-guardian</code>加入到我们的项目中。首先在<code>settings</code>里将guardian加到<code>INSTALLED_APPS</code>，同时加入身份验证后端的<code>AUTHENTICATION_BAKENDS</code>:<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">INSTALLED_APPS &#x3D; (</span><br><span class="line">   # ...</span><br><span class="line">   &#39;guardian&#39;</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+以及<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">AUTHENTICATION_BACKENDS &#x3D; (</span><br><span class="line">    &#39;django.contrib.auth.bakends.ModelBackend&#39;,</span><br><span class="line">    &#39;guardian.backends.ObjectPermissionBackend&#39;</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+一旦我们将<code>django-guardian</code>配置进项目，调用migrate命令会生成一个匿名用户的实例，在数据库中也会创建相应的条目。<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">request.user.is_anonymous &#x3D; True</span><br></pre></td></tr></table></figure>
+<h4 id="2-2-权限分配"><a href="#2-2-权限分配" class="headerlink" title="2.2 权限分配"></a>2.2 权限分配</h4>如下task模型，我们自定义了一条<code>assign_task</code>的权限：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">class Task(model.Model):</span><br><span class="line">    summary &#x3D; model.CharField(max_length&#x3D;32)</span><br><span class="line">    content &#x3D; model.TextField()</span><br><span class="line">    reported_by &#x3D; models.ForeignKey(User, on_delete&#x3D;models.CASCADE)</span><br><span class="line">    created_at &#x3D; models.DateTimeField(auto_now_add&#x3D;True)</span><br><span class="line">    </span><br><span class="line">    class Meta:</span><br><span class="line">        permissions &#x3D; (</span><br><span class="line">            (&#39;assign_task&#39;, &#39;Assign task&#39;),</span><br><span class="line">        )</span><br></pre></td></tr></table></figure>
+为用户分配权限<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"># 创建用户</span><br><span class="line">&gt;&gt;&gt; from django.contrib.auth.models import User</span><br><span class="line">&gt;&gt;&gt; boss &#x3D; User.objects.create(username&#x3D;&#39;boss&#39;)</span><br><span class="line">&gt;&gt;&gt; joe &#x3D; User.objects.create(username&#x3D;&#39;joe&#39;)</span><br><span class="line">&gt;&gt;&gt; task &#x3D; Task.objects.create(summary&#x3D;&#39;Some job&#39;, content&#x3D;&#39;&#39;, reported_by&#x3D;boss)</span><br><span class="line">&gt;&gt;&gt; joe.has_perm(&#39;assign_task&#39;, task)</span><br><span class="line"></span><br><span class="line"># 使用guardian的assign_perm方法新增tasks对象的权限</span><br><span class="line">&gt;&gt;&gt; from guardian.shortcuts import assign_perm</span><br><span class="line">&gt;&gt;&gt; assign_perm(&#39;assign_task&#39;, joe, task)</span><br><span class="line">&gt;&gt;&gt; joe.has_perm(&#39;assign_task&#39;, task)</span><br></pre></td></tr></table></figure>
+为用户组分配权限，同样使用<code>assign_perm</code>方法即可<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; from django.contrib.auth.models import Group</span><br><span class="line">&gt;&gt;&gt; group &#x3D; Group.objects.create(name&#x3D;&#39;employees&#39;)</span><br><span class="line">&gt;&gt;&gt; assign_perm(&#39;change_task&#39;, group, task)</span><br><span class="line">&gt;&gt;&gt; joe.has_perm(&#39;change_task&#39;, task)</span><br><span class="line"># well, joe is not yet within an employee&#39;s group</span><br><span class="line">&gt;&gt;&gt; joe.groups.add(group)</span><br><span class="line">&gt;&gt;&gt; joe.has_perm(&#39;change_task&#39;, task)</span><br></pre></td></tr></table></figure>
+删除权限：使用<code>remove_perm</code>方法即可删除一个用户或用户组的权限<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; from guardian.shortcuts import remove_perm</span><br><span class="line">&gt;&gt;&gt; remove_perm(&#39;change_site&#39;, joe, site)</span><br><span class="line">&gt;&gt;&gt; joe&#x3D;User.objects.get(username&#x3D;&#39;joe&#39;)</span><br><span class="line">&gt;&gt;&gt; joe.has_perm(&#39;change_site&#39;, site)</span><br></pre></td></tr></table></figure>
+权限验证<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># 分配对象权限前</span><br><span class="line">&gt;&gt;&gt; site &#x3D; Site.objects.get_current()</span><br><span class="line">&gt;&gt;&gt; joe.has_perm(&#39;sites.change_site&#39;, site)</span><br><span class="line"></span><br><span class="line"># 分配对象权限后</span><br><span class="line">&gt;&gt;&gt; from guardian.shortcuts import assign_perm</span><br><span class="line">&gt;&gt;&gt; assign_perm(&#39;sites.change_site&#39;, joe, site)</span><br><span class="line">&lt;UserObjectPermission: example.com | joe | change_site&gt;</span><br></pre></td></tr></table></figure>
+GET_OBJECTS_FOR_USER方法,该方法可以获取用户具有权限操作的对象列表<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">from guardian.shortcuts import get_objects_for_user</span><br><span class="line"></span><br><span class="line">def user_dashboard(request, template_name&#x3D;&#39;projects&#x2F;dashboard.html&#39;):</span><br><span class="line">    projects &#x3D; get_objects_for_user(request.user, &#39;projects.view_project&#39;)</span><br></pre></td></tr></table></figure>
+OBJECTPERMISSIONCHECKER,该方法可以缓存用户对一个对象的全部权限，减少数据库查询次数。<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; from guardian.core import ObjectPermissionChecker</span><br><span class="line">&gt;&gt;&gt; checker &#x3D; ObjectPermissionChecker(joe) # 检查joe的对象权限并缓存</span><br><span class="line">&gt;&gt;&gt; checker.has_perm(&#39;change_site&#39;, site)</span><br><span class="line"># 在缓存中查询，无需再次读取数据库</span><br><span class="line">&gt;&gt;&gt; checker.has_perm(&#39;add_site&#39;, site)</span><br></pre></td></tr></table></figure>
+使用标准的<code>permission_required</code>的装饰器不能用来检查对象权限，guardian提供了自己的装饰器<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; from guardian.decorators import permission_required_or_403</span><br><span class="line">&gt;&gt;&gt; from django.http import HttpResponse</span><br><span class="line">&gt;&gt;&gt; @permission_required_or_403(&#39;auth.change_group&#39;,</span><br><span class="line">&gt;&gt;&gt;     (Group, &#39;name&#39;, &#39;group_name&#39;))</span><br><span class="line">&gt;&gt;&gt; def edit_group(request, group_name):</span><br><span class="line">&gt;&gt;&gt;     return HttpResponse(&#39;some form&#39;)</span><br></pre></td></tr></table></figure>
+<h3 id="三-中间件原理及示例"><a href="#三-中间件原理及示例" class="headerlink" title="三.中间件原理及示例"></a>三.中间件原理及示例</h3><blockquote>
+<p>前言：中间件(middleware)允许在一个浏览器的请求在到达Django视图之前处理它，以及在视图返回的响应到达浏览器之前处理这个响应。这部分分析Django中间件的工作原理和应用场景，介绍如何自定义中间件并提供一些示例。</p>
+</blockquote>
+<h4 id="1-中间件及其应用场景"><a href="#1-中间件及其应用场景" class="headerlink" title="1.中间件及其应用场景"></a>1.中间件及其应用场景</h4><blockquote>
+<p>中间件(middleware)是一个镶嵌到Django的request(请求)/response(响应)处理机制中的一个钩子(hooks)框架，它是一个可以修改Django全局输入或输出的一个底层插件系统。</br><br>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;–Django官网中对于中间件的介绍</p>
+</blockquote>
+</li>
+</ul>
+<h5 id="1-1-Django的request-response处理机制"><a href="#1-1-Django的request-response处理机制" class="headerlink" title="1.1 Django的request/response处理机制"></a>1.1 Django的request/response处理机制</h5><p>&emsp;&emsp;HTTP Web服务器工作原理一般是接收用户发来的请求(request)，然后给出响应(response)。Django的工作原理一般是接收request请求及其参数，交由视图(View)处理。然后给出它的响应(response)：渲染过的html文件或者json格式的数据。在实际工作过程中，Django并不是接收到request对象之后就马上交给视图函数或者类处理，也不是在view执行后立马把response返回给用户。一个请求在到达视图View处理前需要先经过一层层的中间件处理，经过View处理后的响应也要经过一层层的中间件处理才能返回给用户。<br>&emsp;&emsp;中间件(Middleware)在整个Django的request/response处理机制中的角色如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">HttpRequest -&gt; Middleware -&gt; View -&gt; Middleware -&gt; HttpResponse</span><br></pre></td></tr></table></figure>
+<p>中间件常用于权限校验，限制用户请求、打印日志、改变输出内容等多种应用场景，比如：</p>
+<ul>
+<li>禁止特定IP地址的用户或未登录的用户访问我们的View视图函数</li>
+<li>对同一IP地址单位时间内发送的请求数量做出限制</li>
+<li>在View视图函数执行前或执行后把特定信息打印到log日志</li>
+<li>在View视图函数执行后对reponse数据进行修改后返回给用户</li>
+</ul>
+<p>注意：装饰器也常用于用户校验，但与装饰器不同，中间件对Django的输入或输出的改变是全局的。装饰器比如<code>@login_required</code>仅作用于单个视图函数。如果我们希望全站只有登录用户才能访问，中间件会是一个更好的选择。</p>
+<h5 id="1-2-Django自带中间件"><a href="#1-2-Django自带中间件" class="headerlink" title="1.2 Django自带中间件"></a>1.2 Django自带中间件</h5><p>当创建一个新的Django项目时，<code>settings.py</code>里的<code>MIDDLEWARE</code>列表已经注册了一些Django自带的中间件，每个中间件都负责特定的功能。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">MIDDLEWARE &#x3D; [</span><br><span class="line">    &#39;django.middleware.security.SecurityMiddleware&#39;,</span><br><span class="line">    &#39;django.contrib.sessions.middleware.SessionMiddleware&#39;,</span><br><span class="line">    &#39;django.middleware.common.CommonMiddleware&#39;,</span><br><span class="line">    &#39;django.middleware.csrf.CsrfViewMiddleware&#39;</span><br><span class="line">    &#39;django.contrib.auth.middleware.AuthenticationMiddleware&#39;,</span><br><span class="line">    &#39;django.contrib.messages.middleware.MessageMiddleware&#39;,</span><br><span class="line">    &#39;django.middleware.clickjacking.XFrameOptionMiddleware&#39;,</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+<p>每个中间件的功能如下，我们都建议保留：</p>
+<ul>
+<li><code>SecurityMiddleware</code>：为request/response提供了几种安全改进。</li>
+<li><code>SessionMiddleware</code>：开启session会话支持</li>
+<li><code>CommonMiddleware</code>：基于APPEND_SLASH和PREPEND_WWW的设置来重写URL，如果APPEND_SLASH设为True，并且初始URL没有以斜线结尾以及在URLconf中没找到对应定义，这时形成一个斜线结尾的新URL；</li>
+<li><code>CsrfViewMiddleware</code>：添加跨站点请求伪造的保护，通过向POST表单添加一个隐藏的表单字段，并检查请求中是否有正确的值。</li>
+<li><code>AuthenticationMiddleware</code>：在视图函数执行前向每个接收到的user对象添加HttpRequest属性，表示当前登录的用户，无它登录不了<code>request.user</code>。</li>
+<li><code>MessageMiddleware</code>：开启基于Cookie和会话的消息支持</li>
+<li><code>XFrameOptionMiddleware</code>：对点击劫持的保护</li>
+</ul>
+<p>除此之外，Django还提供了压缩网站内容的<code>GZipMiddleware</code>，根据用户请求语言返回不同内容的<code>LocaleMiddleware</code>和给GET请求附加条件的<code>ConditionalGetMiddleware</code>。这些中间件都是可选的。</p>
+<h4 id="2-自定义中间件"><a href="#2-自定义中间件" class="headerlink" title="2.自定义中间件"></a>2.自定义中间件</h4><p>自定义中间件我们首先需要在app所属目录下新建一个文件<code>middleware.py</code>，在文件中添加编写好的中间件代码。然后在项目<code>settings.py</code>中把它添加到<code>MIDDLEWARE</code>列表进行注册，添加时务必注意顺序。<br>Django提供了两种编写自定义中间件的方式：函数和类，基本框架如下所示：<br>函数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">def simple_middleware(get_response):</span><br><span class="line">    # 一次性设置和初始化</span><br><span class="line">    def middleware(request):</span><br><span class="line">        # 请求在到达视图前的执行代码</span><br><span class="line">        response &#x3D; get_response(request)</span><br><span class="line">        # 请求在返回给客户端前执行的代码</span><br><span class="line">        return response</span><br><span class="line">    return middleware</span><br></pre></td></tr></table></figure>
+<p>当请求从浏览器发送到服务器视图时，将执行<code>response=get_response(request)</code>该行之前的所有代码。当响应从服务器返回到浏览器时，将执行<code>response=get_response(request)</code>此行之后的所有内容。</br><br>分界线<code>response=get_response(request)</code>，它的功能将调用列表中的下一个中间件，如果这是最后一个中间件，则将调用该视图。</p>
+<h5 id="2-1-示例1"><a href="#2-1-示例1" class="headerlink" title="2.1 示例1"></a>2.1 示例1</h5><p>我们现在以函数编写一个名为<code>timeit_middleware</code>的中间件，打印出执行每个请求所花费的时间，代码如下所示：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">import time</span><br><span class="line"></span><br><span class="line">def timeit_middleware(get_response):</span><br><span class="line">    def middleware(request):</span><br><span class="line">        start &#x3D; time.time()</span><br><span class="line">        response &#x3D; get_response(request)</span><br><span class="line">        end &#x3D; time.time()</span><br><span class="line">        print(&#39;请求花费时间：&#123;&#125;&#39;.format(end-start))</span><br><span class="line">        return response</span><br><span class="line">    </span><br><span class="line">    return middleware</span><br></pre></td></tr></table></figure>
+<p>在<code>settings.py</code>中注册该中间件：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">MIDDLEWARE &#x3D; [</span><br><span class="line">    ...</span><br><span class="line">    &#39;blog.middleware.timeit_middleware&#39;, # add new</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+<p>使用类的实现：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">class SimpleMiddleware:</span><br><span class="line">    def __init__(self, get_response):</span><br><span class="line">        # 一次性设置和初始化</span><br><span class="line">        self.get_response &#x3D; get_response(request)</span><br><span class="line">        </span><br><span class="line">    def __call__(self, request):</span><br><span class="line">        # 视图函数执行前的代码</span><br><span class="line">        response &#x3D; self.get_reponse(request)</span><br><span class="line">        # 视图函数执行侯的代码</span><br><span class="line">        return response</span><br></pre></td></tr></table></figure>
+<h5 id="2-2-示例2"><a href="#2-2-示例2" class="headerlink" title="2.2 示例2"></a>2.2 示例2</h5><p>现在用类编写一个名为<code>LoginRequiredMiddleware</code>的中间件，实现全站要求登录，但是登录页面和开放白名单上的urls除外，代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">from django.shortcuts import redirect</span><br><span class="line">form django.conf import settings</span><br><span class="line"></span><br><span class="line">class LoginRequiredMiddleware:</span><br><span class="line">    def __init__(self, get_response):</span><br><span class="line">        self.get_response &#x3D; get_response</span><br><span class="line">        self.login_url &#x3D; settings.LOGIN_URL</span><br><span class="line">        # 开放白名单</span><br><span class="line">        self.open_urls &#x3D; [self.login_url] + getattr(settings, &#39;OPEN_URLS&#39;, [])</span><br><span class="line">        </span><br><span class="line">    def __call__(self, request):</span><br><span class="line">        if not request.user.is_authenticated and request.path_info not in self.open_urls:</span><br><span class="line">           # 登录之后跳转回原页面</span><br><span class="line">           return redirect(self.login_url + &#39;?next&#x3D;&#39; + request.get_full_path())</span><br><span class="line">           </span><br><span class="line">          response &#x3D; self.get_response(request)</span><br><span class="line">          return response</span><br></pre></td></tr></table></figure>
+<p>备注：<code>request.path_info</code>用于获得当前请求的相对路径，如<code>/articles</code>，而<code>request.get_full_path()</code>用于获取当前请求完整的相对路径，包括请求参数，如：<code>/articles/?page=2</code>。使用<code>request.get_full_path()</code>要记得加括号，否则返回的是uwsgi请求对象，而不是字符串。<br>在<code>settings.py</code>文件里需要做的修改如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">MIDDLEWARE &#x3D; [</span><br><span class="line">    ...</span><br><span class="line">    &#39;blog.middleware.LoginRequiredMiddleware&#39;,</span><br><span class="line">]</span><br><span class="line">LOGIN_URL &#x3D; &quot;&#x2F;admin&#x2F;login&#x2F;&quot;</span><br><span class="line">OPEN_URLS &#x3D; [&quot;&#x2F;admin&#x2F;&quot;]</span><br></pre></td></tr></table></figure>
+<h4 id="3-其他中间件钩子函数"><a href="#3-其他中间件钩子函数" class="headerlink" title="3.其他中间件钩子函数"></a>3.其他中间件钩子函数</h4><p>Django还提供了其他三个中间件钩子函数，分别在执行视图函数，处理异常和进行模板渲染时使用。</p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <div class="declare">
+      <ul class="post-copyright">
+        <li>
+          <i class="ri-copyright-line"></i>
+          <strong>版权声明： </strong>
+          
+          本博客所有文章除特别声明外，著作权归作者所有。转载请注明出处！
+          
+        </li>
+      </ul>
+    </div>
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://twilight2017.github.io/2022/11/21/Django%E9%AB%98%E7%BA%A7%E4%BD%BF%E7%94%A8%EF%BC%9A%E4%B8%80/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Django/" rel="tag">Django</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%8A%80%E6%9C%AF/" rel="tag">技术</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+    
+      <a href="/2022/11/12/Python%20web%E5%BC%80%E5%8F%91%E5%B7%A5%E5%85%B7/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">Python Web开发工具</div>
+      </a>
+    
+  </nav>
+
+   
+<!-- valine评论 -->
+<div id="vcomments-box">
+  <div id="vcomments"></div>
+</div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js"></script>
+<script>
+  new Valine({
+    el: "#vcomments",
+    app_id: "",
+    app_key: "",
+    path: window.location.pathname,
+    avatar: "monsterid",
+    placeholder: "给我的文章加点评论吧~",
+    recordIP: true,
+  });
+  const infoEle = document.querySelector("#vcomments .info");
+  if (infoEle && infoEle.childNodes && infoEle.childNodes.length > 0) {
+    infoEle.childNodes.forEach(function (item) {
+      item.parentNode.removeChild(item);
+    });
+  }
+</script>
+<style>
+  #vcomments-box {
+    padding: 5px 30px;
+  }
+
+  @media screen and (max-width: 800px) {
+    #vcomments-box {
+      padding: 5px 0px;
+    }
+  }
+
+  #vcomments-box #vcomments {
+    background-color: #fff;
+  }
+
+  .v .vlist .vcard .vh {
+    padding-right: 20px;
+  }
+
+  .v .vlist .vcard {
+    padding-left: 10px;
+  }
+</style>
+
+ 
+   
+     
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2015-2022
+        <i class="ri-heart-fill heart_icon"></i> twilight2017
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        
+        由 <a href="https://hexo.io" target="_blank">Hexo</a> 强力驱动
+        <span class="division">|</span>
+        主题 - <a href="https://github.com/Shen-Yu/hexo-theme-ayer" target="_blank">Ayer</a>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></s>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>
+      <div class="float_btns">
+        <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+      </div>
+    </main>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="瑟兰迪尔"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E6%8A%80%E6%9C%AF">技术</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E8%AF%BB%E4%B9%A6">读书</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/travels">旅行</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E9%9A%8F%E7%AC%94">随笔</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/friends">友链</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/about">关于我</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <script>
+      if (window.matchMedia("(max-width: 768px)").matches) {
+        document.querySelector('.content').classList.remove('on');
+        document.querySelector('.sidebar').classList.remove('on');
+      }
+    </script>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="https://cdn.jsdelivr.net/gh/Shen-Yu/cdn/img/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="https://cdn.jsdelivr.net/gh/Shen-Yu/cdn/img/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-2.0.3.min.js"></script>
+
+
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+
+
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: '.tocbot',
+    contentSelector: '.article-entry',
+    headingSelector: 'h1, h2, h3, h4, h5, h6',
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: 'main',
+    positionFixedSelector: '.tocbot',
+    positionFixedClass: 'is-position-fixed',
+    fixedSidebarOffset: 'auto'
+  });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.css">
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css">
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script>
+
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+
+
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+
+
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+
+
+<link rel="stylesheet" href="/css/clipboard.css">
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+
+
+<!-- CanvasBackground -->
+
+
+    
+  </div>
+</body>
+
+</html>

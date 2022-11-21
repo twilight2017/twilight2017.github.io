@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+
+
+<head>
+  <meta charset="utf-8" />
+    
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>
+    Python Web开发工具 |  瑟兰迪尔
+  </title>
+  <meta name="generator" content="hexo-theme-ayer">
+  
+  <link rel="shortcut icon" href="/favicon.ico" />
+  
+  
+<link rel="stylesheet" href="/dist/main.css">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Shen-Yu/cdn/css/remixicon.min.css">
+  
+<link rel="stylesheet" href="/css/custom.css">
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+  
+  
+
+  
+
+</head>
+
+</html>
+
+<body>
+  <div id="app">
+    
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-Python web开发工具"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  Python Web开发工具
+</h1>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2022/11/12/Python%20web%E5%BC%80%E5%8F%91%E5%B7%A5%E5%85%B7/" class="article-date">
+  <time datetime="2022-11-12T11:56:52.000Z" itemprop="datePublished">2022-11-12</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">4.7k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">19 分钟</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="Python-Web开发工具"><a href="#Python-Web开发工具" class="headerlink" title="Python Web开发工具"></a>Python Web开发工具</h1><h2 id="一-Python多进程知识点讲解"><a href="#一-Python多进程知识点讲解" class="headerlink" title="一.Python多进程知识点讲解"></a>一.Python多进程知识点讲解</h2><p>调用python的multiprocessing模块，分析如下的一段代码：</p>
+<h4 id="1-multiprocessing模块讲解"><a href="#1-multiprocessing模块讲解" class="headerlink" title="1.multiprocessing模块讲解"></a>1.multiprocessing模块讲解</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">from multiprocessing import Process</span><br><span class="line">import os</span><br><span class="line">import time</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def long_time_task(i):</span><br><span class="line">    print(&#39;子进程：&#123;&#125;-任务&#123;&#125;&#39;.format(os.getpid(), i))</span><br><span class="line">    time.sleep(2)</span><br><span class="line">    print(&quot;结果：&#123;&#125;&quot;.format(8*20))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">if __name__ &#x3D;&#x3D; &#39;__main__&#39;:</span><br><span class="line">    print(&quot;当前母进程：&#123;&#125;&quot;.format(os.getpid()))</span><br><span class="line">    start &#x3D; time.time()</span><br><span class="line">    p1 &#x3D; Process(target&#x3D;long_time_task, args&#x3D;(1,))</span><br><span class="line">    p2 &#x3D; Process(target&#x3D;long_time_task, args&#x3D;(2,))</span><br><span class="line">    print(&quot;等待所有子进程完成。&quot;)</span><br><span class="line">    p1.start()</span><br><span class="line">    p2.start()</span><br><span class="line">    p1.join()</span><br><span class="line">    p2.join()</span><br><span class="line">    end &#x3D; time.time()</span><br><span class="line">    print(&quot;总共用时&#123;&#125;秒&quot;.format(end-start))</span><br></pre></td></tr></table></figure>
+<p>执行这段python代码，控制台输出如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">当前母进程：17304</span><br><span class="line">等待所有子进程完成。</span><br><span class="line">子进程：7132-任务1</span><br><span class="line">子进程：10288-任务2</span><br><span class="line">结果：160</span><br><span class="line">结果：160</span><br><span class="line">总共用时2.1409997940063477秒</span><br></pre></td></tr></table></figure>
+<p>多进程下，本耗时4s左右的任务，耗时变为了2s，时间减少了一半，可见并发执行的时间明显比顺序执行要快很多。从代码来看，尽管我们只创建了两个进程，可实际运行中却饱含1个母进程和2个子进程。</p>
+<blockquote>
+<p>1.新创建的进程与进程的切换都是要耗资源的，所以平时工作中进程数不能开太大。</br><br>2.同时可以运行的进程数一般受制于CPU的核数。</br><br>3.除了使用Process方法，我们还可以使用Pool类创建多进程。</p>
+</blockquote>
+<h4 id="2-进程池Pool"><a href="#2-进程池Pool" class="headerlink" title="2.进程池Pool"></a>2.进程池Pool</h4><blockquote>
+<p>&emsp;&emsp;前言：很多时候系统都需要创建多个进程以提高CPU的利用率，当数量较少时，可以手动生成一个个<code>Process</code>实例。当进程数量较多时，也许可以利用循环，但这仍需要程序员手动管理系统中并发进程的数量。</p>
+</blockquote>
+<p>&emsp;&emsp;进程池Pool的功效就是可以通过传递参数限制并发进程的数量，默认值为CPU的核数。</br><br>&emsp;&emsp;Pool类可以提供指定数量的进程供用户调用，当有新的请求提交到Pool时，如果进程池还没有满，就会创建一个新的进程来执行请求。如果池满，请求就会告知先等待，直到池中有进程结束，才会创建新的进程来执行这些请求。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">from multiprocessing import Pool, cpu_count</span><br><span class="line">import os</span><br><span class="line">import time</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def long_time_task(i):</span><br><span class="line">    print(&#39;子进程：&#123;&#125;-任务&#123;&#125;&#39;.format(os.getpid(), i))</span><br><span class="line">    time.sleep(2)</span><br><span class="line">    print(&quot;结果：&#123;&#125;&quot;.format(8*20))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">if __name__ &#x3D;&#x3D; &#39;__main__&#39;:</span><br><span class="line">    print(&quot;CPU内核数：&#123;&#125;&quot;.format(cpu_count()))</span><br><span class="line">    print(&quot;当前母进程是“&#123;&#125;&quot;.format(os.getpid()))</span><br><span class="line">    start &#x3D; time.time()</span><br><span class="line">    p &#x3D; Pool(8)</span><br><span class="line">    for i in range(9):</span><br><span class="line">        p.apply_async(long_time_task, (i,))</span><br><span class="line">    print(&quot;等待所有子进程完成。&quot;)</span><br><span class="line">    p.close()</span><br><span class="line">    p.join()</span><br><span class="line">    end &#x3D; time.time()</span><br><span class="line">    print(&quot;总共用时&#123;&#125;秒&quot;.format(end-start))</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>1.对Pool对象调用join()方法会等待所有的子进程执行完毕<br>2.调用join()之前必须先调用close()和terminate()方法，让其不再接收新的Process了。</p>
+</blockquote>
+<h2 id="二-Python爬虫下一代网络请求库httpx和parsel解析库测评"><a href="#二-Python爬虫下一代网络请求库httpx和parsel解析库测评" class="headerlink" title="二. Python爬虫下一代网络请求库httpx和parsel解析库测评"></a>二. Python爬虫下一代网络请求库httpx和parsel解析库测评</h2><blockquote>
+<p>&emsp;&emsp;前言：httpx号称下一代的新一代的网络请求库，不仅支持requests库的所有操作，还能发送异步请求。parsel最初集成在著名Python爬虫框架Scrapy中，后独立出来成立一个单独的模块，支持XPath选择器，CSS选择器和正则表达式等多种解析提取方式。</p>
+</blockquote>
+<h3 id="1-案例分析：爬取链家网上的二手房在售房产信息为例"><a href="#1-案例分析：爬取链家网上的二手房在售房产信息为例" class="headerlink" title="1.案例分析：爬取链家网上的二手房在售房产信息为例"></a>1.案例分析：爬取链家网上的二手房在售房产信息为例</h3><h4 id="1-1-Python爬虫之Beautifulsoup模块用法详解"><a href="#1-1-Python爬虫之Beautifulsoup模块用法详解" class="headerlink" title="1.1 Python爬虫之Beautifulsoup模块用法详解"></a>1.1 Python爬虫之Beautifulsoup模块用法详解</h4><blockquote>
+<p>&emsp;&emsp;beautifulsoup是一个可以从HTML或XML文件中提取出数据的python库。它能够通过转换器实现惯用的文档导航，查找、修改文档的方式。简而言之，beautifulsoup是一个解析器，可以特定的解析出内容，省去了我们书写正则表达式的麻烦。<br>项目代码如下：</p>
+</blockquote>
+<h2 id="三-Nginx配置详解"><a href="#三-Nginx配置详解" class="headerlink" title="三.Nginx配置详解"></a>三.Nginx配置详解</h2><p>一个Nginx配置文件通常包含以下3个模块：</p>
+<ul>
+<li>全局块：比如工作进程数，定义日志路径。</li>
+<li>Events块：设置处理轮询事件模型，每个工作进程最大连接数以及http层的keep-alive超时时间。</li>
+<li>htto块：路由匹配，静态文件服务器、反向代理、负载均衡等。<br>其中http块又可以进一步分为3块，http全局快的配置对所有站点生效，server块配置仅对单个站点生效，而location块的配置仅对单个页面或url生效。<br>Nginx配置文件示例<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br></pre></td><td class="code"><pre><span class="line"># 全局块</span><br><span class="line">user www-data;</span><br><span class="line">work_processes 2; ##默认1，一般建议设置为cpu核数的1-2倍</span><br><span class="line">error_log logs&#x2F;errors.log; ## 错误日志路径</span><br><span class="line">pid log&#x2F;nginx.pid; ## 进程id</span><br><span class="line"></span><br><span class="line"># events块</span><br><span class="line">events&#123;</span><br><span class="line">    # 使用epoll的I&#x2F;O模型处理轮询事件</span><br><span class="line">    use epoll;</span><br><span class="line">    </span><br><span class="line">    # 工作进程的最大连接数，默认为1024个</span><br><span class="line">    worker_connections 2048;</span><br><span class="line">    </span><br><span class="line">    # http层的server-alive超时时间</span><br><span class="line">    keepalive_timeout 60;</span><br><span class="line">    </span><br><span class="line">    # 客户端请求头部的缓冲区大小</span><br><span class="line">    client_header_buffer_size 2k;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">http &#123;</span><br><span class="line">    # http全局块</span><br><span class="line">    include mime.types; # 导入文件扩展名与文件类型映射表</span><br><span class="line">    default_type application&#x2F;octet-stream; #默认文件类型</span><br><span class="line">    </span><br><span class="line">    # 日志格式及access日志路径</span><br><span class="line">    log_format   main &#39;$remote_addr - $remote_user [$time_local]  $status &#39;</span><br><span class="line">    &#39;&quot;$request&quot; $body_bytes_sent &quot;$http_referer&quot; &#39;</span><br><span class="line">    &#39;&quot;$http_user_agent&quot; &quot;$http_x_forwarded_for&quot;&#39;;</span><br><span class="line">    </span><br><span class="line">    access_log logs&#x2F;access.log main;</span><br><span class="line">    </span><br><span class="line">    #允许sendfile方式传输文件，默认为off</span><br><span class="line">    sendfile on;</span><br><span class="line">    tcp_nopush on; # sendfile开启时才开启</span><br><span class="line">    </span><br><span class="line">    # http server块</span><br><span class="line">    # 简单反向代理</span><br><span class="line">    server&#123;</span><br><span class="line">        listen 80;</span><br><span class="line">        server_name domain2.com www.domain.com;</span><br><span class="line">        access_log logs&#x2F;domain2.access.log main;</span><br><span class="line">        </span><br><span class="line">        转发动态请求到web应用服务器</span><br><span class="line">        location &#x2F;&#123;</span><br><span class="line">            proxy_pass http:&#x2F;&#x2F;127.0.0.1:8000</span><br><span class="line">            deny 192.24.40.8 # 拒绝的ip</span><br><span class="line">            allow 192.24.40.6 # 允许的ip</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        # 错误页面</span><br><span class="line">        error_page 500 502 503 504 &#x2F;50x.html</span><br><span class="line">        location  &#x2F;50x.html&#123;</span><br><span class="line">            root html;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    # 负载均衡</span><br><span class="line">    upstream backend_server&#123;</span><br><span class="line">        server 192.168.0.1:8000 weight&#x3D;5;</span><br><span class="line">        server 192.168.0.2:8000 weight&#x3D;1;</span><br><span class="line">        server 192.168.0.3:8000;</span><br><span class="line">        server 192.168.0.4:8001 backup; # 热备</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    server&#123;</span><br><span class="line">        listen 80;</span><br><span class="line">        server_name big.server.com;</span><br><span class="line">        access_log logs&#x2F;big.server.access.log main;</span><br><span class="line">        </span><br><span class="line">        charset utf-8;</span><br><span class="line">        client_max_body_size 10M; # 限制用户上传的文件大小，默认1M</span><br><span class="line">        </span><br><span class="line">        location &#x2F; &#123;</span><br><span class="line">            # 通过proxy_pass转发请求到一组通过upstream定义的一组应用服务器</span><br><span class="line">            proxy_pass http:&#x2F;&#x2F;backend_server;</span><br><span class="line">            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;</span><br><span class="line">            proxy_set_header Host $http_host;</span><br><span class="line">            proxy_redirect off;</span><br><span class="line">            proxy_set_header X-Real-Ip $remote_addr;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="1-Niginx-Location配置"><a href="#1-Niginx-Location配置" class="headerlink" title="1.Niginx Location配置"></a>1.Niginx Location配置</h3><table>
+<thead>
+<tr>
+<th>匹配符</th>
+<th align="center">匹配规则</th>
+<th align="right">优先级</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>=</td>
+<td align="center">精确匹配</td>
+<td align="right">1</td>
+</tr>
+<tr>
+<td>^~</td>
+<td align="center">以某个字符串开头</td>
+<td align="right">2</td>
+</tr>
+<tr>
+<td>~</td>
+<td align="center">区分大小写的正则匹配</td>
+<td align="right">3</td>
+</tr>
+<tr>
+<td>~*</td>
+<td align="center">不区分大小写的正则匹配</td>
+<td align="right">4</td>
+</tr>
+<tr>
+<td>!~</td>
+<td align="center">区分大小写的不匹配正则</td>
+<td align="right">5</td>
+</tr>
+<tr>
+<td>!~*</td>
+<td align="center">区分大小写的不匹配正则</td>
+<td align="right">6</td>
+</tr>
+<tr>
+<td>/</td>
+<td align="center">通用匹配，任何请求都会匹配到</td>
+<td align="right">7</td>
+</tr>
+<tr>
+<td>看如下的规则设置的例子，来加深理解:Nginx会执行优先级更高的匹配规则</td>
+<td align="center"></td>
+<td align="right"></td>
+</tr>
+</tbody></table>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"># 规则1：通用匹配</span><br><span class="line">location &#x2F;&#123;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"># 规则2：处理以&#x2F;static开头的url</span><br><span class="line">localtion ^&#x3D;&#x2F;static&#123;</span><br><span class="line">    alias &#x2F;usr&#x2F;share&#x2F;nginx&#x2F;html&#x2F;static; #静态资源路径</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>注：上述例子中我们使用了<code>alias</code>别名设置了静态文件所在的目录。我们还可以用<code>root</code>指定静态文件目录：</p>
+</blockquote>
+</li>
+<li><code>root</code>对路径的处理：root路径+location路径</li>
+<li><code>alias</code>对路径的处理：使用alias路径替换location路径<br>如果用<code>root</code>设置静态资源路径，可以按如下代码进行设置。两者是等同的。<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">规则2：处理以&#x2F;static开头的url</span><br><span class="line">location ^~ &#x2F;static&#123;</span><br><span class="line">    root &#x2F;usr&#x2F;share&#x2F;nginx&#x2F;html; #静态资源路径</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+Location还支持正则匹配，比如下例可以禁止用户访问所有的图片格式文件<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># 拒绝访问所有的图片格式文件</span><br><span class="line">location ~* .*\.(jpg|gif|png|jpeg)$&#123;</span><br><span class="line">    deny all;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+请求转发与重定向<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"># 转发动态请求</span><br><span class="line">server&#123;</span><br><span class="line">    listen 80;</span><br><span class="line">    server_name localhost;</span><br><span class="line">    client_max_body_size 1024M;</span><br><span class="line">    </span><br><span class="line">    location &#x2F; &#123;</span><br><span class="line">        proxy_pass http:&#x2F;&#x2F;localohost:8080;</span><br><span class="line">        proxy_set_header Host $host:$server_port;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"># http请求重定向到https请求</span><br><span class="line">server&#123;</span><br><span class="line">    listen 80;</span><br><span class="line">    server_name domain.com;</span><br><span class="line">    return 301 https:&#x2F;&#x2F;$server_name$server_uri;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+上述的代码示例中，我们使用到了以$开头的变量，这些都是Nginx提供的全局变量，它们的具体含义如下所示：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">$args, 请求中的参数</span><br><span class="line">$content_length, HTTP请求信息里的&quot;Content-length&quot;;</span><br><span class="line">$content-type, 请求信息里的&quot;COntent-Type&quot;;</span><br><span class="line">$document_root, 针对当前请求的根路径设置值</span><br><span class="line">&amp;document_uri，与&amp;uri相同</span><br><span class="line">&amp;host, 请求信息中的&quot;Host&quot;，如果请求中没有Host行，则等于设置的服务器名</span><br><span class="line">$limit_tare，对连接速率的限制</span><br><span class="line">$request_method，请求方法</span><br><span class="line">$remote_addr，客户端地址</span><br><span class="line">$remote_user，客户端用户名，认证用</span><br><span class="line">$request_filename，当前请求的文件路径名</span><br><span class="line">$request_body_file，当前请求的文件</span><br><span class="line">$request_uri，请求的uri，带查询字符串</span><br><span class="line">$query_string 与&amp;args相同；</span><br><span class="line">$scheme，所用的协议，比如是http还是https</span><br><span class="line">$server_protocol 请求的协议版本， &quot;HTTP&#x2F;1.0&quot;</span><br><span class="line">$server_addr， 服务器地址</span><br><span class="line">$server_name, 请求到达的服务器名</span><br><span class="line">$server_port，请求到达的服务器端口号</span><br><span class="line">$uri，请求的URI</span><br></pre></td></tr></table></figure>
+这个例子中我们配置只允许用户通过POST方法访问，其他的方法则返回405。<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">if ($request_method !~ ^(GET|POST))&#123;</span><br><span class="line">    return 405;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="2-Nginx静态文件配置"><a href="#2-Nginx静态文件配置" class="headerlink" title="2.Nginx静态文件配置"></a>2.Nginx静态文件配置</h3>Nginx可以直接作为强大的静态文件服务器使用，支持对静态文件进行缓存还可以直接将Nginx作为文件下载服务器使用。<h5 id="2-1静态文件缓存"><a href="#2-1静态文件缓存" class="headerlink" title="2.1静态文件缓存"></a>2.1静态文件缓存</h5>缓存可以加快下次静态文件加载速度，很多与网站样式相关的文件比如css和js文件一般不怎么变化，缓存有效器可以通过<code>expires</code>选项设置得长一些<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># 使用expires选项开启静态文件缓存，10天有效</span><br><span class="line">location ~^(images|javascript|js|css|flash|media|static)&#x2F;&#123;</span><br><span class="line">    root &#x2F;var&#x2F;www&#x2F;big.serrver.com&#x2F;static_files;</span><br><span class="line">    expires 10d;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="3-Nignx配置HTTPS"><a href="#3-Nignx配置HTTPS" class="headerlink" title="3.Nignx配置HTTPS"></a>3.Nignx配置HTTPS</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"># 负载均衡，设置HTTPS</span><br><span class="line">upstream backend_server&#123;</span><br><span class="line">    server APP_SERVER_1_IP;</span><br><span class="line">    server APP_SERVER_2_IP;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"># 禁止未绑定域名访问，比如通过ip地址访问</span><br><span class="line"># 444：该网页无法正常运作，并未发送任何数据</span><br><span class="line">server &#123;</span><br><span class="line">    listen 80 default_server;</span><br><span class="line">    server_name _;</span><br><span class="line">    return 444;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"># HTTP请求重定向至HTTPS请求</span><br><span class="line">server&#123;</span><br><span class="line">    listen 80;</span><br><span class="line">    listen [::]:80;</span><br><span class="line">    server_name you_domain.com;</span><br><span class="line">    </span><br><span class="line">    location &#x2F;&#123;</span><br><span class="line">        proxy_set_header X-Forwarded-For &amp;proxy_add_x_forwarded_for;</span><br><span class="line">        proxy_set_header X-forwarded-Proto $scheme;</span><br><span class="line">        proxy_set_header Host &amp;http_host;</span><br><span class="line">        proxy_redirect off;</span><br><span class="line">        proxy_pass http:&#x2F;&#x2F;backend_server;</span><br><span class="line">    &#125;</span><br><span class="line">    return 301 https:&#x2F;&#x2F;$server_name$request_uri;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">server&#123;</span><br><span class="line">    listen 443 ssl http2;</span><br><span class="line">    listen [::]:443 ssl http2;</span><br><span class="line">    server_name your_domain.com</span><br><span class="line">    </span><br><span class="line">    # ssl证书及密钥路径</span><br><span class="line">    ssl_certificate &#x2F;path&#x2F;to&#x2F;your&#x2F;fullchain.pem;</span><br><span class="line">    ssl_certificate_key &#x2F;path&#x2F;to&#x2F;your&#x2F;privkey.pem;</span><br><span class="line">    </span><br><span class="line">    # ssl会话信息</span><br><span class="line">    client_max_body_size 75MB;</span><br><span class="line">    keepalive_timeout 10;</span><br><span class="line">    </span><br><span class="line">     location &#x2F; &#123;</span><br><span class="line">        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;</span><br><span class="line">        proxy_set_header X-Forwarded-Proto $scheme;</span><br><span class="line">        proxy_set_header Host $http_host;</span><br><span class="line">        proxy_redirect off;</span><br><span class="line">        proxy_pass http:&#x2F;&#x2F;django;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="4-Nginx日志配置"><a href="#4-Nginx日志配置" class="headerlink" title="4.Nginx日志配置"></a>4.Nginx日志配置</h3>Nginx的日志主要包括访问日志<code>access_log</code>和错误日志<code>error_log</code>，我们可以通过<code>logformat</code>定义日志格式。我们可以在全局块、Server块或Location块定义日志。比如在下例中定义了一个名为main的日志格式，所有站点的日志都会按照这个格式进行记录:<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">http &#123;</span><br><span class="line">    # 日志格式及access日志路径</span><br><span class="line">    log_format main &#39;$remote_addr - $remote_user [$time_local] $status&#39;</span><br><span class="line">    &#39;&quot;request&quot; $body_bytes_sent &quot;$http_referer&quot;&#39;</span><br><span class="line">    &#39;&quot;http_user_agent&quot; &quot;$http_x_forwarded_for&quot;&#39;;</span><br><span class="line">    access_log logs&#x2F;access.log main;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><figcaption><span>```access_log off```关闭一些不需要记录的访问。比如当一个站点没有设置favicon.ico时，```access_log```会记录大量favicon.ico 404信息，这是没有必要的，可以按如下方式关闭访问日志记录</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#96;&#96;&#96;</span><br><span class="line">location &#x3D; &#x2F;favicon.ico &#123;</span><br><span class="line">    log_not_found off;</span><br><span class="line">    access_log; #不在access_log记录该项访问</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="5-Nginx超时设置"><a href="#5-Nginx超时设置" class="headerlink" title="5.Nginx超时设置"></a>5.Nginx超时设置</h3>Nginx提供了很多超时设置选项，目的是保护服务器资源，CPU，内存并控制连接数。可以根据实际项目需求在全局块、Server块和Location块进行配置。<h5 id="请求超时设置"><a href="#请求超时设置" class="headerlink" title="请求超时设置"></a>请求超时设置</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"># 客户端链接保持会话超时时间，超过这个时间，服务器断开这个链接</span><br><span class="line">keepalive_timeout 60;</span><br><span class="line"></span><br><span class="line"># 设置请求头的时间</span><br><span class="line"># 如果超过这个时间没有发送任何数据，nginx将返回request time out的错误</span><br><span class="line">client_header_timeout 15;</span><br><span class="line"></span><br><span class="line"># 设置请求体的超时时间</span><br><span class="line"># 如果超过这个时间没有发送任何数据，nginx 将返回request time out的错误</span><br><span class="line">client+body_timeout 15;</span><br><span class="line"></span><br><span class="line"># 响应客户端超时时间</span><br><span class="line"># 如果超过这个时间，客户端没有任何活动，nginx关闭连接</span><br><span class="line">send_timeout 15;</span><br><span class="line"></span><br><span class="line"># 上传文件大小限制</span><br><span class="line">client_max_body_size 10m;</span><br><span class="line"></span><br><span class="line"># 也是防止网络阻塞，不过要包含在keepalived参数才有效</span><br><span class="line">tcp_nodelay on;</span><br><span class="line"></span><br><span class="line"># 客户端请求头部的缓冲区大小，这个可以根据系统分页大小来设置</span><br><span class="line"># 一般一个请求头的大小不会超过1k</span><br><span class="line">client_header_buffer_size 2k;</span><br><span class="line"></span><br><span class="line"># 这个将为打开文件指定缓存，默认是没有启用的</span><br><span class="line"># max指定缓存梳理，建议和打开文件数一致，inactive是指经过多长时间文件没被请求后删除缓存。</span><br><span class="line">open_file_cache max&#x3D;102400 insctive&#x3D;20s;</span><br><span class="line"></span><br><span class="line"># 这个是指多长时间检查一次缓存的有效信息</span><br><span class="line">open_file_cache_valid 30s;</span><br><span class="line"></span><br><span class="line"># 告诉nginx关闭不响应的客户端连接，这将会释放那个客户端占有的内存空间。</span><br><span class="line">reset_timeout_connection on;</span><br></pre></td></tr></table></figure>
+<h5 id="Proxy反向代理超时设置"><a href="#Proxy反向代理超时设置" class="headerlink" title="Proxy反向代理超时设置"></a>Proxy反向代理超时设置</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"># 该指令设置与upstream服务的连接超时时间</span><br><span class="line">proxy_connect_timeout 60;</span><br><span class="line"></span><br><span class="line"># 该指令设置应用服务器的响应超时时间</span><br><span class="line">proxy_read_timeout 60</span><br><span class="line"></span><br><span class="line"># 设置了发送请求给upstream服务器的超时时间</span><br><span class="line">proxy_send_timeout 60;</span><br><span class="line"></span><br><span class="line"># max_fails设定Nginx与upstream服务器通信的尝试失败的次数</span><br><span class="line"># 在fail_timeout参数定义的时间段内，如果连接失败次数达到此值，nginx就认为服务不可用</span><br><span class="line">upstream big_server_com &#123;</span><br><span class="line">    server 192.168.0.1:8000 weight&#x3D;5, max_fails&#x3D;3, fail_timeout&#x3D;30s;</span><br><span class="line">    server 192.168.0.2:8000 weight&#x3D;1 max_fails&#x3D;3 fail_timeout&#x3D;30s;</span><br><span class="line">    server 192.168.0.3:8000</span><br><span class="line">    server 192.168.0.4:8001 backup; #热备</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="Nginx负载均衡"><a href="#Nginx负载均衡" class="headerlink" title="Nginx负载均衡"></a>Nginx负载均衡</h5>Nginx提供了多种负载均衡算法，最常见的有5种，我们只需要修改对应的upstream模块即可。<h5 id="轮询-默认"><a href="#轮询-默认" class="headerlink" title="轮询(默认)"></a>轮询(默认)</h5>每个请求按时间顺序逐一分配到不同的后端服务器，如果后端服务器down掉，能自动剔除<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"># 轮询，大家权重一样</span><br><span class="line">upstream backend_server&#123;</span><br><span class="line">    server 192.168.0.1:8000;</span><br><span class="line">    server 192.168.0.2:8000;</span><br><span class="line">    server 192.168.0.3:8000 down; #不参与负载均衡</span><br><span class="line">    server 192.168.0.4:8001 backup; #热备</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">server &#x2F; &#123;</span><br><span class="line">    listen 80;</span><br><span class="line">    server_name big.server.com;</span><br><span class="line">    access_log logs&#x2F;big.server.access.log main;</span><br><span class="line">    </span><br><span class="line">    charset utf-8;</span><br><span class="line">    client_max_body_size 10M; #限制用户上传文件大小，默认1M</span><br><span class="line">    </span><br><span class="line">    location &#x2F; &#123;</span><br><span class="line">        # 使用proxy_pass转发请求通过upstream定义的一组应用服务器</span><br><span class="line">        proxy_pass http:&#x2F;&#x2F;backend_server;</span><br><span class="line">        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;</span><br><span class="line">        proxy_set_header Host $http_host;</span><br><span class="line">        proxy_redirect off;</span><br><span class="line">        proxy_set_header X-Real_IP $remote_addr;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="权重-weight"><a href="#权重-weight" class="headerlink" title="权重(weight)"></a>权重(weight)</h5>通过weight指定轮询几率，访问比率与weight成正比，常用于后端服务器性能不均的情况<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">weight越大，承担的任务越多</span><br><span class="line">upstream backend_server&#123;</span><br><span class="line">    server 192.168.0.1:8000 weight&#x3D;3;</span><br><span class="line">    server 192.168.0.2:8000 weight&#x3D;1;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="ip-hash"><a href="#ip-hash" class="headerlink" title="ip_hash"></a>ip_hash</h5>每个请求按访问的ip的hash结果分配，这样每个访客固定访问一个后端服务器，可以解决用户登录时的session问题。<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># 权重：weight越大，承担的任务越多</span><br><span class="line">upstream backend_server&#123;</span><br><span class="line">    ip_hash;</span><br><span class="line">    server 192.168.0.1:8000;</span><br><span class="line">    server 192.168.0.2:8000;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="url-hash"><a href="#url-hash" class="headerlink" title="url_hash"></a>url_hash</h5>按访问的url的hash结果来分配请求，使每个url定向到同一个后端服务器，后端服务器为缓存时比较有效。<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># Url Hash</span><br><span class="line">upstream backend_server&#123;</span><br><span class="line">    hash $request_uri;</span><br><span class="line">    server 192.168.0.1:8000;</span><br><span class="line">    server 192.168.0.2:8000;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="fair-第三方"><a href="#fair-第三方" class="headerlink" title="fair(第三方)"></a>fair(第三方)</h5>按后端服务器的响应时间来分配请求，响应时间短的有效分配。使用这个算法需要安装<code>nginx-upstream-fair</code>这个库<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># Fair</span><br><span class="line">upstream backend_server&#123;</span><br><span class="line">    server 192.168.0.1:8000;</span><br><span class="line">    server 192.168.0.2:8000;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="6-Nginx与uWSGI服务器的沟通"><a href="#6-Nginx与uWSGI服务器的沟通" class="headerlink" title="6.Nginx与uWSGI服务器的沟通"></a>6.Nginx与uWSGI服务器的沟通</h3><blockquote>
+<p>在前面的分析中，Nginx都是使用<code>proxy_pass</code>转发的动态请求，<code>proxy_pass</code>使用普通的HTTP协议与应用服务器进行沟通。如果你部署的是Python Web应用(Django, Flask)，你的应用服务器(uwsgi, gunicorn)一般是遵守uwsgi协议的，对于这种情况，建议使用<code>uwsgi_pass</code>转发请求。</p>
+</blockquote>
+<h5 id="Python-Web应用部署负载均衡Nginx配置文件参考"><a href="#Python-Web应用部署负载均衡Nginx配置文件参考" class="headerlink" title="Python Web应用部署负载均衡Nginx配置文件参考"></a>Python Web应用部署负载均衡Nginx配置文件参考</h5>如果我们部署的是Django或者Flask Web应用，一个完整的Nginx配置文件如下所示：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br></pre></td><td class="code"><pre><span class="line"># nginx配置文件: nginx.conf</span><br><span class="line"></span><br><span class="line"># 全局块</span><br><span class="line">user www-data;</span><br><span class="line">worker_processes 2; ## 默认1，一般建议设置成cpu核数的1-2倍</span><br><span class="line"></span><br><span class="line"># Events块</span><br><span class="line">events &#123;</span><br><span class="line">    # 使用epoll的I&#x2F;O模型处理轮询时间。</span><br><span class="line">    # 可以不设置，nginx会根据操作系统选择合适的模型。</span><br><span class="line">    use epoll;</span><br><span class="line">    </span><br><span class="line">    # 工作进程的最大连接数量，默认1024个</span><br><span class="line">    worker_connections 2048;</span><br><span class="line">    </span><br><span class="line">    # http层面的keep-alive超时时间</span><br><span class="line">    keepalive_timeout 60;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">http &#123;</span><br><span class="line">    # 开启gzip压缩功能</span><br><span class="line">    gzip on;</span><br><span class="line">    </span><br><span class="line">    # 设置允许压缩的页面最小字节数，这里表示如果文件小于10k,压缩没有意义</span><br><span class="line">    gzip_min_length 10k;</span><br><span class="line">    </span><br><span class="line">    # 设置压缩比率，最小为1，处理速度快，传输速度慢；</span><br><span class="line">    # 9为最大压缩比，处理速度慢，传输速度快; 推荐6</span><br><span class="line">    gzip_comp_level 6; </span><br><span class="line">    </span><br><span class="line">    # 设置压缩缓冲区大小，此处设置为16个8K内存作为压缩结果缓冲</span><br><span class="line">    gzip_buffers 16 8k;</span><br><span class="line">    </span><br><span class="line">     # 设置哪些文件需要压缩,一般文本，css和js建议压缩。图片视需要要锁。</span><br><span class="line">    gzip_types text&#x2F;plain text&#x2F;css application&#x2F;json application&#x2F;x-javascript text&#x2F;xml application&#x2F;xml application&#x2F;xml+rss text&#x2F;javascript; </span><br><span class="line">    </span><br><span class="line">    upstream backend_server&#123;</span><br><span class="line">        server 192.168.0.1:8000; # 替换成应用服务器或容器实际IP及端口</span><br><span class="line">        server 192.168.0.2:8000;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    server &#123;</span><br><span class="line">        listen 80; #监听80端口</span><br><span class="line">        server_name localhost; #可以是nginx容器所在ip地址或者127.0.0.1，不能写宿主机外网ip地址</span><br><span class="line">        </span><br><span class="line">        charset utf-8;</span><br><span class="line">        client_max_body_size 10M; #限制用户上传文件大小</span><br><span class="line">        </span><br><span class="line">        # 客户端请求头部的缓冲区大小</span><br><span class="line">        client_header_buffer_size 2k;</span><br><span class="line">        client_header_timeout 15;</span><br><span class="line">        client_body_timeout 15;</span><br><span class="line">        </span><br><span class="line">        access_log &#x2F;var&#x2F;log&#x2F;nginx&#x2F;mysite1.access.log main;</span><br><span class="line">        error_log &#x2F;var&#x2F;log&#x2F;nginx&#x2F;mysite1.error.log main;</span><br><span class="line">        </span><br><span class="line">        # 静态资源路径</span><br><span class="line">        location &#x2F;static&#123;</span><br><span class="line">            alias &#x2F;usr&#x2F;share&#x2F;nginx&#x2F;html&#x2F;static;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        # 媒体资源路径，用户上传文件路径</span><br><span class="line">        location &#x2F;media&#123;</span><br><span class="line">            alias &#x2F;usr&#x2F;share&#x2F;nginx&#x2F;html&#x2F;media;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        location &#x2F; &#123;</span><br><span class="line">            include &#x2F;etc&#x2F;nginx&#x2F;uwsgi_params;</span><br><span class="line">            uwsgi_pass backend_server; # 使用uwsgi_pass， 而不是proxy_pass</span><br><span class="line">            uwsgi_read_timeout 600; # 指定接收uWSGI应答的超时时间</span><br><span class="line">            uwsgi_connect_timeout 600; # 指定连接到后端uWSGI的超时时间</span><br><span class="line">            uwsgi_send_timeout 600; #指定向uWSGI传送请求的超时时间</span><br><span class="line">            </span><br><span class="line">            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;</span><br><span class="line">            proxy_set_header Host $http_host;</span><br><span class="line">            proxy_redirect off;</span><br><span class="line">            proxy_set_header X-Real-IP  $remote_addr;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+如果我们的Nginx与uwsgi在同一台服务器上，用不到负载均衡，你还可以通过本地机器的unix socker进行通信，这样速度更快，如下所示：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">location &#x2F; &#123;</span><br><span class="line">    include &#x2F;etc&#x2F;nginx&#x2F;uwsgi_params;</span><br><span class="line">    uswgi_pass unix:&#x2F;run&#x2F;uwsgi&#x2F;django_test1.sock;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+注意：取决于Nginx会采用哪种方式与uWSGI服务器进行通信(本地socket， 网络TCP socket和http协议)， uWSGI配置文件也会有所不同，这里以<code>uwsg.ini</code>为例展示了不同<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"># uwsgi.ini配置文件</span><br><span class="line"></span><br><span class="line"># 对于uwsgi_pass转发的请求，使用本地unix socket通信</span><br><span class="line"># 仅适用于nginx和uwsgi在同一台服务器上的情形</span><br><span class="line">socket&#x3D;&#x2F;run&#x2F;uwsgi&#x2F;django_test1.sock</span><br><span class="line"></span><br><span class="line"># 对于uwsgi_pass转发的请求，使用TCP socket通信</span><br><span class="line">socket-0.0.0.0:8000</span><br><span class="line"></span><br><span class="line"># 对于proxy_pass HTTP转发的请求，使用http协议</span><br><span class="line">http-0.0.0.0:8000</span><br></pre></td></tr></table></figure></li>
+</ul>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <div class="declare">
+      <ul class="post-copyright">
+        <li>
+          <i class="ri-copyright-line"></i>
+          <strong>版权声明： </strong>
+          
+          本博客所有文章除特别声明外，著作权归作者所有。转载请注明出处！
+          
+        </li>
+      </ul>
+    </div>
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://twilight2017.github.io/2022/11/12/Python%20web%E5%BC%80%E5%8F%91%E5%B7%A5%E5%85%B7/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Python/" rel="tag">Python</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%8A%80%E6%9C%AF/" rel="tag">技术</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2022/11/21/Django%E9%AB%98%E7%BA%A7%E4%BD%BF%E7%94%A8%EF%BC%9A%E4%B8%80/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            Django高级使用：一
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2022/11/08/Poetry%E7%A7%91%E5%AD%A6%E7%AE%A1%E7%90%86Python%E8%99%9A%E6%8B%9F%E7%8E%AF%E5%A2%83-Poetry/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">Poetry科学管理Python虚拟环境-Poetry</div>
+      </a>
+    
+  </nav>
+
+   
+<!-- valine评论 -->
+<div id="vcomments-box">
+  <div id="vcomments"></div>
+</div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js"></script>
+<script>
+  new Valine({
+    el: "#vcomments",
+    app_id: "",
+    app_key: "",
+    path: window.location.pathname,
+    avatar: "monsterid",
+    placeholder: "给我的文章加点评论吧~",
+    recordIP: true,
+  });
+  const infoEle = document.querySelector("#vcomments .info");
+  if (infoEle && infoEle.childNodes && infoEle.childNodes.length > 0) {
+    infoEle.childNodes.forEach(function (item) {
+      item.parentNode.removeChild(item);
+    });
+  }
+</script>
+<style>
+  #vcomments-box {
+    padding: 5px 30px;
+  }
+
+  @media screen and (max-width: 800px) {
+    #vcomments-box {
+      padding: 5px 0px;
+    }
+  }
+
+  #vcomments-box #vcomments {
+    background-color: #fff;
+  }
+
+  .v .vlist .vcard .vh {
+    padding-right: 20px;
+  }
+
+  .v .vlist .vcard {
+    padding-left: 10px;
+  }
+</style>
+
+ 
+   
+     
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2015-2022
+        <i class="ri-heart-fill heart_icon"></i> twilight2017
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        
+        由 <a href="https://hexo.io" target="_blank">Hexo</a> 强力驱动
+        <span class="division">|</span>
+        主题 - <a href="https://github.com/Shen-Yu/hexo-theme-ayer" target="_blank">Ayer</a>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></s>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>
+      <div class="float_btns">
+        <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+      </div>
+    </main>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="瑟兰迪尔"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E6%8A%80%E6%9C%AF">技术</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E8%AF%BB%E4%B9%A6">读书</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/travels">旅行</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E9%9A%8F%E7%AC%94">随笔</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/friends">友链</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/about">关于我</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <script>
+      if (window.matchMedia("(max-width: 768px)").matches) {
+        document.querySelector('.content').classList.remove('on');
+        document.querySelector('.sidebar').classList.remove('on');
+      }
+    </script>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="https://cdn.jsdelivr.net/gh/Shen-Yu/cdn/img/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="https://cdn.jsdelivr.net/gh/Shen-Yu/cdn/img/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-2.0.3.min.js"></script>
+
+
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+
+
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: '.tocbot',
+    contentSelector: '.article-entry',
+    headingSelector: 'h1, h2, h3, h4, h5, h6',
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: 'main',
+    positionFixedSelector: '.tocbot',
+    positionFixedClass: 'is-position-fixed',
+    fixedSidebarOffset: 'auto'
+  });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.css">
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css">
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script>
+
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+
+
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+
+
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+
+
+<link rel="stylesheet" href="/css/clipboard.css">
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+
+
+<!-- CanvasBackground -->
+
+
+    
+  </div>
+</body>
+
+</html>
