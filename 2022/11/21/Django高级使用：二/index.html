@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+
+
+<head>
+  <meta charset="utf-8" />
+    
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>
+    Django高级使用：二 |  瑟兰迪尔
+  </title>
+  <meta name="generator" content="hexo-theme-ayer">
+  
+  <link rel="shortcut icon" href="/favicon.ico" />
+  
+  
+<link rel="stylesheet" href="/dist/main.css">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Shen-Yu/cdn/css/remixicon.min.css">
+  
+<link rel="stylesheet" href="/css/custom.css">
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+  
+  
+
+  
+
+</head>
+
+</html>
+
+<body>
+  <div id="app">
+    
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-Django高级使用：二"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  Django高级使用：二
+</h1>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2022/11/21/Django%E9%AB%98%E7%BA%A7%E4%BD%BF%E7%94%A8%EF%BC%9A%E4%BA%8C/" class="article-date">
+  <time datetime="2022-11-21T13:08:52.000Z" itemprop="datePublished">2022-11-21</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">6.8k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">27 分钟</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="Django高级使用：二"><a href="#Django高级使用：二" class="headerlink" title="Django高级使用：二"></a>Django高级使用：二</h1><h2 id="一-Django全局上下文处理器"><a href="#一-Django全局上下文处理器" class="headerlink" title="一.Django全局上下文处理器"></a>一.Django全局上下文处理器</h2><blockquote>
+<p>前言：Django的全局上下文处理器(COntext Processors)的作用就是向模板传递需要全局使用的变量。</p>
+</blockquote>
+<h3 id="1-全局上下文处理器-Context-Processors-应用场景"><a href="#1-全局上下文处理器-Context-Processors-应用场景" class="headerlink" title="1.全局上下文处理器(Context Processors)应用场景"></a>1.全局上下文处理器(Context Processors)应用场景</h3><p>&emsp;&emsp;当需要向所有模板传递一个可以被全局使用的变量时。我们在编写Django视图函数时，一般会在视图函数中以字典形式向模板中传递需要被调用或使用的变量并指定渲染模板。</br><br>&emsp;&emsp;如果每个视图函数分别去查询数据库，然后向每个模板传递这些变量，不仅造成代码冗余，而且会造成对数据库的重复查询，一个更好的解决方案就是使用自定义的上下文处理器(Context Processors)给模板传递全局变量，一次查询全局使用，完美解决上述问题。</p>
+<h3 id="2-Django内置的全局上下文处理器"><a href="#2-Django内置的全局上下文处理器" class="headerlink" title="2.Django内置的全局上下文处理器"></a>2.Django内置的全局上下文处理器</h3><blockquote>
+<p>思考：我们没有向某个模板中传递过权限perms对象，我们却可以在所有模板中随时调用它。同样可以在模板中全局使用的变量还有request和user对象。</p>
+</blockquote>
+<p>这是因为Django的<code>settings.py</code>里已经包含了<code>django.template.context_processors.request</code>和<code>django.contrib.auth.context_processors.auth</code>这两个全局上下文处理器。如果把他们移除，看看还能不能在模板中调用<code>user</code>和<code>perms</code>？</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">TEMPLATES &#x3D; [</span><br><span class="line">    &#123;</span><br><span class="line">        &#39;BACKEND&#39;: &#39;django.template.backends.django.DjangoTemplates&#39;</span><br><span class="line">        &#39;DIRS&#39;: [</span><br><span class="line">            os.path.join(BASE_DIR, &#39;templates&#39;)</span><br><span class="line">        ],</span><br><span class="line">        &#39;APP_DIRS&#39;: True</span><br><span class="line">        &#39;OPTIONS&#39;: &#123;</span><br><span class="line">            &#39;context_processors&#39;:[</span><br><span class="line">                # 以下包含了4个默认的全局上下文处理器</span><br><span class="line">                &#39;django.template.context_processors.debug&#39;,</span><br><span class="line">                &#39;django.template.context_processors.request&#39;,</span><br><span class="line">                &#39;django.contrib.auth.context_processors.auth&#39;,</span><br><span class="line">                &#39;django.contrib.messages.context_processors.messages&#39;,</span><br><span class="line">                &#39;myapp.custom_context_processors.xxx&#39;, # 自定义全局上下文处理器</span><br><span class="line">            ]</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+<p>Django一般包含了上述4个默认全局上下文处理器，它们作用如下所示：</p>
+<ul>
+<li>django.template.context_processors.debug:在模板里可以直接使用settings的DEBUG参数及强大的sql_queries：它本身是一个字典，其中包括当前执行页面执行SQL查询所需的时间</li>
+<li>django.template.context_processors.request：在模板中可以直接使用request对象</li>
+<li>django.contrib.auth.context_processors.auth：在模板里面可以直接使用user, perms对象</li>
+<li>django.contrib.messages.context_processors.messages:在模板里面可以直接使用message对象</li>
+</ul>
+<p>另外Django还提供了几个全局上下文处理器：</p>
+<ul>
+<li>django.template.context_processors.i18n：在模板里面可以直接使用settings的LANGUAGES和LANGUAGE_CODE</li>
+<li>django.template.context_processors.media：可以在模板里面使用settings的MEDIA_URL参数</li>
+<li>django.template.context_processors.csrf:给模板标签 csrf_token提供值</li>
+<li>django.template.context_processors.tz： 可以在模板里面使用TIME_ZONE参数</li>
+</ul>
+<h3 id="3-如何自定义全局上下文处理器"><a href="#3-如何自定义全局上下文处理器" class="headerlink" title="3.如何自定义全局上下文处理器"></a>3.如何自定义全局上下文处理器</h3><p>自定义的全局上下文处理器本质是个函数，使用它必须满足3个条件：</p>
+<ul>
+<li>1.传入参数必须有<code>request</code>对象</li>
+<li>2.返回值必须是个字典</li>
+<li>3.使用前需要在settings的<code>context_processors</code>里声明。<h4 id="3-1-如何使用全局上下文处理器"><a href="#3-1-如何使用全局上下文处理器" class="headerlink" title="3.1 如何使用全局上下文处理器"></a>3.1 如何使用全局上下文处理器</h4>现要向模板传递一个叫做<code>site_name</code>的全局变量以便在所有模板中都能使用<code>site_name</code>输出站点名称。现在blog(app)的目录下新建<code>context_processors.py</code>中，新增如下代码：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># blog&#x2F;context_processors.py</span><br><span class="line"></span><br><span class="line">from django.conf import settings</span><br><span class="line">def global_site_name(request):</span><br><span class="line">    return &#123;&#39;site_name&#39;, settings.SITE_NAME,&#125;</span><br></pre></td></tr></table></figure>
+然后在<code>settings</code>文件里增加如下申明：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#39;context_processors&#39;: [ # 以下包含了4个默认的全局上下文处理器</span><br><span class="line">    &#39;django.template.context_processors.debug&#39;,</span><br><span class="line">    &#39;django.template.context_processors.request&#39;,</span><br><span class="line">    &#39;django.contrib.auth.context_processors.auth&#39;,</span><br><span class="line">    &#39;django.contrib.messages.context_processors.messages&#39;,</span><br><span class="line">    &#39;blog.context_processors.global_site_name&#39;, # 自定义全局上下文处理器</span><br></pre></td></tr></table></figure>
+<h3 id="全局变量与本地变量的优先级"><a href="#全局变量与本地变量的优先级" class="headerlink" title="全局变量与本地变量的优先级"></a>全局变量与本地变量的优先级</h3>全局上下文处理器提供的变量优先级高于单个视图函数给单个模板传递的变量。这意味着全局上下文处理器提供的变量可能会覆盖你视图函数中自定义的本地变量，因此具体使用时请注意避免本地变量名与全局上下文处理器提供的变量名称重复。这些变量名包括perms，user和debug等等。<br>如果我们要设计单个视图函数定义的变量名覆盖全局变量，请使用如下强制模式：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">from django.template import RequestContext</span><br><span class="line"></span><br><span class="line">high_priority_context &#x3D; RequestContext(request)</span><br><span class="line">high_priority_context.push(&#123;&quot;my_name&quot;: &quot;Adrian&quot;&#125;)</span><br></pre></td></tr></table></figure>
+<h2 id="二-Django信号机制及示例"><a href="#二-Django信号机制及示例" class="headerlink" title="二.Django信号机制及示例"></a>二.Django信号机制及示例</h2><blockquote>
+<p>前言：Django框架包含了一个信号机制，它允许若干个发送者(sender)通知一组接收者(receiver)某些特定操作或事件(events)已经发生了，接收者收到指令信号(signals)后再去执行特定的操作。这部分介绍Django信号的工作机制、应用场景、如何在项目中使用信号已经如何自定义信号。</p>
+</blockquote>
+<h3 id="1-信号的工作机制"><a href="#1-信号的工作机制" class="headerlink" title="1.信号的工作机制"></a>1.信号的工作机制</h3>Django中的信号工作机制依赖如下三个主要要素：</li>
+<li>发送者(sender)：信号的发出方，可以是模型，也可以是视图。当某个操作发生时，发送者会发出信号。</li>
+<li>信号(signal)：发送的信号本身</li>
+<li>接收者(receiver)：信号的接收者，其本质是一个回调函数。将这个函数注册到信号上，当特定的事件发生时，发送者发送信号，回调函数就会被执行。<h3 id="2-信号的应用场景"><a href="#2-信号的应用场景" class="headerlink" title="2.信号的应用场景"></a>2.信号的应用场景</h3>信号主要用于Django项目内不同时间得联动，实现程序的解耦。发送通知也是一个信号常用的场景。<blockquote>
+<p>注意：Django中信号监听函数不是异步执行，而是同步执行，所以需要异步执行耗时的任务时(比如发送邮件或写入文件)，不建议使用Django自带的信号。</p>
+</blockquote>
+<h3 id="3-使用举例"><a href="#3-使用举例" class="headerlink" title="3.使用举例"></a>3.使用举例</h3>假设我们的Profile模型，与User模型是一对一关系。我们希望创建User对象实例时能自动创建Profile对象实例，而更新User对象实例时不创建新的Profile对象实例。这时我们可以自定义<code>create_user_profile</code>和<code>save_user_profile</code>两个监听函数，同时监听sender(User模型)发出的<code>post_save</code>信号。由于<code>post_save</code>可同时用于模型的创建和更新，我们用<code>if created</code>这个判断来加以区别。<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">from django.db import models</span><br><span class="line">from django.db.models.signals import post_save</span><br><span class="line">from django.dispatch import receiver</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class Profile(models.Model):</span><br><span class="line">    user &#x3D; models.OneToOneField(User, on_delete&#x3D;models.CASCADE)</span><br><span class="line">    birth_date &#x3D; models.DateField(null&#x3D;True, bland&#x3D;True)</span><br><span class="line"></span><br><span class="line"># 监听User模型创建</span><br><span class="line">@receiver(post_save, sender&#x3D;User)</span><br><span class="line">def create_user_profile(sender, instance, created, **kwargs):</span><br><span class="line">    if created:</span><br><span class="line">        Profile.objects.create(user&#x3D;instance)</span><br><span class="line"></span><br><span class="line"># 监听User模型更新</span><br><span class="line">@receiver(post_save, sender&#x3D;User)</span><br><span class="line">def save_user_profile(sender,instance, **kwargs):</span><br><span class="line">    instance.profile.save()</span><br></pre></td></tr></table></figure>
+我们再来看一个使用信号清除缓存的例子。当模型A被更新或被删除时，会分别发出<code>post_save</code>和<code>post_delete</code>的信号，监听这两个信号的receivers函数会自动清楚缓存里的A对象列表。<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">from django.core.cache import cache</span><br><span class="line">from django.db.models.signals import post_delete, post_save</span><br><span class="line">from django.dispatch import receiver</span><br><span class="line"></span><br><span class="line">@receiver(post_save, sender&#x3D;ModelA)</span><br><span class="line">def cache_post_save_handler(sender, **kwargs)：</span><br><span class="line">    cache.delete(&#39;cached_a_objetcs&#39;)</span><br><span class="line">    </span><br><span class="line">@receiver(post_delete, sneder&#x3D;ModelA)</span><br><span class="line">def cache_post_delete_handler(sender, **kwargs):</span><br><span class="line">    cache.delete(&#39;cached_a_objects&#39;)</span><br></pre></td></tr></table></figure>
+<h3 id="4-Django常用内置信号："><a href="#4-Django常用内置信号：" class="headerlink" title="4.Django常用内置信号："></a>4.Django常用内置信号：</h3>前面例子举例了<code>post_save</code>和<code>post_delete</code>信号。Django还内置了其他信号：</li>
+<li>pre_save&amp;post_save：在模型调用save()方法之前或之后发送</li>
+<li>pre_init&amp;post_init：在模型调用_init_方法之前或之后发送。</li>
+<li>pre_delete &amp; post_delete：在模型调用delete()方法或查询集调用delete()方法之前或之后发送。</li>
+<li>request_started &amp; request_finished：Django建立或关闭HTTP请求时发送。<h2 id="二-自定义Django-admin管理命令"><a href="#二-自定义Django-admin管理命令" class="headerlink" title="二.自定义Django-admin管理命令"></a>二.自定义Django-admin管理命令</h2><blockquote>
+<p>前言：每次在启动Django服务之前，我们都会在终端运行<code>python mnaage.py xxx</code>的管理命令。其实我们还可以自定义管理命令，这对于执行独立的脚本或任务非常有用，比如清除缓存、导出用户邮件清单或发送邮件等等。</br><br>自定义的管理命令不仅可以通过<code>manage.py</code>运行，还可以通过Linux或Celery的crontab服务将其设成定时任务。这部分主要讲解如何自定义Django-admin命令，并提供一些演示案例。</br><br>自定义Django-admin命令一共分三步：创建文件夹布局、编写命令代码和测试使用。</p>
+</blockquote>
+<h3 id="1-创建文件夹布局"><a href="#1-创建文件夹布局" class="headerlink" title="1.创建文件夹布局"></a>1.创建文件夹布局</h3>自定义的Django-admin管理命令本质上是一个python脚本文件，它的存放路径必须遵循一定的规范，一般位于<code>app/management/commands</code>目录。整个文件夹的布局如下所示：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">app01&#x2F;</span><br><span class="line">    __init__.py</span><br><span class="line">    models.py</span><br><span class="line">    management&#x2F;</span><br><span class="line">        __init__.py</span><br><span class="line">        commands&#x2F;</span><br><span class="line">            __init__.py</span><br><span class="line">            _private.py # 以下划线开头文件不能用作管理命令</span><br><span class="line">            my_commands.py # 这个就是自定义的管理命令脚本，文件名即为命令名</span><br><span class="line">    tests.py</span><br><span class="line">    views.py</span><br></pre></td></tr></table></figure>
+注意：</li>
+<li><code>management</code>和<code>commands</code>每个目录下都必须有个<code>__init__.py</code>文件，表明这是一个python包。另外以下划线开头的文件名不能用作管理命令脚本。</li>
+<li><code>management/commands</code>目录可以位于任何一个app的目录下，Django都能找到它。</li>
+<li>一般建议每个python脚本文件对应一条管理命令<h3 id="2-编写命令代码"><a href="#2-编写命令代码" class="headerlink" title="2.编写命令代码"></a>2.编写命令代码</h3>每一个自定义的管理命令本质是一个<code>Command</code>类，它继承了Django的<code>Basecommand</code>或其子类，主要通过重写<code>handle()</code>方法实现自己的业务逻辑代码，而<code>add_argument()</code>则用于帮助处理命令行的参数，如果运行命令时不需要额外参数，可以不写这个方法。<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">from django.core.management.base import BaseCommand</span><br><span class="line"></span><br><span class="line">class Command(BaseCommand):</span><br><span class="line">    # 帮助文本，一般备注命令的用途及如何使用</span><br><span class="line">    help &#x3D; &#39;Some help texts&#39;</span><br><span class="line">    </span><br><span class="line">    # 处理命令行参数，可选</span><br><span class="line">    def add_argument(self, parser)：</span><br><span class="line">        pass</span><br><span class="line">        </span><br><span class="line">    # 核心业务逻辑</span><br><span class="line">    def handle(self, *args, **options):</span><br><span class="line">        pass</span><br></pre></td></tr></table></figure>
+<h3 id="3-实践"><a href="#3-实践" class="headerlink" title="3.实践"></a>3.实践</h3><blockquote>
+<p>前言：我们现在来看一个最简单的例子，希望定义一个<code>heelo_world</code>的命令。这样当我们运行<code>python manage.py hello_world</code>命令时，控制台会打印出<code>Hello World!</code>的字样。在<code>app/management/commands</code>目录下新建<code>hello_world.py</code>，添加如下代码：</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">from django.core.management.base iport BaseCommand</span><br><span class="line"></span><br><span class="line">class Command(BaseCommand):</span><br><span class="line">    # 帮助文本，一般备注命令的用途及如何使用</span><br><span class="line">    help &#x3D; &quot;Print Hello World！&quot;</span><br><span class="line">    </span><br><span class="line">    # 核心业务逻辑</span><br><span class="line">    def handle(self, *args, **options):</span><br><span class="line">        # 注意：当我们使用管理命令并希望在控制台输出指定信息时，我们应该使用self.stdout和self.stderr方法，而不应该直接使用python的print方法。另外，我们不需要在消息的末尾加上换行符，它将被自动添加。</span><br><span class="line">        self.stdout.write(&#39;Hello World!&#39;)</span><br></pre></td></tr></table></figure>
+&emsp;&emsp;现在我们来稍微增加点难度，来通过命令行给<code>hello_world</code>命令传递参数，以实现运行<code>python manage.py hello_world John</code>命令时，打印出<code>Hello World! John</code>。</br><br>&emsp;&emsp;现在我们修改原<code>hello_world.py</code>，添加<code>add_arguments</code>方法，该方法的作用是给自定义的handle方法添加一个或多个参数<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">from django.core.managements.base import BaseCommand</span><br><span class="line"></span><br><span class="line">class Command(BaseCommand):</span><br><span class="line">    # 帮助文本，一般备注命令的用途及如何使用</span><br><span class="line">    help &#x3D; &quot;Print Hello World!&quot;</span><br><span class="line">    </span><br><span class="line">    # 给命令添加一个名为name的参数</span><br><span class="line">    def add_argument(self, parser):</span><br><span class="line">        parser.add_argument(&#39;name&#39;)</span><br><span class="line">        </span><br><span class="line">    # 核心业务逻辑，通过options字典接收name参数值，拼接字符串后输出</span><br><span class="line">    def handle(self, *args, **options):</span><br><span class="line">        msg &#x3D; &#39;Hello World !&#39; + options[&#39;name&#39;]</span><br><span class="line">        self.stdout.write(msg)</span><br></pre></td></tr></table></figure>
+<h3 id="4-实际使用场景"><a href="#4-实际使用场景" class="headerlink" title="4.实际使用场景"></a>4.实际使用场景</h3><blockquote>
+<p>前言：我们来看两个自定义管理命令的实际应用案例</p>
+</blockquote>
+<h4 id="4-1检查数据库连接是否已经就绪"><a href="#4-1检查数据库连接是否已经就绪" class="headerlink" title="4.1检查数据库连接是否已经就绪"></a>4.1检查数据库连接是否已经就绪</h4>无论使用常规方式还是Docker在生产环境部署Django项目，我们都需要确保数据库连接已经就绪后才进行数据库迁移(migrate)操作，否则Django应用程序一定会报错。</br><br>此时我们可以自定义一个<code>wair_for_db</code>的命令，如下所示：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"># app&#x2F;management&#x2F;commands&#x2F;wait_for_db.py</span><br><span class="line"></span><br><span class="line">import time</span><br><span class="line">from django.db import connections</span><br><span class="line">from django.db.utils import OperationError</span><br><span class="line">from django.core.management import BaseCommand</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Class Command(BaseCommand):</span><br><span class="line">    help &#x3D; &#39;Run data migrations util db is available.&#39;</span><br><span class="line">    </span><br><span class="line">    def handle(self, *args, **options):</span><br><span class="line">        self.stdout.write(&#39;Waiting for database...&#39;)</span><br><span class="line">        db_conn &#x3D; None</span><br><span class="line">        while not db_conn:</span><br><span class="line">            try:</span><br><span class="line">                # try to build connection</span><br><span class="line">                db_conn &#x3D; connections[&#39;default&#39;]</span><br><span class="line">            except OperationalError:</span><br><span class="line">                # 连接失败，就等待1s</span><br><span class="line">                self.stdout.write(&#39;Database unavilable, waiting 1 second...&#39;)</span><br><span class="line">                time.sleep(1)</span><br><span class="line">        </span><br><span class="line">        self.stdout.write(self.style.SUCCESS(&#39;Database available!&#39;))</span><br></pre></td></tr></table></figure>
+定义好这个命令之后每次在运行<code>python manage.py migrate</code>命令前先运行<code>python manage.py wait_for_db</code>即可<h4 id="4-2-周期性发送邮件"><a href="#4-2-周期性发送邮件" class="headerlink" title="4.2 周期性发送邮件"></a>4.2 周期性发送邮件</h4><blockquote>
+<p>应用场景：如果你是网站管理员，你肯定希望知道每天有多少新用户已注册，这时你可以自定义一条<code>mail_admin</code>的管理命令，将每天新注册用户数量以邮件形式发送给自己，如下所示：</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"># app&#x2F;management&#x2F;commands&#x2F;mail_admin.py</span><br><span class="line"></span><br><span class="line">#-*- coding:utf-8 -*-</span><br><span class="line">from datetime import timedelta, time, datetime</span><br><span class="line">from django.core.mail import mail_admins</span><br><span class="line">from django.core.managements import BaseCommand</span><br><span class="line">from django.utils import timezone</span><br><span class="line">from django.contrib.auth import get_user_model</span><br><span class="line"></span><br><span class="line">User &#x3D; get_user_model()</span><br><span class="line"></span><br><span class="line">today &#x3D; timezone.now()</span><br><span class="line">yesterday &#x3D; today - timedelta(1)</span><br><span class="line"></span><br><span class="line">Class Command(BaseCommand):</span><br><span class="line">    # 获取过去一天注册的用户数量</span><br><span class="line">    user_count &#x3D; User.objects.filter(data_joined_range&#x3D;(yesterday, today)).count()</span><br><span class="line">    </span><br><span class="line">    # 发送给管理员</span><br><span class="line">    if user_count &gt;&#x3D; 1:</span><br><span class="line">        message &#x3D; &quot;You have got &#123;&#125; user(s) in the past 24 hours&quot;.format(user_count)</span><br><span class="line">        </span><br><span class="line">        subject &#x3D; (</span><br><span class="line">            f&quot;New user count for &#123;today.strftime(&quot;%Y-%m-%d&quot;)&#125;:&#123;user_count&#125;&quot;</span><br><span class="line">        )</span><br><span class="line">        </span><br><span class="line">        mail_admin(subject&#x3D;subject, message&#x3D;message, html_message&#x3D;None)</span><br><span class="line">        </span><br><span class="line">        self.stdout.write(&quot;Email was sent&quot;)</span><br><span class="line">    else:</span><br><span class="line">        self.stdout.write(&quot;No new users today&quot;)</span><br></pre></td></tr></table></figure>
+其中，真正发送邮件成功需要设置Email后台及管理员，测试环境下可以使用如下简单配置：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">EMAIL_BACKEND &#x3D; &quot;dkjango.core.mail.bakends.EmailBackend&quot;</span><br><span class="line">DEFAULT_FROM_EAIL &#x3D; &quot;noreply@example.com&quot;</span><br><span class="line">ADMINS &#x3D; [(&quot;大江狗&quot;, &quot;yunbo.shi@example.com&quot;),]</span><br></pre></td></tr></table></figure>
+但是如果每天都要进入终端运行这个命令实在太麻烦了，我们完全可以使用Linux的crontab服务或Celery-Beat将其设置成周期性定时任务task，这时只需要调用Django的<code>call_command</code>方法即可<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"># app&#x2F;tasks.py， 可以在任一app目录下新建task</span><br><span class="line">from celery import shared_task</span><br><span class="line">from django.core.management import call_command</span><br><span class="line"></span><br><span class="line">@shared_task</span><br><span class="line">def mail_admin():</span><br><span class="line">    call_command(&quot;mail_admin&quot;,)</span><br></pre></td></tr></table></figure>
+<h2 id="三-Django项目中使用Celery执行异步和周期性任务"><a href="#三-Django项目中使用Celery执行异步和周期性任务" class="headerlink" title="三.Django项目中使用Celery执行异步和周期性任务"></a>三.Django项目中使用Celery执行异步和周期性任务</h2><blockquote>
+<p>前言：Django Web项目中我们经常需要执行耗时的任务比如发送邮件、调用第三方接口、批量处理文件等等，将这些任务异步化放在后台运行可以有效缩短请求响应时间。另外服务器上经常会有定时任务的需求，比如清除缓存、备份数据库等工作。Celery是一个高效的异步任务队列/基于分布式消息传递的作业队列，可以轻松帮助我们在Django项目中设置执行异步和周期性任务。</p>
+</blockquote>
+<h3 id="1-Celery的工作原理"><a href="#1-Celery的工作原理" class="headerlink" title="1.Celery的工作原理"></a>1.Celery的工作原理</h3>Celery是一个高效的基于分布式消息传递的作业队列，它主要通过消息(messages)传递任务，通常使用一个叫Broker(中间人)来协调client(任务的发出者)和worker(任务的处理者)。clients发出消息到队列中，broker将队列中的消息派发给Celery worker来处理。Celery本身不提供消息服务，它支持的消息服务(Broker)有RabbitMQ和Redis，Redis一般多是Django项目中首选的缓存后台。<h3 id="2-安装项目依赖文件"><a href="#2-安装项目依赖文件" class="headerlink" title="2.安装项目依赖文件"></a>2.安装项目依赖文件</h3>本项目使用了最新Django和Celery版本。因为本项目使用Redis做消息队列的broker，所以还需要安装redis。如果你需要另外设置定时或周期性任务，还需要安装<code>django-celery-beat</code>。<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"># pip 安装首选</span><br><span class="line">Django&#x3D;&#x3D;3.2</span><br><span class="line">celery&#x3D;&#x3D;5.0.5</span><br><span class="line">redis&#x3D;&#x3D;3.5.3</span><br><span class="line"></span><br><span class="line"># 可选,windows下运行celery 4以后版本，还需要额外安装eventlet库</span><br><span class="line">eventlet</span><br><span class="line"></span><br><span class="line"># 推荐安装，需要设置定时或周期任务时安装，推荐安装</span><br><span class="line">django-celery-results&#x3D;&#x3D;2.0.1</span><br><span class="line"></span><br><span class="line"># 视情况需要，需要监控celery运行定时任务时安装</span><br><span class="line">folower&#x3D;&#x3D;0.9.7</span><br></pre></td></tr></table></figure>
+<h3 id="3-Celery配置"><a href="#3-Celery配置" class="headerlink" title="3.Celery配置"></a>3.Celery配置</h3>在正式使用<code>celery</code>和<code>django-celery-beat</code>之前，需要做基础的配置工作。加入Django项目文件夹布局如下所示，我们首先需要在myproject/myproject目录下新增<code>celery.py</code>并修改<code>__init__.py</code><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">- myproject&#x2F;</span><br><span class="line">  - manage.py</span><br><span class="line">  - project&#x2F;</span><br><span class="line">    - __init__.py # 修改这个文件</span><br><span class="line">    - celery.py # 新增这个文件</span><br><span class="line">    - asgi.py</span><br><span class="line">    - settings.py</span><br><span class="line">    - urls.py</span><br><span class="line">    - wsgi.py</span><br></pre></td></tr></table></figure>
+新建<code>celery.py</code>，添加如下代码：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">import os</span><br><span class="line">from celery import Celery</span><br><span class="line"></span><br><span class="line"># 设置环境变量</span><br><span class="line">os.environ.setdefault(&#39;DJANGO_SETTINGS_MODULE&#39;, &#39;myproject.settings&#39;)</span><br><span class="line"></span><br><span class="line"># 实例化</span><br><span class="line">app &#x3D; Celery(&#39;myproject&#39;)</span><br><span class="line"></span><br><span class="line"># namespace &#x3D;&#39;CELERY&#39;作用是允许在Django配置文件中对Celery进行配置</span><br><span class="line"># 但所有Celery配置项必须以CELERY开头，防止冲突</span><br><span class="line">app.config_from_object(&#39;django.conf:settings&#39;, namespace&#x3D;&#39;CELERY&#39;)</span><br><span class="line"></span><br><span class="line"># 自动的从Django的已注册app中发现任务</span><br><span class="line">app.autodiscover_tasks()</span><br><span class="line"></span><br><span class="line"># 一个测试任务</span><br><span class="line">@app.task(bind&#x3D;True)</span><br><span class="line">def debug_task(self):</span><br><span class="line">    print(f&#39;Request: &#123;self.request!r&#125;&#39;)</span><br></pre></td></tr></table></figure>
+修改<strong>init</strong>.py，如下所示：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">from .celery import app as celery_app</span><br><span class="line">__all__ &#x3D; (&#39;celery_app&#39;,)</span><br></pre></td></tr></table></figure>
+接下来修改Django项目的<code>settings.py</code>，添加Celery有关配置选项，如下所示：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># 最重要的配置，设置消息broker，格式为：db:&#x2F;&#x2F;user:password@host:port&#x2F;dbname</span><br><span class="line"># 如果redis安装在本机，使用localhost</span><br><span class="line"># 如果docker部署的redis,使用redis:&#x2F;&#x2F;redis:6379</span><br><span class="line">CELERY_BROKER_URL &#x3D; &quot;redis:&#x2F;&#x2F;127.0.0.1:6379&#x2F;0&quot;</span><br><span class="line"></span><br><span class="line"># celery时区设置，建议与Django settings中TIME_ZONE同样时区，防止时差</span><br><span class="line"># Django设置时区需同时设置USE_TZ&#x3D;True和TIME_ZONE &#x3D; &#39;Asia&#x2F;Shanghai&#39;</span><br><span class="line">CELERY_TIMEZONE &#x3D; TIME_ZONE</span><br></pre></td></tr></table></figure>
+其他Celery常用配置选项包括：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"># 为Django_celery_results存储Celery任务执行结果设置后台</span><br><span class="line"># 格式为： db+scheme:&#x2F;&#x2F;user:paasword@host:port&#x2F;dbname</span><br><span class="line"># 支持数据库django-db和缓存django-cache存储任务状态及结果</span><br><span class="line">CELERY_RESULT_BACKEND &#x3D; &quot;django-db&quot;</span><br><span class="line"># celery内容等消息的格式设置，默认为json</span><br><span class="line">CELERY_ACCEPT_CONTENT &#x3D; [&#39;application&#x2F;json&#39;,]</span><br><span class="line">CELERY_TASK_SERIALIZER &#x3D; &#39;json&#39;</span><br><span class="line">CELERY_RESULT_SERIALIZER &#x3D; &#39;json&#39;</span><br><span class="line"></span><br><span class="line"># 为任务设置超时时间，单位秒。超时即终止，执行下个任务</span><br><span class="line">CELERT_TASK_TIME_LIMIT &#x3D; 5</span><br><span class="line"></span><br><span class="line"># 为存储结果设置过期日期，默认1天过期。如果beat开启,Celery每天会自动清除</span><br><span class="line"># 设为0，则存储结果用不过期</span><br><span class="line">CELERY_RESULT_EXPIRES &#x3D; xx</span><br><span class="line"></span><br><span class="line"># 任务限流</span><br><span class="line">CELERY_TASK_ANNOTATIONS &#x3D; &#123;&#39;tasks.add&#39;:&#123;&#39;rate_limit&#39;: &#39;10&#x2F;s&#39;&#125;&#125;</span><br><span class="line"></span><br><span class="line"># worker并发数量，一般默认CPU核数，可以不设置</span><br><span class="line">CELERY_WORKER_CONCURRENCY &#x3D; 2</span><br><span class="line"></span><br><span class="line"># 每个worker执行了多少任务就会死掉，默认是无限的</span><br><span class="line">CELERY_WORKER_MAX_TASKS_PER_CHILD &#x3D; 200</span><br></pre></td></tr></table></figure>
+注意：</li>
+<li>在Django中正式编写和执行自己的异步任务前，一定要先测试redis和celery是否安装好并配置成功</li>
+<li>一个无限期阻塞的任务会使得工作单元无法再做其他事情，建议给任务设置超时时间<h3 id="4-测试Celery是否工作正常"><a href="#4-测试Celery是否工作正常" class="headerlink" title="4.测试Celery是否工作正常"></a>4.测试Celery是否工作正常</h3>&emsp;&emsp;首先需要启动redis服务</br><br>&emsp;&emsp;启动redis服务后，要先进入项目所在文件夹运行<code>python manage.py runserver</code>命令启动Django服务器(无需创建任何app)，然后再打开一个终端terminal窗口输入celery命令，启动worker<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># Linux下测试，启动Celery</span><br><span class="line">Celery -A myproject worker -l info</span><br><span class="line"></span><br><span class="line"># windows下测试，启动Celery</span><br><span class="line">Celery -A myproject worker -l info -P eventlet</span><br><span class="line"></span><br><span class="line"># 如果Windows下Celery不工作，输入如下命令</span><br><span class="line">Celery -A myproject worker -l info --pool&#x3D;solo</span><br></pre></td></tr></table></figure>
+<h3 id="5-编写任务"><a href="#5-编写任务" class="headerlink" title="5.编写任务"></a>5.编写任务</h3>Celery配置完成后，可以编写任务了。Django项目中所有需要Celery执行的异步或周期性任务都放在tasks.py文件里，该文件可以位于project目录下，也可以位于各个app的目录下，专属于某个Celery实例化项目的task可以使用<code>@app.task</code>装饰器定义，各个app目录下可以复用的task建议使用<code>@shared_task</code>定义<br>示例如下所示：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"># myproject&#x2F;tasks.py</span><br><span class="line"># 专属于myproject项目的任务</span><br><span class="line">app &#x3D; Celery(&#39;myproject&#39;)</span><br><span class="line">@app.task</span><br><span class="line">def test():</span><br><span class="line">    pass</span><br><span class="line">    </span><br><span class="line"># app&#x2F;tasks.py,可以复用的task</span><br><span class="line">from celery import shared_task</span><br><span class="line">import time</span><br><span class="line"></span><br><span class="line">@shared_task</span><br><span class="line">def add(x, y):</span><br><span class="line">    time.sleep(2)</span><br><span class="line">    return x + y</span><br></pre></td></tr></table></figure>
+上面我们定义了一个名为<code>add</code>的任务，它接收两个参数，并返回计算结果。为了模拟耗时任务，我们中途让其sleep 2s。现在已经定义了一个耗时任务，我们希望在Django的视图或其他地方中以异步方式调用执行它，做法如下面所示：<br>注意：</li>
+<li>使用celery定义任务时，避免在一个任务中调用另一个异步任务，容易造成阻塞。</li>
+<li>当我们使用<code>@app.task</code>装饰器定义我们的异步任务时，那么这个任务依赖于根据项目名myproject生成的Celery实例。然而我们在进行Django开发时为了保证每个app的可重用性。我们经常会在每个app文件夹下编写异步任务，这些任务并不依赖于具体的Django项目名。使用<code>@shared_app</code>装饰器能让我们避免对某个项目名对应Celery实例的依赖，使app的可移植性更强<h3 id="6-异步调用任务"><a href="#6-异步调用任务" class="headerlink" title="6.异步调用任务"></a>6.异步调用任务</h3>Celery提供了2种以异步方式调用任务的方法，<code>delay</code>和<code>apply_async</code>方法，如下所示：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># 方法一： delay方法</span><br><span class="line">task_name.delay(args1, args2, kwargs&#x3D;value_1, kwargs2&#x3D;value_2)</span><br><span class="line"></span><br><span class="line"># 方法二： apply_async方法，与delay类似，但支持更多的参数</span><br><span class="line">task.apply_async(args&#x3D;[arg1, arg2], kwargs&#x3D;&#123;key:value, key:value&#125;)</span><br></pre></td></tr></table></figure>
+接下来我们来看一个具体的例子，我们编写了一个Django视图函数，使用<code>delay</code>方法调用<code>add</code>任务。<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"># app&#x2F;views.py</span><br><span class="line">from .tasks import add</span><br><span class="line"></span><br><span class="line">def test_celery(request):</span><br><span class="line">    add.delay(3, 5)</span><br><span class="line">    return HttpResponse(&#39;Celery works&#39;)</span><br><span class="line">    </span><br><span class="line"># app&#x2F;urls.py</span><br><span class="line">uslpatterns &#x3D; [</span><br><span class="line">    re_path(r&#39;^test&#x2F;$&#39;, views.test_celery, name&#x3D;&quot;test_celery&quot;)</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+我们现在再次使用<code>apply_async</code>方法调用<code>add</code>任务，不过还要打印初任务的id(task.id)和状态status。Celery会为每个加入到队列中的任务分配独一无二的uuid，可以通过<code>task.status</code>获取状态和<code>task.result</code>获取结果。注意：<code>apply_async</code>传递参数的方式与delay方法略有不同。<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># app&#x2F;views.py</span><br><span class="line">from .tasks import add</span><br><span class="line"></span><br><span class="line">def test_celery(request):</span><br><span class="line">    result &#x3D; add.apply_async(args&#x3D;[3,5])</span><br><span class="line">    return HttpResponse(result.task_id + &#39; : &#39; + result.status)</span><br></pre></td></tr></table></figure>
+除了在Django admin后台中查看任务状态和结果，你还可以在视图中通过<code>AsyncResult</code>方法获取任务执行状态和结果，它需要接收一个任务的task_id(通常为uuid格式)<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">from celery.result imprt AsyncResult</span><br><span class="line"># 调用异步任务</span><br><span class="line">async_task &#x3D; add.apply_async(args&#x3D;[3, 5])</span><br><span class="line"># 获取任务状态及结果</span><br><span class="line">AsyncResult(async_task.task_id).status</span><br><span class="line">AsyncResult(async_task.task_id).result</span><br></pre></td></tr></table></figure>
+<h3 id="7-设置定时和周期性任务"><a href="#7-设置定时和周期性任务" class="headerlink" title="7.设置定时和周期性任务"></a>7.设置定时和周期性任务</h3>借助于装<code>django-celery-beat</code>后，可以将任一Celery任务设置为定时任务或周期性任务，使用它你只需要通过pip安装它，并加入INSTALLED_APPS里去。</br><figure class="highlight plain"><figcaption><span>admin后台添加</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#### 7.1 配置文件添加任务</span><br><span class="line">同一任务可以设置成不同的调用周期，给它们不同的任务名就好了</span><br></pre></td></tr></table></figure>
+from datetime import timedelta<br>CELERY_BEAT_SCHEDULE = {<br>  “add-every-30s”:{<pre><code>  &quot;task&quot;: &quot;app.tasks.add&quot;,
+  &quot;schedule&quot;: 30.0, # 每30s执行一次
+  &#39;args&#39;: (3, 8)
+</code></pre>
+  },<br>  “add-every-day”:{<pre><code>  &quot;task&quot;: &quot;app.tasks.add&quot;,
+  &#39;schedule&#39;: timedelta(hours=1), #每1小时执行1次
+  &#39;args&#39;: (3,8)
+</code></pre>
+  }<br>}<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#### 7.2 通过Crontab设置定时任务</span><br><span class="line">如果你希望在特定的时间(某月某周或某天)执行一个任务，你可以通过crontab设置定时任务，如下例所示：</span><br></pre></td></tr></table></figure>
+CELERY_BEAT_SCHEDULE = {<h1 id="每周一早上7点半执行"><a href="#每周一早上7点半执行" class="headerlink" title="每周一早上7点半执行"></a>每周一早上7点半执行</h1>  ‘add-every-monday-morning’:{<pre><code>  &#39;task&#39;: &#39;app.tasks.add&#39;,
+  &#39;schedule&#39;: crontab(hour=7, minute=30,day_of_week=1),
+  &#39;args&#39;: (7, 8)
+</code></pre>
+  }<br>}<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">### 8.启动任务调度器beat</span><br><span class="line">前面我们只是添加了定时或周期性任务，我们还需要启动任务调度器beat分发定时和周期任务给Celery的worker</span><br><span class="line">#### 8.1启动任务调度器beat</span><br><span class="line">多开几个终端，一个用来启动任务调度器beat，另一个启动celery worker，任务就可以在后台执行了</span><br></pre></td></tr></table></figure>
+<h1 id="开启任务调度器"><a href="#开启任务调度器" class="headerlink" title="开启任务调度器"></a>开启任务调度器</h1>Celery -A myproject beat</li>
+</ul>
+<h1 id="Linux下开启Celery-worker"><a href="#Linux下开启Celery-worker" class="headerlink" title="Linux下开启Celery worker"></a>Linux下开启Celery worker</h1><p>Celery -A myproject worker -l info</p>
+<h1 id="windows下开启Celery-worker"><a href="#windows下开启Celery-worker" class="headerlink" title="windows下开启Celery worker"></a>windows下开启Celery worker</h1><p>Celery -A myproject worker -l info -P eventlet</p>
+<h1 id="windows下如果报Pid错误"><a href="#windows下如果报Pid错误" class="headerlink" title="windows下如果报Pid错误"></a>windows下如果报Pid错误</h1><p>Celery -A myproject worker -l info –pool=solo</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#### 8.2 Flower监控任务执行状态</span><br><span class="line">除了&#96;&#96;&#96;django_celery_results&#96;&#96;&#96;，你可以使用&#96;&#96;&#96;flower&#96;&#96;&#96;监控后台执行任务状态。它提供了一个可视化的界面，在测试环境中非常有用</span><br></pre></td></tr></table></figure>
+<p>pip install flower</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">安装好后，你有如下两种方式启动服务器。启动服务器后，打开&#96;&#96;&#96;http:&#x2F;&#x2F;localhost:5555&#96;&#96;&#96;即可查看监控情况</span><br></pre></td></tr></table></figure>
+<h1 id="从terminal终端启动，proj为项目名"><a href="#从terminal终端启动，proj为项目名" class="headerlink" title="从terminal终端启动，proj为项目名"></a>从terminal终端启动，proj为项目名</h1><p>$ flower -A proj –port=5555</p>
+<h1 id="从celery启动"><a href="#从celery启动" class="headerlink" title="从celery启动"></a>从celery启动</h1><h1 id="celery-flower-A-proj-–address-127-0-0-1-–port-5555"><a href="#celery-flower-A-proj-–address-127-0-0-1-–port-5555" class="headerlink" title="celery flower -A proj –address=127.0.0.1 –port=5555"></a>celery flower -A proj –address=127.0.0.1 –port=5555</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">### 9.Celery高级用法与注意事项</span><br><span class="line">#### 9.1给任务设置最大重试次数</span><br><span class="line">定义任务时可以通过&#96;&#96;&#96;max_retries&#96;&#96;&#96;设置最大重试次数，并调用&#96;&#96;&#96;self.retry&#96;&#96;&#96;方法调用。因为要调用&#96;&#96;&#96;self&#96;&#96;&#96;这个参数，定时任务必须设置&#96;&#96;&#96;bind&#x3D;True&#96;&#96;&#96;</span><br></pre></td></tr></table></figure>
+<p>@shared_task(bind=True, max_retries=3)<br>def send_batch_notification(self):<br>    try:<br>        something_raising()<br>        raise Excepton(‘Can’t send email.’)<br>    except Exception as exec:<br>        self.retry(exc=exc, countdown=5)<br>    send_email(<br>        subject=’Batch email notifications’,<br>        message=’Test mail’,<br>        from_email=’no-reply@example.com’,<br>        recipient_list=[‘john@example.com’]<br>    )</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#### 9.2 不同任务交由不同Queue处理</span><br><span class="line">不同任务所需要的时间和资源不一样。为了防止一些非常占用资源或耗时的任务阻塞任务队列导致一些简单的任务也无法执行，可以将不同的任务交由不同的Queue处理。下例定义了两个Queue队列，default执行普通任务，heavy_tasks执行重型任务。</span><br></pre></td></tr></table></figure>
+<p>CELERY_TASK_DEFAULT_QUEUE = ‘default’<br>CELERY_TASK_DEFAULT_ROUTING_KEY = ‘default’<br>CELERY_QUEUES = (<br>    Queue(‘default’, Exchage(‘default’), routing_key=’default’)<br>    Queue(‘heavy_tasks’, Exchage(‘heavy_tasks’), routing_key=’heavy_tasks’)<br>)<br>CELERY_TASK_ROUTES = {<br>    ‘mysqpp.tasks.havy_tasks’: ‘heavy_tasks’<br>}</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#### 9.3 Django的模型对象不应该作为参数传递</span><br><span class="line">Django的模型对象不应该作为参数传递给任务，几乎总时在任务运行时从数据库获取对象是最好的，因为老的数据会导致竞态条件。假象有这样一个场景，你有一篇文章，以及自动展开文章中缩写的任务：</span><br></pre></td></tr></table></figure>
+<p>class Article(models.Model):<br>    title = models.Charfield()<br>    body = models.Textfield()</p>
+<p>@app.task<br>def expend_abbreviations(article):<br>    article.body.replace(‘Old text’, ‘New text’)<br>    article.save()</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">首先，作者创建一篇文章并保存，这时作者点击一个按钮初始化一个缩写展开任务：</span><br></pre></td></tr></table></figure>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>article = Article.objects.get(id=102)<br>expand_abbreviations.delay(article)</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">现在，队列非常忙，所以任务在2分钟内都不会运行。与此同时，另一个作者修改了这篇文章，当这个任务最终运行，因为老版本的文章作为参数传递给了这个任务，所以这篇文章会回滚到老的版本。修复这个竞态条件很简单，只要参数传递文章的id即可，此时可以在任务中重新获取这篇文章：</span><br></pre></td></tr></table></figure>
+<p>@app.task<br>def expand_abbreviation(article_id):<br>    article = Article.objects.get(id=article_id)<br>    article.body.replace(‘MyCorp’, ‘My Corporation’)<br>    article.save()</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#### 9.4 使用on_commit函数处理事务</span><br><span class="line">再看另外一个celery中处理事务的例子。这是在数据库中创建一个文章对象的Django视图，此时传递主键给任务，它使用&#96;&#96;&#96;commit_on_success&#96;&#96;&#96;装饰器，当视图返回时该事务会被提交，当视图抛出异常时会进行回滚。</span><br></pre></td></tr></table></figure>
+<p>from django.db import transaction</p>
+<p>@transaction.commit_on_success<br>def create_article(request):<br>    article = Article.objects.create()<br>    expand_abbreviation.delay(article.pk)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">如果在事务提交之前已经开始执行会产生一个竞态条件；数据库对象还不存在。解决方案时使用&#96;&#96;&#96;on_commit&#96;&#96;&#96;回调函数来在所有事务提交成功后启动任务。</span><br></pre></td></tr></table></figure>
+<p>from django.db.transaction import on_commit</p>
+<p>def create_article(request):<br>    article = Artile.objects.create()<br>    on_commit(lambda: expand_abbreiation.delay(article.pk))<br>```</p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <div class="declare">
+      <ul class="post-copyright">
+        <li>
+          <i class="ri-copyright-line"></i>
+          <strong>版权声明： </strong>
+          
+          本博客所有文章除特别声明外，著作权归作者所有。转载请注明出处！
+          
+        </li>
+      </ul>
+    </div>
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://twilight2017.github.io/2022/11/21/Django%E9%AB%98%E7%BA%A7%E4%BD%BF%E7%94%A8%EF%BC%9A%E4%BA%8C/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Django/" rel="tag">Django</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%8A%80%E6%9C%AF/" rel="tag">技术</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2022/11/21/Django%E9%AB%98%E7%BA%A7%E4%BD%BF%E7%94%A8%EF%BC%9A%E4%B8%80/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            Django高级使用：一
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2022/11/12/Python%20web%E5%BC%80%E5%8F%91%E5%B7%A5%E5%85%B7/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">Python Web开发工具</div>
+      </a>
+    
+  </nav>
+
+   
+<!-- valine评论 -->
+<div id="vcomments-box">
+  <div id="vcomments"></div>
+</div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js"></script>
+<script>
+  new Valine({
+    el: "#vcomments",
+    app_id: "",
+    app_key: "",
+    path: window.location.pathname,
+    avatar: "monsterid",
+    placeholder: "给我的文章加点评论吧~",
+    recordIP: true,
+  });
+  const infoEle = document.querySelector("#vcomments .info");
+  if (infoEle && infoEle.childNodes && infoEle.childNodes.length > 0) {
+    infoEle.childNodes.forEach(function (item) {
+      item.parentNode.removeChild(item);
+    });
+  }
+</script>
+<style>
+  #vcomments-box {
+    padding: 5px 30px;
+  }
+
+  @media screen and (max-width: 800px) {
+    #vcomments-box {
+      padding: 5px 0px;
+    }
+  }
+
+  #vcomments-box #vcomments {
+    background-color: #fff;
+  }
+
+  .v .vlist .vcard .vh {
+    padding-right: 20px;
+  }
+
+  .v .vlist .vcard {
+    padding-left: 10px;
+  }
+</style>
+
+ 
+   
+     
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2015-2022
+        <i class="ri-heart-fill heart_icon"></i> twilight2017
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        
+        由 <a href="https://hexo.io" target="_blank">Hexo</a> 强力驱动
+        <span class="division">|</span>
+        主题 - <a href="https://github.com/Shen-Yu/hexo-theme-ayer" target="_blank">Ayer</a>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></s>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>
+      <div class="float_btns">
+        <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+      </div>
+    </main>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="瑟兰迪尔"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E6%8A%80%E6%9C%AF">技术</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E8%AF%BB%E4%B9%A6">读书</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/travels">旅行</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E9%9A%8F%E7%AC%94">随笔</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/friends">友链</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/about">关于我</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <script>
+      if (window.matchMedia("(max-width: 768px)").matches) {
+        document.querySelector('.content').classList.remove('on');
+        document.querySelector('.sidebar').classList.remove('on');
+      }
+    </script>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="https://cdn.jsdelivr.net/gh/Shen-Yu/cdn/img/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="https://cdn.jsdelivr.net/gh/Shen-Yu/cdn/img/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-2.0.3.min.js"></script>
+
+
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+
+
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: '.tocbot',
+    contentSelector: '.article-entry',
+    headingSelector: 'h1, h2, h3, h4, h5, h6',
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: 'main',
+    positionFixedSelector: '.tocbot',
+    positionFixedClass: 'is-position-fixed',
+    fixedSidebarOffset: 'auto'
+  });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.css">
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css">
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script>
+
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+
+
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+
+
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+
+
+<link rel="stylesheet" href="/css/clipboard.css">
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+
+
+<!-- CanvasBackground -->
+
+
+    
+  </div>
+</body>
+
+</html>
