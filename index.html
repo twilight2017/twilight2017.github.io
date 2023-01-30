@@ -141,6 +141,81 @@
     
     
     <article
+  id="post-Python模块学习之timeit"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2023/01/30/Python%E6%A8%A1%E5%9D%97%E5%AD%A6%E4%B9%A0%E4%B9%8Btimeit/"
+    >Python模块学习之timeit</a> 
+</h2>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2023/01/30/Python%E6%A8%A1%E5%9D%97%E5%AD%A6%E4%B9%A0%E4%B9%8Btimeit/" class="article-date">
+  <time datetime="2023-01-30T12:21:52.000Z" itemprop="datePublished">2023-01-30</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+  </div>
+   
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="timeit—计算小段Python代码的运行时间"><a href="#timeit—计算小段Python代码的运行时间" class="headerlink" title="timeit—计算小段Python代码的运行时间"></a>timeit—计算小段Python代码的运行时间</h1><blockquote>
+<p>前言：<code>timeit</code>模块提供了一个简单的接口来测量一小段Python代码的执行时间。它使用平台相关的时间函数来提供尽可能精确的时间计算，并通过反复执行代码来减少启动或关闭的开销对时间计算的影响。</p>
+</blockquote>
+<h2 id="模块内容"><a href="#模块内容" class="headerlink" title="模块内容"></a>模块内容</h2><p>&emsp;&emsp;<code>timeit</code>定义了一个公共类<code>Timer</code>。<code>Timer</code>的构造函数接受要计时的语句和设置语句(例如，要初始化变量)。</br><br>&emsp;&emsp;<code>timeit()</code>方法首先执行设置语句一次，然后重复执行被测试语句并返回使用的总时间。传递给<code>timeit()</code>的参数控制语句执行的测试，默认值是1000000.</p>
+<h2 id="基本示例"><a href="#基本示例" class="headerlink" title="基本示例"></a>基本示例</h2><p>为了说明如何使用<code>Timer</code>的各种参数，这里有一个简单的示例，在执行每个语句时打印一个标识值。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"># timeit_example.py</span><br><span class="line"></span><br><span class="line"># using setitem</span><br><span class="line">t &#x3D; timeit.Timer(&quot;print(&#39;main statement&#39;)&quot;, &quot;print(&#39;setup&#39;)&quot;)</span><br><span class="line"></span><br><span class="line">print(&#39;TIMEIT:&#39;)</span><br><span class="line">print(t.timeit(2))</span><br><span class="line"></span><br><span class="line">print(&#39;REPEAT:&#39;)</span><br><span class="line">print(t.repeat(3, 2))</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">## 在字典中存储数据</span><br><span class="line">这个更复杂的示例比较使用不同的方法向字典中填充大量数据所需的时间。首先，需要一些常量来配置&#96;&#96;&#96;Timer&#96;&#96;&#96;。&lt;&#x2F;br&gt;</span><br><span class="line">&#96;&#96;&#96;setup_statement&#96;&#96;&#96;变量初始化包含字符串和整数的元组列表，主语句将使用这些字符串和整数来填充字典，使用字符串作为键，将整数存储为值。</span><br></pre></td></tr></table></figure>
+<h1 id="一些常量"><a href="#一些常量" class="headerlink" title="一些常量"></a>一些常量</h1><p>range_size=1000<br>count=1000<br>setup_statement = ‘;’.join([<br>    “l = [(str(x), x) for x in range(1000)]”,<br>    “d={}”,<br>])</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">定义一个函数&#96;&#96;&#96;show_results()&#96;&#96;&#96;，格式化并打印输出结果。&#96;&#96;&#96;timeit()&#96;&#96;&#96;方法返回重复执行主语句所需的时间。&#96;&#96;&#96;show_results()&#96;&#96;&#96;将其转化为每次迭代所需的时间，然后进一步缩减为在字典中插入一条数据所需的平均时间。</span><br></pre></td></tr></table></figure>
+<p>def show_results(result):<br>    “以微秒为单位打印每轮测试的时间和插入一条数据的时间”<br>    global count, range_size<br>    per_pass = 1000000 * (result/count)<br>    print(‘{:6.2f} usec/pass’.format(per_pass), end=’ ‘)<br>    per_item = per_pass/range_size<br>    print(‘{:6.2f} usec/item’.format(per_item))</p>
+<p>print(“{} items”.format(range_size))<br>print(“{} iterations”.format(count))<br>print()</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">为了建立基准测试，第一个测试使用&#96;&#96;&#96;__setitem()__&#96;&#96;&#96;。后续的其他测试都要避免覆盖字典中已经存在的值，所以这个简单的版本应该是速度最快的。&lt;&#x2F;br&gt;</span><br><span class="line">&#96;&#96;&#96;Timer&#96;&#96;&#96;的第一个参数是一个多行字符串，保留空白，以确保能够正确解析执行。第二个参数是一个常量，用来初始化列表和字典。</span><br></pre></td></tr></table></figure>
+<h1 id="使用setitem-不检测字典中是否已存在指定的键"><a href="#使用setitem-不检测字典中是否已存在指定的键" class="headerlink" title="使用setitem 不检测字典中是否已存在指定的键"></a>使用<strong>setitem</strong> 不检测字典中是否已存在指定的键</h1><p>print(‘<strong>setitem</strong>:’, end=’ ‘)<br>t = timeit.Timer(<br>    textwrap.dedent(<br>        “””<br>        for s, i in l:<br>            d[s] = i<br>        “””<br>    ),<br>    setup_statement,<br>)<br>show_results(t.timeit(number=count))</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">也可以把更复杂的代码定义成函数，然后在命令行中调用。</span><br></pre></td></tr></table></figure>
+<h1 id="timeit-setitem-py"><a href="#timeit-setitem-py" class="headerlink" title="timeit_setitem.py"></a>timeit_setitem.py</h1><p>def test_setitem(range_size=1000):<br>    l = [(str(x), x) for x in range(range_size)]<br>    d = {}<br>    for s, i in i:<br>        d[s]=i</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">要测试以上函数，只需要将导入模块以及运行函数的语句作为参数。</span><br></pre></td></tr></table></figure>
+<p>$ python3 -m timeit<br>“import timeit_setitem; timeit_setitem.test_setitem()”</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">## 直接在文件中进行调用方式</span><br><span class="line">&gt; 以下内容摘自官方文档</span><br><span class="line"></span><br><span class="line">要让&#96;&#96;&#96;timeit&#96;&#96;&#96;模块访问你定义的函数，你可以传递一个包含import语句的setup函数：</span><br></pre></td></tr></table></figure>
+<p>def test():<br>    “””Stupid test function”””<br>    L = [i for i in range(100)]</p>
+<p>if <strong>name</strong> == ‘<strong>main</strong>‘:<br>    import timeit<br>    print(‘timeit.timeit(“test()”, setup=”from <strong>main</strong> import test”)’)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">另一种选择是将&#96;&#96;&#96;globals()&#96;&#96;&#96;传递给globals参数，这将导致代码在当前的全局命名空间中执行，这比单独指定import更方便。</span><br></pre></td></tr></table></figure>
+<p>def f(x):<br>    return x<strong>2<br>def g(x):<br>    return x</strong>4<br>def h(x):<br>    return x**8</p>
+<p>import timeit<br>print(timeit.timeit(‘[func(42) for func in (f,g,h)]’, globals=globals()))<br>```</p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Python/" rel="tag">Python</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%8A%80%E6%9C%AF/" rel="tag">技术</a></li></ul>
+
+    </footer>
+  </div>
+
+    
+ 
+    
+</article>
+
+    
+    <article
   id="post-Django高级使用：三"
   class="article article-type-post"
   itemscope
@@ -1382,76 +1457,6 @@ from django_filters import rest_framework</li>
 </article>
 
     
-    <article
-  id="post-Python接口自动化测试实战教程"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2022/08/08/Python%E6%8E%A5%E5%8F%A3%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95%E5%AE%9E%E6%88%98%E6%95%99%E7%A8%8B/"
-    >Python接口自动化测试实战教程</a> 
-</h2>
- 
-
-    </header>
-     
-    <div class="article-meta">
-      <a href="/2022/08/08/Python%E6%8E%A5%E5%8F%A3%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95%E5%AE%9E%E6%88%98%E6%95%99%E7%A8%8B/" class="article-date">
-  <time datetime="2022-08-08T09:06:03.000Z" itemprop="datePublished">2022-08-08</time>
-</a> 
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
-  </div>
-   
-    </div>
-      
-    <div class="article-entry" itemprop="articleBody">
-       
-  <h1 id="Python接口自动化测试实战教程"><a href="#Python接口自动化测试实战教程" class="headerlink" title="Python接口自动化测试实战教程"></a>Python接口自动化测试实战教程</h1><h2 id="一-pytest用例管理框架"><a href="#一-pytest用例管理框架" class="headerlink" title="一.pytest用例管理框架"></a>一.pytest用例管理框架</h2><h3 id="pyest默认规则："><a href="#pyest默认规则：" class="headerlink" title="pyest默认规则："></a>pyest默认规则：</h3><p>1.py文件必须以test_开头或者_test结尾</br><br>2.类名必须以Test开头</br><br>3.测试用例必须以test_开头<br></p>
-<h3 id="pytest用例管理框架的作用？"><a href="#pytest用例管理框架的作用？" class="headerlink" title="pytest用例管理框架的作用？"></a>pytest用例管理框架的作用？</h3><p>1.发现测试用例：从多个py文件中通过默认的规则去找测试用例。</br><br>2.执行测试用例：顺序和条件。</br><br>3.判断测试结果：断言。</br><br>4.生成测试报告：html，allure。</br><br>5.python:unittest或pytest。</br><br>6.java:Junit,testong.</p>
-<h2 id="二-pytest全局观"><a href="#二-pytest全局观" class="headerlink" title="二.pytest全局观"></a>二.pytest全局观</h2><h6 id="1-它可以和所有自动化测试工具selenium-requests结合实现web自动化，接口自动化以及app自动化。"><a href="#1-它可以和所有自动化测试工具selenium-requests结合实现web自动化，接口自动化以及app自动化。" class="headerlink" title="1.它可以和所有自动化测试工具selenium, requests结合实现web自动化，接口自动化以及app自动化。"></a>1.它可以和所有自动化测试工具selenium, requests结合实现web自动化，接口自动化以及app自动化。</h6><h6 id="2-跳过用例以及失败用例重跑"><a href="#2-跳过用例以及失败用例重跑" class="headerlink" title="2.跳过用例以及失败用例重跑"></a>2.跳过用例以及失败用例重跑</h6><h6 id="3-结合allure生成美观的测试报告"><a href="#3-结合allure生成美观的测试报告" class="headerlink" title="3.结合allure生成美观的测试报告"></a>3.结合allure生成美观的测试报告</h6><h6 id="4-和Jenkins自动集成"><a href="#4-和Jenkins自动集成" class="headerlink" title="4.和Jenkins自动集成"></a>4.和Jenkins自动集成</h6><h6 id="5-有很多强大的插件"><a href="#5-有很多强大的插件" class="headerlink" title="5.有很多强大的插件"></a>5.有很多强大的插件</h6><blockquote>
-<p>pytest-html 生成html测试报告</br><br>pytest-xdist 多线程运行</br><br>pytest-ordering 改变测试用例的执行顺序</br><br>pytest-rerunfailures 失败用例重跑</br><br>allure-pytest 生成allure测试报告</p>
-</blockquote>
-<h2 id="三-运行方式"><a href="#三-运行方式" class="headerlink" title="三.运行方式"></a>三.运行方式</h2><p>1.主函数的方式（命令行的方式）</br><br>-v: 输出更加详细的信息</br><br>-s：输出调试信息</br><br>-n：指定线程个数</br><br>–reruns：失败用例重跑</br><br>–html 生成报告的路径</br><br>2.项目中使用pytest.ini配置文件，举例如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[pytest]</span><br><span class="line">addopts &#x3D; -vs</span><br><span class="line">testpaths &#x3D; .&#x2F;testcases</span><br><span class="line">python_files &#x3D; test_*.py</span><br><span class="line">python_classes &#x3D; Test*</span><br><span class="line">python_functions &#x3D; test_*</span><br></pre></td></tr></table></figure>
-<h2 id="四-前后置、夹具"><a href="#四-前后置、夹具" class="headerlink" title="四.前后置、夹具"></a>四.前后置、夹具</h2><p>1.setup/teardown 在每个用例之前/之后执行一次</br><br>2.setup_class/teardown_class 在每个类之前和之后执行一次</br></p>
-<h5 id="如何实现部分前置？装饰器"><a href="#如何实现部分前置？装饰器" class="headerlink" title="如何实现部分前置？装饰器"></a>如何实现部分前置？装饰器</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">@pytest.fixture(scope&#x3D;&quot;作用域&quot;， params&#x3D;&quot;数据驱动&quot;, autouse&#x3D;&quot;自动执行&quot;, ids&#x3D;&quot;自定义参数名&quot;,name&#x3D;&quot;重命名&quot;)</span><br></pre></td></tr></table></figure>
-<p>作用域：function.class,module, package/session<br>可以通过yield唤醒类似teardown功能，简单理解就是返回，yield和return都表示返回数据的意思，只是区别在于：yield返回多次且其后可以跟代码，return只返回一次且其后不能跟代码</p>
-<h5 id="conftest-py文件很强大"><a href="#conftest-py文件很强大" class="headerlink" title="conftest.py文件很强大"></a>conftest.py文件很强大</h5><p>1.conftest.py文件是单独存放@pytest.fixture()的方法，用处是可以在多个py文件之间共享前置配置</br><br>2.conftest.py里面的方法在调用时不需要导入，可以直接使用。</br><br>3.conftest.py可以有多个，也可以有不同的层级。</p>
-<h2 id="接口自动化框架封装"><a href="#接口自动化框架封装" class="headerlink" title="接口自动化框架封装"></a>接口自动化框架封装</h2><p>一般情况下通过关联的yaml文件来实现</p>
-<h2 id="五-接口断言"><a href="#五-接口断言" class="headerlink" title="五.接口断言"></a>五.接口断言</h2><h2 id="六。pytest结合allure-pytest生成allure生成测试报告"><a href="#六。pytest结合allure-pytest生成allure生成测试报告" class="headerlink" title="六。pytest结合allure-pytest生成allure生成测试报告"></a>六。pytest结合allure-pytest生成allure生成测试报告</h2><p>1.官网下载allure</p>
-<h2 id="七-接口自动化测试框架Yaml数据驱动的封装"><a href="#七-接口自动化测试框架Yaml数据驱动的封装" class="headerlink" title="七.接口自动化测试框架Yaml数据驱动的封装"></a>七.接口自动化测试框架Yaml数据驱动的封装</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">@pytest.mark.parametrize(args_name, args_value)</span><br><span class="line">args_name：参数名</span><br><span class="line">args_value：参数值</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">import pytest</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class TestApi:</span><br><span class="line"></span><br><span class="line">    @pytest.mark.parametrize(&#39;args&#39;, [&#39;a&#39;, &#39;b&#39;, &#39;c&#39;])</span><br><span class="line">    def test_api(self, args):</span><br><span class="line">        print(&quot;1&quot;)</span><br><span class="line">        print(args)</span><br></pre></td></tr></table></figure>
-<p>打印结果如下</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">[gw0] win32 Python 3.8.6 cwd: D:\2021_practice\heaven-sword-backend</span><br><span class="line">[gw1] win32 Python 3.8.6 cwd: D:\2021_practice\heaven-sword-backend</span><br><span class="line">[gw2] win32 Python 3.8.6 cwd: D:\2021_practice\heaven-sword-backend</span><br><span class="line">[gw0] Python 3.8.6 (tags&#x2F;v3.8.6:db45529, Sep 23 2020, 15:52:53) [MSC v.1927 64 bit (AMD64)]</span><br><span class="line">[gw1] Python 3.8.6 (tags&#x2F;v3.8.6:db45529, Sep 23 2020, 15:52:53) [MSC v.1927 64 bit (AMD64)]</span><br><span class="line">[gw2] Python 3.8.6 (tags&#x2F;v3.8.6:db45529, Sep 23 2020, 15:52:53) [MSC v.1927 64 bit (AMD64)]</span><br><span class="line">gw0 [3] &#x2F; gw1 [3] &#x2F; gw2 [3]</span><br><span class="line"></span><br><span class="line">scheduling tests via LoadScheduling</span><br><span class="line"></span><br><span class="line">test_api.py::TestApi::test_api[a] </span><br><span class="line">test_api.py::TestApi::test_api[c] </span><br><span class="line">test_api.py::TestApi::test_api[b] </span><br><span class="line">[gw0] [ 33%] PASSED test_api.py::TestApi::test_api[a] </span><br><span class="line">[gw1] [ 66%] PASSED test_api.py::TestApi::test_api[b] </span><br><span class="line">[gw2] [100%] PASSED test_api.py::TestApi::test_api[c] </span><br></pre></td></tr></table></figure>
-<h2 id="八-YAML详解"><a href="#八-YAML详解" class="headerlink" title="八.YAML详解"></a>八.YAML详解</h2><p>也是一种数据格式。</br><br>主要的两个作用：<br>1.配置文件<br>2.测试用例</br><br>数据组成：1.map对象：键(空格)值 2.列表：用-开头</p>
- 
-      <!-- reward -->
-      
-    </div>
-    
-
-    <!-- copyright -->
-    
-    <footer class="article-footer">
-       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Python/" rel="tag">Python</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%8A%80%E6%9C%AF/" rel="tag">技术</a></li></ul>
-
-    </footer>
-  </div>
-
-    
- 
-    
-</article>
-
-    
   </article>
   
 
@@ -1469,7 +1474,7 @@ from django_filters import rest_framework</li>
     <ul>
       <li>
         Copyrights &copy;
-        2015-2022
+        2015-2023
         <i class="ri-heart-fill heart_icon"></i> twilight2017
       </li>
     </ul>
