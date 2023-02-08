@@ -141,6 +141,77 @@
     
     
     <article
+  id="post-实现Dockerfile，打包python3.9的编译过程"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2022/09/08/%E5%AE%9E%E7%8E%B0Dockerfile%EF%BC%8C%E6%89%93%E5%8C%85python3.9%E7%9A%84%E7%BC%96%E8%AF%91%E8%BF%87%E7%A8%8B/"
+    >实现Dockerfile，打包python3.9的编译过程</a> 
+</h2>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2022/09/08/%E5%AE%9E%E7%8E%B0Dockerfile%EF%BC%8C%E6%89%93%E5%8C%85python3.9%E7%9A%84%E7%BC%96%E8%AF%91%E8%BF%87%E7%A8%8B/" class="article-date">
+  <time datetime="2022-09-08T07:51:52.000Z" itemprop="datePublished">2022-09-08</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+  </div>
+   
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="实现Dockerfile，打包python3-9的编译过程"><a href="#实现Dockerfile，打包python3-9的编译过程" class="headerlink" title="实现Dockerfile，打包python3.9的编译过程"></a>实现Dockerfile，打包python3.9的编译过程</h1><h2 id="1-什么是Dockerfile"><a href="#1-什么是Dockerfile" class="headerlink" title="1.什么是Dockerfile"></a>1.什么是Dockerfile</h2><p>Dockerfile是一个文本文件，其内包含了多条指令，每一条指令构建一层。因此每一条指令的内容，就是描述该层应当如何构建。有了Dockerfile之后，我们需要构建自己的额外需求时，只需要在Dockerfile上添加或者修改指令，重新生成镜像即可，省去了敲命令的麻烦。</p>
+<h2 id="2-Dockerfile文件格式"><a href="#2-Dockerfile文件格式" class="headerlink" title="2.Dockerfile文件格式"></a>2.Dockerfile文件格式</h2><p>Dockerfile分为四部分：</p>
+<blockquote>
+<p>基础镜像信息</br><br>维护者信息</br><br>镜像操作命令</br><br>容器启动执行命令</br></p>
+</blockquote>
+<p>值得注意的是，Dockerfile的指令每执行一次都会在docker上新建一层。所以过多无意义的层，会造成镜像膨胀。<br>例如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">FROM centos</span><br><span class="line">RUN yum install wget</span><br><span class="line">RUN wget -O redis.tar.gz &quot;http:&#x2F;&#x2F;download.redis.io&#x2F;releases&#x2F;redis-5.0.3.tar.gz&quot;</span><br><span class="line">RUN tar -xvf redis.tar.gz</span><br></pre></td></tr></table></figure>
+<p>以上执行方式会创建层镜像，推荐简化为以下形式：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">FROM centos</span><br><span class="line">RUN yum install wget \</span><br><span class="line">    &amp;&amp; wget -O redis.tar.gz &quot;http:&#x2F;&#x2F;download.redis.io&#x2F;releases&#x2F;redis-5.0.3.tar.gz&quot; \</span><br><span class="line">    &amp;&amp; tar -xvf redis.tar.gz</span><br></pre></td></tr></table></figure>
+<h2 id="3-构建docker镜像相关命令"><a href="#3-构建docker镜像相关命令" class="headerlink" title="3.构建docker镜像相关命令"></a>3.构建docker镜像相关命令</h2><p>docker build命令会根据Dockerfile文件已经上下文构建新的Docker镜像。构建上下文是指Dockerfile所在的本地路径或者一个url<br>使用当前目录的Dockerfile构建镜像，指定标签。</br><br>上下文路径是指docker在构建镜像，若想使用本机的文件，docker build命令获得这个路径后，会将路径下所有文件进行打包</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker build -t &lt;镜像名&gt;:&lt;tag&gt; .</span><br></pre></td></tr></table></figure>
+<p>根据指定镜像构建容器，并在后台运行</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run --name &lt;容器的指定名称&gt; -d -i -t &lt;镜像名&gt;:&lt;tag&gt; &#x2F;bin&#x2F;bash</span><br></pre></td></tr></table></figure>
+<h2 id="4-Dockerfile中的层机制"><a href="#4-Dockerfile中的层机制" class="headerlink" title="4.Dockerfile中的层机制"></a>4.Dockerfile中的层机制</h2><p>Dockerfile中每个<code>RUN</code>命令都会在新的容器中运行，以下列代码为例：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">RUN cd cosign-master</span><br><span class="line">RUN autoconf</span><br><span class="line">RUN .&#x2F;configure --enable-apache2&#x3D;&#96;which apxs&#96;</span><br></pre></td></tr></table></figure>
+<p>这三条命令会在三个独立的容器中运行，所以对下一个容器,<code>cd cosign-master</code>命令没有改变工作目录。</br><br>生成镜像有如下两条建议：</br></p>
+<blockquote>
+<p>1.一条指令应该执行多条命令，来减少最终镜像的层数，因为每条指令都会生成新的一层。</br><br>2.应清理中间文件或软件来减小最终镜像的大小。<br>对于上面的代码，推荐更换成如下形式：</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">RUN cd cosign-master \</span><br><span class="line">    &amp;&amp; autoconf \</span><br><span class="line">    &amp;&amp; .&#x2F;configure --enable-apache2&#x3D;&#96;which apxs&#96; \</span><br><span class="line">    &amp;&amp; make \</span><br><span class="line">    &amp;&amp; make install</span><br></pre></td></tr></table></figure> 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Django/" rel="tag">Django</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%8A%80%E6%9C%AF/" rel="tag">技术</a></li></ul>
+
+    </footer>
+  </div>
+
+    
+ 
+    
+</article>
+
+    
+    <article
   id="post-Python接口自动化测试实战教程"
   class="article article-type-post"
   itemscope
@@ -907,65 +978,6 @@ version: “3”</li>
 <h5 id="使用语法"><a href="#使用语法" class="headerlink" title="使用语法"></a>使用语法</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tailf logfile #动态跟踪日志文件logfile，最初的时候打印文件的最后十行的内容</span><br></pre></td></tr></table></figure>
 <h5 id="选项"><a href="#选项" class="headerlink" title="选项"></a>选项</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">-n, --lines NUMBER #输出最后行数</span><br><span class="line">-V, --version #输出版本信息并退出</span><br><span class="line">-h, --help #显示帮助并退出</span><br></pre></td></tr></table></figure>
 <h5 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tailf -n 5 logfile.log #显示文件最后五行的内容</span><br></pre></td></tr></table></figure> 
-      <!-- reward -->
-      
-    </div>
-    
-
-    <!-- copyright -->
-    
-    <footer class="article-footer">
-       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/python/" rel="tag">python</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%8A%80%E6%9C%AF/" rel="tag">技术</a></li></ul>
-
-    </footer>
-  </div>
-
-    
- 
-    
-</article>
-
-    
-    <article
-  id="post-用Python编写Hadoop MapReduce程序 - 副本"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2022/03/28/%E7%94%A8Python%E7%BC%96%E5%86%99Hadoop%20MapReduce%E7%A8%8B%E5%BA%8F%20-%20%E5%89%AF%E6%9C%AC/"
-    >用Python编写Hadoop MapReduce程序</a> 
-</h2>
- 
-
-    </header>
-     
-    <div class="article-meta">
-      <a href="/2022/03/28/%E7%94%A8Python%E7%BC%96%E5%86%99Hadoop%20MapReduce%E7%A8%8B%E5%BA%8F%20-%20%E5%89%AF%E6%9C%AC/" class="article-date">
-  <time datetime="2022-03-28T08:05:03.000Z" itemprop="datePublished">2022-03-28</time>
-</a> 
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
-  </div>
-   
-    </div>
-      
-    <div class="article-entry" itemprop="articleBody">
-       
-  <h1 id="用Python编写Hadoop-MapReduce程序"><a href="#用Python编写Hadoop-MapReduce程序" class="headerlink" title="用Python编写Hadoop MapReduce程序"></a>用Python编写Hadoop MapReduce程序</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>&emsp;&emsp;尽管Hadoop框架是用Java编写的，但Hadoop程序不需要用Java编写。采用Java streaming实现用python实现mapreduce过程。</p>
-<h4 id="一-安装java和hadoop集群"><a href="#一-安装java和hadoop集群" class="headerlink" title="一.安装java和hadoop集群"></a>一.安装java和hadoop集群</h4><p>1.查看安装路径</br><br>java version查看java版本</br><br>which java查看java安装路径</br><br>ls -lrt /usr/bin/java</br><br>ls -lrt /etc/alternatives/java</br><br>最后一条指令执行完，复制记录/bin/java前面的路径。</br><br>2.配置jdk环境变量</br><br>export JAVA_HOME=复制路径</br><br>export PATH=$JAVA_HOME/bin:$PATH</br><br>export CLASSPATH=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar</br><br>3.激活配置内容</br><br>source /etc/profile</br></p>
-<h4 id="二-编写MapReduce代码"><a href="#二-编写MapReduce代码" class="headerlink" title="二.编写MapReduce代码"></a>二.编写MapReduce代码</h4><p>mapper.py文件内容如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">#!&#x2F;usr&#x2F;bin&#x2F;env python</span><br><span class="line"></span><br><span class="line">import sys</span><br><span class="line"></span><br><span class="line"># input comes from STDIN (standard input)</span><br><span class="line">for line in sys.stdin:</span><br><span class="line">    # remove leading and trailing whitespace</span><br><span class="line">    line &#x3D; line.strip()</span><br><span class="line">    # split the line into words</span><br><span class="line">    words &#x3D; line.split()</span><br><span class="line">    # increase counters</span><br><span class="line">    for word in words:</span><br><span class="line">        # write the results to STDOUT (standard output);</span><br><span class="line">        # what we output here will be the input for the</span><br><span class="line">        # Reduce step, i.e. the input for reducer.py</span><br><span class="line">        #</span><br><span class="line">        # tab-delimited; the trivial word count is 1</span><br><span class="line">        print &#39;%s\t%s&#39; % (word, 1)</span><br></pre></td></tr></table></figure>
-<p>reducer.py文件内容如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">#!&#x2F;usr&#x2F;bin&#x2F;env python</span><br><span class="line">&quot;&quot;&quot;reducer.py&quot;&quot;&quot;</span><br><span class="line"></span><br><span class="line">from operator import itemgetter</span><br><span class="line">import sys</span><br><span class="line"></span><br><span class="line">current_word &#x3D; None</span><br><span class="line">current_count &#x3D; 0</span><br><span class="line">word &#x3D; None</span><br><span class="line"></span><br><span class="line"># input comes from STDIN</span><br><span class="line">for line in sys.stdin:</span><br><span class="line">    # remove leading and trailing whitespace</span><br><span class="line">    line &#x3D; line.strip()</span><br><span class="line"></span><br><span class="line">    # parse the input we got from mapper.py</span><br><span class="line">    word, count &#x3D; line.split(&#39;\t&#39;, 1)</span><br><span class="line"></span><br><span class="line">    # convert count (currently a string) to int</span><br><span class="line">    try:</span><br><span class="line">        count &#x3D; int(count)</span><br><span class="line">    except ValueError:</span><br><span class="line">        # count was not a number, so silently</span><br><span class="line">        # ignore&#x2F;discard this line</span><br><span class="line">        continue</span><br><span class="line"></span><br><span class="line">    # this IF-switch only works because Hadoop sorts map output</span><br><span class="line">    # by key (here: word) before it is passed to the reducer</span><br><span class="line">    if current_word &#x3D;&#x3D; word:</span><br><span class="line">        current_count +&#x3D; count</span><br><span class="line">    else:</span><br><span class="line">        if current_word:</span><br><span class="line">            # write result to STDOUT</span><br><span class="line">            print &#39;%s\t%s&#39; % (current_word, current_count)</span><br><span class="line">        current_count &#x3D; count</span><br><span class="line">        current_word &#x3D; word</span><br><span class="line"></span><br><span class="line"># do not forget to output the last word if needed!</span><br><span class="line">if current_word &#x3D;&#x3D; word:</span><br><span class="line">    print &#39;%s\t%s&#39; % (current_word, current_count)</span><br></pre></td></tr></table></figure>
-<p>注意应给这两个文件添加执行权限：</br><br>chmod u+x xxx.py</p>
-<h4 id="运行与实践"><a href="#运行与实践" class="headerlink" title="运行与实践"></a>运行与实践</h4><h5 id="1-将本地数据复制到HDFS"><a href="#1-将本地数据复制到HDFS" class="headerlink" title="1.将本地数据复制到HDFS"></a>1.将本地数据复制到HDFS</h5><h5 id="2-运行MapReduce作业"><a href="#2-运行MapReduce作业" class="headerlink" title="2.运行MapReduce作业"></a>2.运行MapReduce作业</h5> 
       <!-- reward -->
       
     </div>

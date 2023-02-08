@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+
+
+<head>
+  <meta charset="utf-8" />
+    
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>
+    Jedis学习笔记 |  瑟兰迪尔
+  </title>
+  <meta name="generator" content="hexo-theme-ayer">
+  
+  <link rel="shortcut icon" href="/favicon.ico" />
+  
+  
+<link rel="stylesheet" href="/dist/main.css">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Shen-Yu/cdn/css/remixicon.min.css">
+  
+<link rel="stylesheet" href="/css/custom.css">
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+  
+  
+
+  
+
+</head>
+
+</html>
+
+<body>
+  <div id="app">
+    
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-Jedis学习笔记"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  Jedis学习笔记
+</h1>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2023/02/08/Jedis%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" class="article-date">
+  <time datetime="2023-02-08T09:51:52.000Z" itemprop="datePublished">2023-02-08</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">6k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">29 分钟</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="Jedis学习指南"><a href="#Jedis学习指南" class="headerlink" title="Jedis学习指南"></a>Jedis学习指南</h1><blockquote>
+<p>前言：从Java的旧日阴影中站起来，重新学习java</p>
+</blockquote>
+<h2 id="1-Jedis定义"><a href="#1-Jedis定义" class="headerlink" title="1.Jedis定义"></a>1.Jedis定义</h2><blockquote>
+<p>Jedis是Redis官方推荐的java连接开发工具。使用Java操作Redis中间件。 </p>
+</blockquote>
+<h2 id="2-实践"><a href="#2-实践" class="headerlink" title="2.实践"></a>2.实践</h2><h4 id="快捷键设置"><a href="#快捷键设置" class="headerlink" title="快捷键设置"></a>快捷键设置</h4><blockquote>
+<p>磨刀不误砍柴工，先把基础的东西都设置好</p>
+</blockquote>
+<h6 id="1-sout"><a href="#1-sout" class="headerlink" title="(1)sout"></a>(1)sout</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">System.out.println(&quot;&quot;)</span><br></pre></td></tr></table></figure>
+<h6 id="2-psvm"><a href="#2-psvm" class="headerlink" title="(2)psvm"></a>(2)psvm</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">public static void main(String [] args)&#123;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h6 id="3-fori"><a href="#3-fori" class="headerlink" title="(3)fori"></a>(3)fori</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">for(int i&#x3D;0;i&lt;;i++)&#123;&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="Maven是什么"><a href="#Maven是什么" class="headerlink" title="Maven是什么"></a>Maven是什么</h4><p>&emsp;&emsp;首先确定项目的目录结构。例如：<code>src</code>目录存放java源码，<code>resources</code>目录存放配置文件，<code>bin</code>目录存放编译生成的<code>.class</code>文件。</br><br>&emsp;&emsp;此外，我们还需要配置环境，例如JDK的版本，编译打包的流程，当前代码的版本号。</br><br>&emsp;&emsp;最后，除了使用Eclipse这样的IDE进行编译外，我们还必须能够通过命令行工具进行编译，才能够让项目在一个独立的服务器上编译、测试、部署。</br><br>&emsp;&emsp;这些工作难度不大，但非常琐碎且耗时。如果每个项目都自己搞一套配置，肯定会一团糟。我们需要的是一个标准化的Java项目管理和构建工具。</br><br>&emsp;&emsp;Maven就是是专门为Java项目打造的管理和构建工具。它的主要功能有：</p>
+<ul>
+<li>提供了一套标准化的项目结构。</li>
+<li>提供了一套标准化的构建流程(编译，测试，打包，发布……);</li>
+<li>提供了一套依赖管理机制。</li>
+</ul>
+<p>一个Maven工程就是由：<code>groupId, artifactId和version</code>作为唯一标识。我们在引用其他第三方库的时候，也是通过这3个变量进行确定。</p>
+<h4 id="maven之pom-xml配置文件详解"><a href="#maven之pom-xml配置文件详解" class="headerlink" title="maven之pom.xml配置文件详解"></a>maven之pom.xml配置文件详解</h4><h5 id="1-pom的定义"><a href="#1-pom的定义" class="headerlink" title="(1)pom的定义"></a>(1)pom的定义</h5><p>pom代表项目对象模型，它是Maven中工作的基本组成单位。它是一个XML文件，始终保存在项目的基本目录中的pom.xml文件中。pom包含的对象是使用maven来构建的，pom.xml文件包含了项目的各种配置信息。创建一个项目前，应该要先决定项目组(groupId)，项目名(artifactId)和版本(version)，因为这些属性在项目仓库是唯一标识的。需要特别注意，每个项目都只有一个pom.xml文件。</p>
+<h5 id="2-pom中的节点分布如下："><a href="#2-pom中的节点分布如下：" class="headerlink" title="(2)pom中的节点分布如下："></a>(2)pom中的节点分布如下：</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line">&lt;project xmlns&#x3D;&quot;http:&#x2F;&#x2F;maven.apache.org&#x2F;POM&#x2F;4.0.0&quot;</span><br><span class="line">         xmlns:xsi&#x3D;&quot;http:&#x2F;&#x2F;www.w3.org&#x2F;2001&#x2F;XMLSchema-instance&quot;</span><br><span class="line">         xsi:schemaLocation&#x3D;&quot;http:&#x2F;&#x2F;maven.apache.org&#x2F;POM&#x2F;4.0.0</span><br><span class="line">            http:&#x2F;&#x2F;maven.apache.org&#x2F;xsd&#x2F;maven-4.0.0.xsd&quot;&gt;</span><br><span class="line">    &lt;modelVersion&gt;4.0.0&lt;&#x2F;modelVersion&gt;</span><br><span class="line"></span><br><span class="line">    &lt;!-- 基本配置 --&gt;</span><br><span class="line">    &lt;groupId&gt;...&lt;&#x2F;groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;...&lt;&#x2F;artifactId&gt;</span><br><span class="line">    &lt;version&gt;...&lt;&#x2F;version&gt;</span><br><span class="line">    &lt;packaging&gt;...&lt;&#x2F;packaging&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    &lt;!-- 依赖配置 --&gt;</span><br><span class="line">    &lt;dependencies&gt;...&lt;&#x2F;dependencies&gt;</span><br><span class="line">    &lt;parent&gt;...&lt;&#x2F;parent&gt;</span><br><span class="line">    &lt;dependencyManagement&gt;...&lt;&#x2F;dependencyManagement&gt;</span><br><span class="line">    &lt;modules&gt;...&lt;&#x2F;modules&gt;</span><br><span class="line">    &lt;properties&gt;...&lt;&#x2F;properties&gt;</span><br><span class="line"></span><br><span class="line">    &lt;!-- 构建配置 --&gt;</span><br><span class="line">    &lt;build&gt;...&lt;&#x2F;build&gt;</span><br><span class="line">    &lt;reporting&gt;...&lt;&#x2F;reporting&gt;</span><br><span class="line"></span><br><span class="line">    &lt;!-- 项目信息 --&gt;</span><br><span class="line">    &lt;name&gt;...&lt;&#x2F;name&gt;</span><br><span class="line">    &lt;description&gt;...&lt;&#x2F;description&gt;</span><br><span class="line">    &lt;url&gt;...&lt;&#x2F;url&gt;</span><br><span class="line">    &lt;inceptionYear&gt;...&lt;&#x2F;inceptionYear&gt;</span><br><span class="line">    &lt;licenses&gt;...&lt;&#x2F;licenses&gt;</span><br><span class="line">    &lt;organization&gt;...&lt;&#x2F;organization&gt;</span><br><span class="line">    &lt;developers&gt;...&lt;&#x2F;developers&gt;</span><br><span class="line">    &lt;contributors&gt;...&lt;&#x2F;contributors&gt;</span><br><span class="line"></span><br><span class="line">    &lt;!-- 环境设置 --&gt;</span><br><span class="line">    &lt;issueManagement&gt;...&lt;&#x2F;issueManagement&gt;</span><br><span class="line">    &lt;ciManagement&gt;...&lt;&#x2F;ciManagement&gt;</span><br><span class="line">    &lt;mailingLists&gt;...&lt;&#x2F;mailingLists&gt;</span><br><span class="line">    &lt;scm&gt;...&lt;&#x2F;scm&gt;</span><br><span class="line">    &lt;prerequisites&gt;...&lt;&#x2F;prerequisites&gt;</span><br><span class="line">    &lt;repositories&gt;...&lt;&#x2F;repositories&gt;</span><br><span class="line">    &lt;pluginRepositories&gt;...&lt;&#x2F;pluginRepositories&gt;</span><br><span class="line">    &lt;distributionManagement&gt;...&lt;&#x2F;distributionManagement&gt;</span><br><span class="line">    &lt;profiles&gt;...&lt;&#x2F;profiles&gt;</span><br><span class="line">&lt;&#x2F;project&gt;</span><br></pre></td></tr></table></figure>
+<h5 id="3-各节点解释说明"><a href="#3-各节点解释说明" class="headerlink" title="(3)各节点解释说明"></a>(3)各节点解释说明</h5><p>以如下的基本配置信息为例：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&lt;project xmlns&#x3D;&quot;http:&#x2F;&#x2F;maven.apache.org&#x2F;POM&#x2F;4.0.0&quot;&gt;</span><br><span class="line">   xmlns:xsi&#x3D;&quot;http:&#x2F;&#x2F;www.w3.org&#x2F;2001&#x2F;XMLSchema-instance&quot;</span><br><span class="line">   xsi:schemaLocation&#x3D;&quot;http:&#x2F;maven.apache.org&#x2F;POM&#x2F;4.0.0</span><br><span class="line">   http:&#x2F;&#x2F;maven.apache.org&#x2F;xsd&#x2F;maven-4.0.0.xsd&quot;&gt;</span><br><span class="line">   &lt;!--pom模型版本，maven2和3都只能为4.0.0--&gt;</span><br><span class="line">   &lt;modelVersion&gt;4.0.0&lt;&#x2F;modelVersion&gt;</span><br><span class="line">   &lt;!--项目的组ID，用于maven定位--&gt;</span><br><span class="line">   &lt;groupId&gt;com.company.bank&lt;&#x2F;groupId&gt;</span><br><span class="line">   &lt;!--项目ID，通常是项目的名称，唯一标识符--&gt;</span><br><span class="line">   &lt;artifactId&gt;parent&lt;&#x2F;artifactId&gt;</span><br><span class="line">   &lt;!--项目的版本--&gt;</span><br><span class="line">   &lt;version&gt;1.0&lt;&#x2F;version&gt;</span><br><span class="line">   &lt;!--项目的打包方式--&gt;</span><br><span class="line">   &lt;packing&gt;war&lt;&#x2F;packing&gt;</span><br><span class="line">&lt;project&gt;</span><br></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr>
+<th>节点</th>
+<th>解释说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>modelVersion</td>
+<td>pom模型版本，maven2和3只能为4.0.0</td>
+</tr>
+<tr>
+<td>groupId</td>
+<td>这是项目组的编号，这在组织或项目中通常是独一无二的。例如，一家银行集团com.company.bank拥有所有银行相关项目。</td>
+</tr>
+<tr>
+<td>artifact</td>
+<td>这是项目的ID。这通常是项目的名称。例如：consumer-banking。除了groupId之外，artifactId还定义了artifact在存储库中的位置。</td>
+</tr>
+<tr>
+<td>version</td>
+<td>这是项目的版本。与groupId一起使用，artifact在存储库中用于将版本彼此分离。</td>
+</tr>
+<tr>
+<td>packing</td>
+<td>项目打包方式，有以下值：pom, jar, maven-plugin, ejb, war, ear, rar, par</td>
+</tr>
+</tbody></table>
+<h6 id="依赖配置"><a href="#依赖配置" class="headerlink" title="依赖配置"></a>依赖配置</h6><p>1&gt; dependencies</br><br>项目相关依赖配置。如果在父项目写的依赖，会被子项目引用。一般会在父项目中定义子项目中所有共用的依赖。<br></br><br>2&gt; parent</br><br>用于确定父项目的坐标位置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;parent&gt;</span><br><span class="line">    &lt;groupId&gt;com.learnPro&lt;&#x2F;groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;SIP-parent&lt;&#x2F;artifactId&gt;</span><br><span class="line">    &lt;relativePath&gt;&lt;&#x2F;relativePath&gt;</span><br><span class="line">    &lt;version&gt;0.0.1-SNAPSHOT&lt;&#x2F;version&gt;</span><br><span class="line">&lt;&#x2F;parent&gt;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>groupId: 父项目的组Id标识符</li>
+<li>artifactId: 父项目的唯一标识符</li>
+<li>relativePath: Maven首先在当前仓库中找父项目的pom，然后在文件系统的这个位置(relativePath)，然后在本地仓库，再在远程仓库找。</li>
+<li>version: 父项目的版本</li>
+</ul>
+<p>3&gt; modules</br><br>有些maven项目会做成多模块的，这个标签用于指定当前项目所包含的所有模块。之后对这个项目进行的maven操作，会让所有子模块也进行相同操作。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;modules&gt;</span><br><span class="line">   &lt;module&gt;com-a&lt;&#x2F;&gt;</span><br><span class="line">   &lt;module&gt;com-b&lt;&#x2F;&gt;</span><br><span class="line">   &lt;module&gt;com-c&lt;&#x2F;&gt;</span><br><span class="line">&lt;&#x2F;modules&gt;</span><br></pre></td></tr></table></figure>
+<p>4&gt;properties常量</br><br>用于定义pom常量</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;properties&gt;</span><br><span class="line">    &lt;java.version&gt;1.7&lt;&#x2F;java.version&gt;</span><br><span class="line">&lt;&#x2F;properties&gt;</span><br></pre></td></tr></table></figure>
+<p>上面这个常量可以在pom文件的任意地方通过${java.version}来引用<br>5&gt; dependencyManagement<br>配置写法同dependencies</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependencyManagement&gt;</span><br><span class="line">   &lt;dependencies&gt;</span><br><span class="line">   ......</span><br><span class="line">   &lt;&#x2F;dependencies&gt;</span><br><span class="line">&lt;&#x2F;dependenctManagement&gt;</span><br></pre></td></tr></table></figure>
+<p>在父模块中完成定义后，子模块不会直接使用对应依赖，但是在使用相同依赖时可以不加上版本号。这样的好处是，父项目统一了版本，而且子项目可以在需要的时候才引用对应的依赖。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">父项目：</span><br><span class="line">&lt;dependencyManagement&gt;</span><br><span class="line">    &lt;dependencies&gt;</span><br><span class="line">        &lt;dependency&gt;</span><br><span class="line">            &lt;groupId&gt;junit&lt;&#x2F;groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;junit&lt;&#x2F;artifactId&gt;</span><br><span class="line">            &lt;version&gt;4.12&lt;&#x2F;version&gt;</span><br><span class="line">            &lt;scope&gt;test&lt;&#x2F;scope&gt;</span><br><span class="line">        &lt;&#x2F;dependency&gt;</span><br><span class="line">    &lt;&#x2F;dependencies&gt;</span><br><span class="line">&lt;&#x2F;dependencyManagement&gt;</span><br><span class="line"></span><br><span class="line">子项目：</span><br><span class="line"></span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;junit&lt;&#x2F;groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;junit&lt;&#x2F;artifactId&gt;</span><br><span class="line">&lt;&#x2F;dependency&gt;</span><br></pre></td></tr></table></figure>
+<h5 id="4-构建配置"><a href="#4-构建配置" class="headerlink" title="(4)构建配置"></a>(4)构建配置</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br></pre></td><td class="code"><pre><span class="line">&lt;build&gt;</span><br><span class="line">    &lt;!--该元素设置了项目源码目录，当构建项目的时候，构建系统会编译目录里的源码。该路径是相对于pom.xml的相对路径。--&gt;    </span><br><span class="line">    &lt;sourceDirectory&#x2F;&gt;    </span><br><span class="line">    &lt;!--该元素设置了项目脚本源码目录，该目录和源码目录不同：绝大多数情况下，该目录下的内容 会被拷贝到输出目录(因为脚本是被解释的，而不是被编译的)。--&gt;    </span><br><span class="line">  &lt;scriptSourceDirectory&#x2F;&gt;    </span><br><span class="line">  &lt;!--该元素设置了项目单元测试使用的源码目录，当测试项目的时候，构建系统会编译目录里的源码。该路径是相对于pom.xml的相对路径。--&gt;    </span><br><span class="line">  &lt;testSourceDirectory&#x2F;&gt;    </span><br><span class="line">  &lt;!--被编译过的应用程序class文件存放的目录。--&gt;    </span><br><span class="line">  &lt;outputDirectory&#x2F;&gt;    </span><br><span class="line">  &lt;!--被编译过的测试class文件存放的目录。--&gt;    </span><br><span class="line">  &lt;testOutputDirectory&#x2F;&gt;    </span><br><span class="line">  &lt;!--使用来自该项目的一系列构建扩展--&gt;    </span><br><span class="line">  &lt;extensions&gt;    </span><br><span class="line">   &lt;!--描述使用到的构建扩展。--&gt;    </span><br><span class="line">   &lt;extension&gt;    </span><br><span class="line">    &lt;!--构建扩展的groupId--&gt;    </span><br><span class="line">    &lt;groupId&#x2F;&gt;    </span><br><span class="line">    &lt;!--构建扩展的artifactId--&gt;    </span><br><span class="line">    &lt;artifactId&#x2F;&gt;    </span><br><span class="line">    &lt;!--构建扩展的版本--&gt;    </span><br><span class="line">    &lt;version&#x2F;&gt;    </span><br><span class="line">   &lt;&#x2F;extension&gt;    </span><br><span class="line">  &lt;&#x2F;extensions&gt;    </span><br><span class="line">  &lt;!--当项目没有规定目标（Maven2 叫做阶段）时的默认值--&gt;    </span><br><span class="line">  &lt;defaultGoal&#x2F;&gt;    </span><br><span class="line">  &lt;!--这个元素描述了项目相关的所有资源路径列表，例如和项目相关的属性文件，这些资源被包含在最终的打包文件里。--&gt;    </span><br><span class="line">  &lt;resources&gt;    </span><br><span class="line">   &lt;!--这个元素描述了项目相关或测试相关的所有资源路径--&gt;    </span><br><span class="line">   &lt;resource&gt;    </span><br><span class="line">    &lt;!-- 描述了资源的目标路径。该路径相对target&#x2F;classes目录（例如$&#123;project.build.outputDirectory&#125;）。举个例 子，如果你想资源在特定的包里(org.apache.maven.messages)，你就必须该元素设置为org&#x2F;apache&#x2F;maven &#x2F;messages。然而，如果你只是想把资源放到源码目录结构里，就不需要该配置。--&gt;    </span><br><span class="line">    &lt;targetPath&#x2F;&gt;    </span><br><span class="line">    &lt;!--是否使用参数值代替参数名。参数值取自properties元素或者文件里配置的属性，文件在filters元素里列出。--&gt;    </span><br><span class="line">    &lt;filtering&#x2F;&gt;    </span><br><span class="line">    &lt;!--描述存放资源的目录，该路径相对POM路径--&gt;    </span><br><span class="line">    &lt;directory&#x2F;&gt;    </span><br><span class="line">    &lt;!--包含的模式列表，例如**&#x2F;*.xml.--&gt;    </span><br><span class="line">    &lt;includes&#x2F;&gt;    </span><br><span class="line">    &lt;!--排除的模式列表，例如**&#x2F;*.xml--&gt;    </span><br><span class="line">    &lt;excludes&#x2F;&gt;    </span><br><span class="line">   &lt;&#x2F;resource&gt;    </span><br><span class="line">  &lt;&#x2F;resources&gt;    </span><br><span class="line">  &lt;!--这个元素描述了单元测试相关的所有资源路径，例如和单元测试相关的属性文件。--&gt;    </span><br><span class="line">  &lt;testResources&gt;    </span><br><span class="line">   &lt;!--这个元素描述了测试相关的所有资源路径，参见build&#x2F;resources&#x2F;resource元素的说明--&gt;    </span><br><span class="line">   &lt;testResource&gt;    </span><br><span class="line">    &lt;targetPath&#x2F;&gt;&lt;filtering&#x2F;&gt;&lt;directory&#x2F;&gt;&lt;includes&#x2F;&gt;&lt;excludes&#x2F;&gt;    </span><br><span class="line">   &lt;&#x2F;testResource&gt;    </span><br><span class="line">  &lt;&#x2F;testResources&gt;    </span><br><span class="line">  &lt;!--构建产生的所有文件存放的目录--&gt;    </span><br><span class="line">  &lt;directory&#x2F;&gt;    </span><br><span class="line">  &lt;!--产生的构件的文件名，默认值是$&#123;artifactId&#125;-$&#123;version&#125;。--&gt;    </span><br><span class="line">  &lt;finalName&#x2F;&gt;    </span><br><span class="line">  &lt;!--当filtering开关打开时，使用到的过滤器属性文件列表--&gt;    </span><br><span class="line">  &lt;filters&#x2F;&gt;    </span><br><span class="line">  &lt;!--子项目可以引用的默认插件信息。该插件配置项直到被引用时才会被解析或绑定到生命周期。给定插件的任何本地配置都会覆盖这里的配置--&gt;    </span><br><span class="line">  &lt;pluginManagement&gt;    </span><br><span class="line">   &lt;!--使用的插件列表 。--&gt;    </span><br><span class="line">   &lt;plugins&gt;    </span><br><span class="line">    &lt;!--plugin元素包含描述插件所需要的信息。--&gt;    </span><br><span class="line">    &lt;plugin&gt;    </span><br><span class="line">     &lt;!--插件在仓库里的group ID--&gt;    </span><br><span class="line">     &lt;groupId&#x2F;&gt;    </span><br><span class="line">     &lt;!--插件在仓库里的artifact ID--&gt;    </span><br><span class="line">     &lt;artifactId&#x2F;&gt;    </span><br><span class="line">     &lt;!--被使用的插件的版本（或版本范围）--&gt;    </span><br><span class="line">     &lt;version&#x2F;&gt;    </span><br><span class="line">     &lt;!--是否从该插件下载Maven扩展（例如打包和类型处理器），由于性能原因，只有在真需要下载时，该元素才被设置成enabled。--&gt;    </span><br><span class="line">     &lt;extensions&#x2F;&gt;    </span><br><span class="line">     &lt;!--在构建生命周期中执行一组目标的配置。每个目标可能有不同的配置。--&gt;    </span><br><span class="line">     &lt;executions&gt;    </span><br><span class="line">      &lt;!--execution元素包含了插件执行需要的信息--&gt;    </span><br><span class="line">      &lt;execution&gt;    </span><br><span class="line">       &lt;!--执行目标的标识符，用于标识构建过程中的目标，或者匹配继承过程中需要合并的执行目标--&gt;    </span><br><span class="line">       &lt;id&#x2F;&gt;    </span><br><span class="line">       &lt;!--绑定了目标的构建生命周期阶段，如果省略，目标会被绑定到源数据里配置的默认阶段--&gt;    </span><br><span class="line">       &lt;phase&#x2F;&gt;    </span><br><span class="line">       &lt;!--配置的执行目标--&gt;    </span><br><span class="line">       &lt;goals&#x2F;&gt;    </span><br><span class="line">       &lt;!--配置是否被传播到子POM--&gt;    </span><br><span class="line">       &lt;inherited&#x2F;&gt;    </span><br><span class="line">       &lt;!--作为DOM对象的配置--&gt;    </span><br><span class="line">       &lt;configuration&#x2F;&gt;    </span><br><span class="line">      &lt;&#x2F;execution&gt;    </span><br><span class="line">     &lt;&#x2F;executions&gt;    </span><br><span class="line">     &lt;!--项目引入插件所需要的额外依赖--&gt;    </span><br><span class="line">     &lt;dependencies&gt;    </span><br><span class="line">      &lt;!--参见dependencies&#x2F;dependency元素--&gt;    </span><br><span class="line">      &lt;dependency&gt;    </span><br><span class="line">       ......    </span><br><span class="line">      &lt;&#x2F;dependency&gt;    </span><br><span class="line">     &lt;&#x2F;dependencies&gt;         </span><br><span class="line">     &lt;!--任何配置是否被传播到子项目--&gt;    </span><br><span class="line">     &lt;inherited&#x2F;&gt;    </span><br><span class="line">     &lt;!--作为DOM对象的配置--&gt;    </span><br><span class="line">     &lt;configuration&#x2F;&gt;    </span><br><span class="line">    &lt;&#x2F;plugin&gt;    </span><br><span class="line">   &lt;&#x2F;plugins&gt;    </span><br><span class="line">  &lt;&#x2F;pluginManagement&gt;    </span><br><span class="line">  &lt;!--使用的插件列表--&gt;    </span><br><span class="line">  &lt;plugins&gt;    </span><br><span class="line">   &lt;!--参见build&#x2F;pluginManagement&#x2F;plugins&#x2F;plugin元素--&gt;    </span><br><span class="line">   &lt;plugin&gt;    </span><br><span class="line">    &lt;groupId&#x2F;&gt;&lt;artifactId&#x2F;&gt;&lt;version&#x2F;&gt;&lt;extensions&#x2F;&gt;    </span><br><span class="line">    &lt;executions&gt;    </span><br><span class="line">     &lt;execution&gt;    </span><br><span class="line">      &lt;id&#x2F;&gt;&lt;phase&#x2F;&gt;&lt;goals&#x2F;&gt;&lt;inherited&#x2F;&gt;&lt;configuration&#x2F;&gt;    </span><br><span class="line">     &lt;&#x2F;execution&gt;    </span><br><span class="line">    &lt;&#x2F;executions&gt;    </span><br><span class="line">    &lt;dependencies&gt;    </span><br><span class="line">     &lt;!--参见dependencies&#x2F;dependency元素--&gt;    </span><br><span class="line">     &lt;dependency&gt;    </span><br><span class="line">      ......    </span><br><span class="line">     &lt;&#x2F;dependency&gt;    </span><br><span class="line">    &lt;&#x2F;dependencies&gt;    </span><br><span class="line">    &lt;goals&#x2F;&gt;&lt;inherited&#x2F;&gt;&lt;configuration&#x2F;&gt;    </span><br><span class="line">   &lt;&#x2F;plugin&gt;    </span><br><span class="line">  &lt;&#x2F;plugins&gt;    </span><br><span class="line"> &lt;&#x2F;build&gt;</span><br></pre></td></tr></table></figure>
+<h5 id="5-项目信息"><a href="#5-项目信息" class="headerlink" title="(5)项目信息"></a>(5)项目信息</h5><ul>
+<li>name:给用户提供更为友好的项目名</li>
+<li>description:项目描述，maven文档中保存</li>
+<li>url：主页的URL，maven文档中保存</li>
+<li>inceptionYear:项目创建年份，4位数字。当产生版权信息时需要使用这个值。</li>
+<li>licenses：该元素描述了项目所有License列表</li>
+<li>organization: 1.name组织名 2.url 组织主页url</li>
+<li>developers：项目开发人员列表</li>
+<li>contributors:项目其他贡献者列表<h4 id="2-1-导入对应的依赖"><a href="#2-1-导入对应的依赖" class="headerlink" title="2.1 导入对应的依赖"></a>2.1 导入对应的依赖</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">&lt;version&gt;1.0-SNAPSHOT&lt;&#x2F;version&gt;</span><br><span class="line"></span><br><span class="line">&lt;!--导入jedis的包--&gt;</span><br><span class="line">&lt;dependencies&gt;</span><br><span class="line">    &lt;!-- https:&#x2F;&#x2F;mvnrepository.com&#x2F;artifact&#x2F;redis.clients&#x2F;jedis --&gt;</span><br><span class="line">    &lt;dependency&gt;</span><br><span class="line">        &lt;groupId&gt;redis.clients&lt;&#x2F;groupId&gt;</span><br><span class="line">        &lt;artifactId&gt;jedis&lt;&#x2F;artifactId&gt;</span><br><span class="line">        &lt;version&gt;4.3.1&lt;&#x2F;version&gt;</span><br><span class="line">    &lt;&#x2F;dependency&gt;</span><br><span class="line">    &lt;!--fastjson--&gt;</span><br><span class="line">    &lt;!-- https:&#x2F;&#x2F;mvnrepository.com&#x2F;artifact&#x2F;com.alibaba&#x2F;fastjson --&gt;</span><br><span class="line">    &lt;dependency&gt;</span><br><span class="line">        &lt;groupId&gt;com.alibaba&lt;&#x2F;groupId&gt;</span><br><span class="line">        &lt;artifactId&gt;fastjson&lt;&#x2F;artifactId&gt;</span><br><span class="line">        &lt;version&gt;2.0.23&lt;&#x2F;version&gt;</span><br><span class="line">    &lt;&#x2F;dependency&gt;</span><br><span class="line"></span><br><span class="line">&lt;&#x2F;dependencies&gt;</span><br></pre></td></tr></table></figure>
+<h4 id="2-2-连接测试"><a href="#2-2-连接测试" class="headerlink" title="2.2 连接测试"></a>2.2 连接测试</h4></li>
+<li>1.连接数据库</li>
+<li>2.操作命令</li>
+<li>3.断开连接<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">package com.redis;</span><br><span class="line"></span><br><span class="line">import redis.clients.jedis.Jedis;</span><br><span class="line"></span><br><span class="line">public class TestPing &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        &#x2F;&#x2F;1. new Jedis对象</span><br><span class="line">        Jedis jedis &#x3D; new Jedis(&quot;127.0.0.1&quot;, 6379);</span><br><span class="line">        System.out.println(jedis.ping());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="2-3-常用的API"><a href="#2-3-常用的API" class="headerlink" title="2.3 常用的API"></a>2.3 常用的API</h4><h5 id="Key"><a href="#Key" class="headerlink" title="Key"></a>Key</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">package com.kuang;</span><br><span class="line"></span><br><span class="line">import redis.clients.jedis.Jedis;</span><br><span class="line"></span><br><span class="line">import java.util.Set;</span><br><span class="line"></span><br><span class="line">public class TestKey &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        Jedis jedis &#x3D; new Jedis(&quot;127.0.0.1&quot;, 6379);</span><br><span class="line"></span><br><span class="line">        System.out.println(&quot;清空数据：&quot;+ jedis.flushDB());</span><br><span class="line">        System.out.println(&quot;判断某个键是否存在&quot; + jedis.exists(&quot;username&quot;));</span><br><span class="line">        System.out.println(&quot;新增&lt;&#39;username&#39;&gt;, &#39;lzx&#39;:&quot; + jedis.set(&quot;username&quot;, &quot;lzx&quot;));</span><br><span class="line">        System.out.println(&quot;新增&lt;password&gt;, &#39;123456&#39;: &quot; +jedis.set(&quot;password&quot;, &quot;123456&quot;));</span><br><span class="line">        System.out.println(&quot;系统中所有键如下：&quot;);</span><br><span class="line">        Set&lt;String&gt; keys &#x3D; jedis.keys(&quot;*&quot;);</span><br><span class="line">        System.out.println(&quot;删除键password:&quot; + jedis.del(&quot;password&quot;));</span><br><span class="line">        System.out.println(&quot;判断键password是否存在：&quot;+ jedis.exists(&quot;password&quot;));</span><br><span class="line">        System.out.println(&quot;判断键username所存储的值的类型:&quot; + jedis.type(&quot;password&quot;));</span><br><span class="line">        System.out.println(&quot;随机返回key空间的一个：&quot;+ jedis.randomKey());</span><br><span class="line">        System.out.println(&quot;重命名key username:&quot; + jedis.rename(&quot;username&quot;, &quot;name&quot;));</span><br><span class="line">        System.out.println(&quot;取出改后的Name:&quot;+ jedis.get(&quot;name&quot;));</span><br><span class="line">        System.out.println(&quot;按索引进行查询：&quot;+jedis.select(0));</span><br><span class="line">        System.out.println(&quot;删除当前数据库中所有数据：&quot;+jedis.flushDB());</span><br><span class="line">        System.out.println(&quot;返回当前数据库中所有key的数目&quot;+jedis.dbSize());</span><br><span class="line">        System.out.println(&quot;删除所有数据库中的所有key:&quot;+jedis.flushAll());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h5 id="String"><a href="#String" class="headerlink" title="String"></a>String</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line">package com.kuang;</span><br><span class="line"></span><br><span class="line">import redis.clients.jedis.Jedis;</span><br><span class="line"></span><br><span class="line">import java.util.concurrent.TimeUnit;</span><br><span class="line"></span><br><span class="line">public class TestString &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        Jedis jedis &#x3D; new Jedis(&quot;127.0.0.1&quot;, 6379);</span><br><span class="line"></span><br><span class="line">        jedis.flushDB();</span><br><span class="line">        System.out.println(&quot;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;增加数据&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&quot;);</span><br><span class="line">        System.out.println(jedis.set(&quot;key1&quot;, &quot;value1&quot;));</span><br><span class="line">        System.out.println(jedis.set(&quot;key2&quot;, &quot;value2&quot;));</span><br><span class="line">        System.out.println(jedis.set(&quot;key3&quot;, &quot;value3&quot;));</span><br><span class="line">        System.out.println(&quot;删除键key2&quot;+ jedis.del(&quot;key2&quot;));</span><br><span class="line">        System.out.println(&quot;获取键key2&quot; + jedis.get(&quot;key2&quot;));</span><br><span class="line">        System.out.println(&quot;修改key1&quot;+ jedis.set(&quot;key1&quot;, &quot;value1changed&quot;));</span><br><span class="line">        System.out.println(&quot;获取修改后的key1的值&quot; + jedis.get(&quot;key1&quot;));</span><br><span class="line">        System.out.println(&quot;在key3后面加上值:&quot; + jedis.append(&quot;key3&quot;, &quot;End&quot;));</span><br><span class="line">        System.out.println(&quot;获取key3的值:&quot; + jedis.get(&quot;key3&quot;));</span><br><span class="line">        System.out.println(&quot;增加多个键值对:&quot; + jedis.mset(&quot;key01&quot;, &quot;values01&quot;, &quot;key02&quot;, &quot;values02&quot;, &quot;key03&quot;, &quot;values03&quot;));</span><br><span class="line">        System.out.println(&quot;获取多个键值对:&quot; + jedis.mget(&quot;key01&quot;, &quot;key02&quot;, &quot;key03&quot;));</span><br><span class="line">        System.out.println(&quot;获取多个键值对:&quot; + jedis.mget(&quot;key01&quot;, &quot;key02&quot;, &quot;key03&quot;, &quot;key04&quot;));</span><br><span class="line">        System.out.println(&quot;删除多个键值对：&quot;+ jedis.del(&quot;key01&quot;, &quot;key02&quot;));</span><br><span class="line">        System.out.println(&quot;获取多个键值对：&quot;+ jedis.mget(&quot;key01&quot;, &quot;key02&quot;, &quot;key03&quot;));</span><br><span class="line"></span><br><span class="line">        jedis.flushDB();</span><br><span class="line">        System.out.println(&quot;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;新增键值对防止覆盖原先值&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&quot;);</span><br><span class="line">        &#x2F;&#x2F; 分布式锁，不存在的时候才进行添加</span><br><span class="line">        System.out.println(jedis.setnx(&quot;key1&quot;, &quot;value1&quot;));</span><br><span class="line">        System.out.println(jedis.setnx(&quot;key2&quot;, &quot;value2&quot;));</span><br><span class="line">        System.out.println(jedis.setnx(&quot;key2&quot;, &quot;value2-new&quot;));</span><br><span class="line">        System.out.println(jedis.get(&quot;key1&quot;));</span><br><span class="line">        System.out.println(jedis.get(&quot;key2&quot;));</span><br><span class="line"></span><br><span class="line">        System.out.println(&quot;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;新增键值对并设置有效时间&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&quot;);</span><br><span class="line">        System.out.println(jedis.setex(&quot;key3&quot;, 2, &quot;values3&quot;));</span><br><span class="line">        System.out.println(jedis.get(&quot;key3&quot;));</span><br><span class="line">        try&#123;</span><br><span class="line">            TimeUnit.SECONDS.sleep(3);</span><br><span class="line">        &#125;catch (InterruptedException e)&#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println(jedis.get(&quot;key3&quot;));</span><br><span class="line"></span><br><span class="line">        System.out.println(&quot;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;获取原值，更新为新值&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&quot;);</span><br><span class="line">        System.out.println(jedis.getSet(&quot;key2&quot;, &quot;key2GetSet&quot;));</span><br><span class="line">        System.out.println(jedis.get(&quot;key2&quot;));</span><br><span class="line"></span><br><span class="line">        System.out.println(&quot;获得key2的值的字符串：&quot;+ jedis.getrange(&quot;key2&quot;, 2, 4));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+控制台输出如下所示：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;增加数据&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;</span><br><span class="line">OK</span><br><span class="line">OK</span><br><span class="line">OK</span><br><span class="line">删除键key21</span><br><span class="line">获取键key2null</span><br><span class="line">修改key1OK</span><br><span class="line">获取修改后的key1的值value1changed</span><br><span class="line">在key3后面加上值:9</span><br><span class="line">获取key3的值:value3End</span><br><span class="line">增加多个键值对:OK</span><br><span class="line">获取多个键值对:[values01, values02, values03]</span><br><span class="line">获取多个键值对:[values01, values02, values03, null]</span><br><span class="line">删除多个键值对：2</span><br><span class="line">获取多个键值对：[null, null, values03]</span><br><span class="line">&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;新增键值对防止覆盖原先值&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;</span><br><span class="line">1</span><br><span class="line">1</span><br><span class="line">0</span><br><span class="line">value1</span><br><span class="line">value2</span><br><span class="line">&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;新增键值对并设置有效时间&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;</span><br><span class="line">OK</span><br><span class="line">values3</span><br><span class="line">null</span><br><span class="line">&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;获取原值，更新为新值&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;</span><br><span class="line">value2</span><br><span class="line">key2GetSet</span><br><span class="line">获得key2的值的字符串：y2G</span><br></pre></td></tr></table></figure>
+<h5 id="List"><a href="#List" class="headerlink" title="List"></a>List</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">package com.kuang;</span><br><span class="line"></span><br><span class="line">import redis.clients.jedis.Jedis;</span><br><span class="line"></span><br><span class="line">public class TestList &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        Jedis jedis &#x3D; new Jedis(&quot;127.0.0.1&quot;, 6379);</span><br><span class="line">        jedis.flushDB();</span><br><span class="line">        System.out.println(&quot;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;添加一个list&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&quot;);</span><br><span class="line">        jedis.lpush(&quot;collections&quot;, &quot;ArrayList&quot;, &quot;Vector&quot;, &quot;Stack&quot;, &quot;HashMap&quot;, &quot;WeakHashMap&quot;, &quot;LinkedHashMap&quot;);</span><br><span class="line">        jedis.lpush(&quot;collections&quot;, &quot;HashSet&quot;);</span><br><span class="line">        jedis.lpush(&quot;collections&quot;, &quot;TreaSet&quot;);</span><br><span class="line">        jedis.lpush(&quot;collections&quot;, &quot;TreaMap&quot;);</span><br><span class="line">        System.out.println(&quot;collections的内容：&quot;+ jedis.lrange(&quot;collections&quot;, 0, -1));</span><br><span class="line">        System.out.println(&quot;collections区间0-3的内容：&quot;+ jedis.lrange(&quot;collections&quot;, 0, 3));</span><br><span class="line"></span><br><span class="line">        &#x2F;&#x2F;删除列表指定的值，第二个参数为删除的个数(有重复时)，后add进去的值先被删除，类似于出栈</span><br><span class="line">        System.out.println(&quot;删除指定元素个数：&quot;+ jedis.lrem(&quot;collections&quot;, 2, &quot;HashMap&quot;));</span><br><span class="line">        System.out.println(&quot;collections的内容&quot; + jedis.lrange(&quot;collections&quot;, 0, -1));</span><br><span class="line">        System.out.println(&quot;删除下表0-3区间之外的元素&quot;+jedis.ltrim(&quot;collections&quot;, 0, 3));</span><br><span class="line">        System.out.println(&quot;collections的内容&quot; + jedis.lrange(&quot;collections&quot;, 0, -1));</span><br><span class="line">        System.out.println(&quot;collections元素出栈(左端)&quot; + jedis.lpop(&quot;collections&quot;));</span><br><span class="line">        System.out.println(&quot;collections的内容&quot; + jedis.lrange(&quot;collections&quot;, 0, -1));</span><br><span class="line">        System.out.println(&quot;collections元素出栈(右端)&quot; + jedis.rpop(&quot;collections&quot;));</span><br><span class="line">        System.out.println(&quot;collections的内容&quot; + jedis.lrange(&quot;collections&quot;, 0, -1));</span><br><span class="line">        System.out.println(&quot;修改collections指定下标1的内容&quot; + jedis.lset(&quot;collections&quot;, 1, &quot;LinkArrayList&quot;));</span><br><span class="line">        System.out.println(&quot;collections的内容&quot; + jedis.lrange(&quot;collections&quot;, 0, -1));</span><br><span class="line"></span><br><span class="line">        System.out.println(&quot;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&quot;);</span><br><span class="line">        System.out.println(&quot;获取collections的长度&quot;+ jedis.llen(&quot;collections&quot;));</span><br><span class="line">        System.out.println(&quot;获取collections的下标为2的元素&quot; + jedis.lindex(&quot;collections&quot;, 2));</span><br><span class="line">        System.out.println(&quot;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&quot;);</span><br><span class="line">        jedis.lpush(&quot;sortedList&quot;, &quot;3&quot;, &quot;6&quot;, &quot;2&quot;, &quot;0&quot;, &quot;7&quot;, &quot;4&quot;);</span><br><span class="line">        System.out.println(&quot;sorted排序前&quot;+jedis.lrange(&quot;sortedList&quot;, 0, -1));</span><br><span class="line">        System.out.println(jedis.sort(&quot;sortedList&quot;));</span><br><span class="line">        System.out.println(&quot;sorted排序后&quot;+ jedis.lrange(&quot;sortedList&quot;, 0, -1));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="Set"><a href="#Set" class="headerlink" title="Set"></a>Set</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">package com.kuang;</span><br><span class="line"></span><br><span class="line">import redis.clients.jedis.Jedis;</span><br><span class="line"></span><br><span class="line">public class TestList &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        Jedis jedis &#x3D; new Jedis(&quot;127.0.0.1&quot;, 6379);</span><br><span class="line">        jedis.flushDB();</span><br><span class="line">        System.out.println(&quot;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;添加一个list&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&quot;);</span><br><span class="line">        jedis.lpush(&quot;collections&quot;, &quot;ArrayList&quot;, &quot;Vector&quot;, &quot;Stack&quot;, &quot;HashMap&quot;, &quot;WeakHashMap&quot;, &quot;LinkedHashMap&quot;);</span><br><span class="line">        jedis.lpush(&quot;collections&quot;, &quot;HashSet&quot;);</span><br><span class="line">        jedis.lpush(&quot;collections&quot;, &quot;TreaSet&quot;);</span><br><span class="line">        jedis.lpush(&quot;collections&quot;, &quot;TreaMap&quot;);</span><br><span class="line">        System.out.println(&quot;collections的内容：&quot;+ jedis.lrange(&quot;collections&quot;, 0, -1));</span><br><span class="line">        System.out.println(&quot;collections区间0-3的内容：&quot;+ jedis.lrange(&quot;collections&quot;, 0, 3));</span><br><span class="line"></span><br><span class="line">        &#x2F;&#x2F;删除列表指定的值，第二个参数为删除的个数(有重复时)，后add进去的值先被删除，类似于出栈</span><br><span class="line">        System.out.println(&quot;删除指定元素个数：&quot;+ jedis.lrem(&quot;collections&quot;, 2, &quot;HashMap&quot;));</span><br><span class="line">        System.out.println(&quot;collections的内容&quot; + jedis.lrange(&quot;collections&quot;, 0, -1));</span><br><span class="line">        System.out.println(&quot;删除下表0-3区间之外的元素&quot;+jedis.ltrim(&quot;collections&quot;, 0, 3));</span><br><span class="line">        System.out.println(&quot;collections的内容&quot; + jedis.lrange(&quot;collections&quot;, 0, -1));</span><br><span class="line">        System.out.println(&quot;collections元素出栈(左端)&quot; + jedis.lpop(&quot;collections&quot;));</span><br><span class="line">        System.out.println(&quot;collections的内容&quot; + jedis.lrange(&quot;collections&quot;, 0, -1));</span><br><span class="line">        System.out.println(&quot;collections元素出栈(右端)&quot; + jedis.rpop(&quot;collections&quot;));</span><br><span class="line">        System.out.println(&quot;collections的内容&quot; + jedis.lrange(&quot;collections&quot;, 0, -1));</span><br><span class="line">        System.out.println(&quot;修改collections指定下标1的内容&quot; + jedis.lset(&quot;collections&quot;, 1, &quot;LinkArrayList&quot;));</span><br><span class="line">        System.out.println(&quot;collections的内容&quot; + jedis.lrange(&quot;collections&quot;, 0, -1));</span><br><span class="line"></span><br><span class="line">        System.out.println(&quot;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&quot;);</span><br><span class="line">        System.out.println(&quot;获取collections的长度&quot;+ jedis.llen(&quot;collections&quot;));</span><br><span class="line">        System.out.println(&quot;获取collections的下标为2的元素&quot; + jedis.lindex(&quot;collections&quot;, 2));</span><br><span class="line">        System.out.println(&quot;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&quot;);</span><br><span class="line">        jedis.lpush(&quot;sortedList&quot;, &quot;3&quot;, &quot;6&quot;, &quot;2&quot;, &quot;0&quot;, &quot;7&quot;, &quot;4&quot;);</span><br><span class="line">        System.out.println(&quot;sorted排序前&quot;+jedis.lrange(&quot;sortedList&quot;, 0, -1));</span><br><span class="line">        System.out.println(jedis.sort(&quot;sortedList&quot;));</span><br><span class="line">        System.out.println(&quot;sorted排序后&quot;+ jedis.lrange(&quot;sortedList&quot;, 0, -1));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h5 id="Hash"><a href="#Hash" class="headerlink" title="Hash"></a>Hash</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">package com.kuang;</span><br><span class="line"></span><br><span class="line">import redis.clients.jedis.Jedis;</span><br><span class="line"></span><br><span class="line">import java.util.HashMap;</span><br><span class="line">import java.util.Map;</span><br><span class="line"></span><br><span class="line">public class TestHash &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        Jedis jedis &#x3D; new Jedis(&quot;127.0.0.1&quot;, 6379);</span><br><span class="line">        jedis.flushDB();</span><br><span class="line">        Map&lt;String, String&gt; map &#x3D; new HashMap&lt;&gt;();</span><br><span class="line">        map.put(&quot;key1&quot;, &quot;value1&quot;);</span><br><span class="line">        map.put(&quot;key2&quot;, &quot;value2&quot;);</span><br><span class="line">        map.put(&quot;key3&quot;, &quot;value3&quot;);</span><br><span class="line">        map.put(&quot;key4&quot;, &quot;value4&quot;);</span><br><span class="line">        &#x2F;&#x2F;添加名称为hash(key)的hash元素</span><br><span class="line">        jedis.hmset(&quot;hash&quot;, map);</span><br><span class="line">        &#x2F;&#x2F;向名称为hash的hash中添加key</span><br><span class="line">        jedis.hset(&quot;hash&quot;, &quot;key5&quot;, &quot;value5&quot;);</span><br><span class="line">        System.out.println(&quot;散列hash的所有键值对为：&quot;+ jedis.hgetAll(&quot;hash&quot;)); &#x2F;&#x2F;return Map&lt;string&gt;&lt;string&gt;</span><br><span class="line">        System.out.println(&quot;散列hash的所有键为:&quot; + jedis.hkeys(&quot;hash&quot;)); &#x2F;&#x2F; return Set&lt;string&gt;</span><br><span class="line">        System.out.println(&quot;散列hash的所有值为：&quot; + jedis.hvals(&quot;hash&quot;)); &#x2F;&#x2F; return List&lt;String&gt;</span><br><span class="line">        System.out.println(&quot;散列hash中的键值对个数：&quot;+ jedis.hlen(&quot;hash&quot;));</span><br><span class="line">        System.out.println(&quot;获取hash中的值：&quot;+ jedis.hget(&quot;hash&quot;, &quot;key3&quot;));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h5 id="Zset"><a href="#Zset" class="headerlink" title="Zset"></a>Zset</h5><h2 id="3-Jedis事务"><a href="#3-Jedis事务" class="headerlink" title="3.Jedis事务"></a>3.Jedis事务</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">package com.kuang;</span><br><span class="line"></span><br><span class="line">import org.json.JSONObject;</span><br><span class="line">import redis.clients.jedis.Jedis;</span><br><span class="line">import redis.clients.jedis.Transaction;</span><br><span class="line"></span><br><span class="line">public class TestTX &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        Jedis jedis &#x3D; new Jedis(&quot;127.0.0.1&quot;, 6379);</span><br><span class="line">        JSONObject jsonObject &#x3D; new JSONObject();</span><br><span class="line">        jsonObject.put(&quot;hello&quot;, &quot;world&quot;);</span><br><span class="line">        jsonObject.put(&quot;name&quot;, &quot;lzx&quot;);</span><br><span class="line"></span><br><span class="line">        &#x2F;&#x2F;开启事务</span><br><span class="line">        Transaction multi &#x3D; jedis.multi();&#x2F;&#x2F;开启事务</span><br><span class="line">        String result &#x3D; jsonObject.toString();</span><br><span class="line"></span><br><span class="line">        try&#123;</span><br><span class="line">            multi.set(&quot;user1&quot;, result);</span><br><span class="line">            multi.set(&quot;user2&quot;, result);</span><br><span class="line">            multi.exec();</span><br><span class="line">        &#125;catch (Exception e)&#123;</span><br><span class="line">            multi.discard();&#x2F;&#x2F;放弃事务</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;finally &#123;</span><br><span class="line">            jedis.close();&#x2F;&#x2F;close connection</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+</ul>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <div class="declare">
+      <ul class="post-copyright">
+        <li>
+          <i class="ri-copyright-line"></i>
+          <strong>版权声明： </strong>
+          
+          本博客所有文章除特别声明外，著作权归作者所有。转载请注明出处！
+          
+        </li>
+      </ul>
+    </div>
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://twilight2017.github.io/2023/02/08/Jedis%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/redis/" rel="tag">redis</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%8A%80%E6%9C%AF/" rel="tag">技术</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+    
+      <a href="/2023/01/30/Python%E6%A8%A1%E5%9D%97%E5%AD%A6%E4%B9%A0%E4%B9%8Btimeit/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">Python模块学习之timeit</div>
+      </a>
+    
+  </nav>
+
+   
+<!-- valine评论 -->
+<div id="vcomments-box">
+  <div id="vcomments"></div>
+</div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js"></script>
+<script>
+  new Valine({
+    el: "#vcomments",
+    app_id: "",
+    app_key: "",
+    path: window.location.pathname,
+    avatar: "monsterid",
+    placeholder: "给我的文章加点评论吧~",
+    recordIP: true,
+  });
+  const infoEle = document.querySelector("#vcomments .info");
+  if (infoEle && infoEle.childNodes && infoEle.childNodes.length > 0) {
+    infoEle.childNodes.forEach(function (item) {
+      item.parentNode.removeChild(item);
+    });
+  }
+</script>
+<style>
+  #vcomments-box {
+    padding: 5px 30px;
+  }
+
+  @media screen and (max-width: 800px) {
+    #vcomments-box {
+      padding: 5px 0px;
+    }
+  }
+
+  #vcomments-box #vcomments {
+    background-color: #fff;
+  }
+
+  .v .vlist .vcard .vh {
+    padding-right: 20px;
+  }
+
+  .v .vlist .vcard {
+    padding-left: 10px;
+  }
+</style>
+
+ 
+   
+     
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2015-2023
+        <i class="ri-heart-fill heart_icon"></i> twilight2017
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        
+        由 <a href="https://hexo.io" target="_blank">Hexo</a> 强力驱动
+        <span class="division">|</span>
+        主题 - <a href="https://github.com/Shen-Yu/hexo-theme-ayer" target="_blank">Ayer</a>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></s>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>
+      <div class="float_btns">
+        <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+      </div>
+    </main>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="瑟兰迪尔"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E6%8A%80%E6%9C%AF">技术</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E8%AF%BB%E4%B9%A6">读书</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/travels">旅行</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E9%9A%8F%E7%AC%94">随笔</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/friends">友链</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/about">关于我</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <script>
+      if (window.matchMedia("(max-width: 768px)").matches) {
+        document.querySelector('.content').classList.remove('on');
+        document.querySelector('.sidebar').classList.remove('on');
+      }
+    </script>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="https://cdn.jsdelivr.net/gh/Shen-Yu/cdn/img/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="https://cdn.jsdelivr.net/gh/Shen-Yu/cdn/img/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-2.0.3.min.js"></script>
+
+
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+
+
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: '.tocbot',
+    contentSelector: '.article-entry',
+    headingSelector: 'h1, h2, h3, h4, h5, h6',
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: 'main',
+    positionFixedSelector: '.tocbot',
+    positionFixedClass: 'is-position-fixed',
+    fixedSidebarOffset: 'auto'
+  });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.css">
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css">
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script>
+
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+
+
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+
+
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+
+
+<link rel="stylesheet" href="/css/clipboard.css">
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+
+
+<!-- CanvasBackground -->
+
+
+    
+  </div>
+</body>
+
+</html>
