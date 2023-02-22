@@ -141,6 +141,75 @@
     
     
     <article
+  id="post-Git踩坑记录"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2022/04/11/Git%E8%B8%A9%E5%9D%91%E8%AE%B0%E5%BD%95/"
+    >Git踩坑记录</a> 
+</h2>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2022/04/11/Git%E8%B8%A9%E5%9D%91%E8%AE%B0%E5%BD%95/" class="article-date">
+  <time datetime="2022-04-11T02:56:03.000Z" itemprop="datePublished">2022-04-11</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+  </div>
+   
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="Git踩坑记录"><a href="#Git踩坑记录" class="headerlink" title="Git踩坑记录"></a>Git踩坑记录</h1><p>前言：对git的操作使用好像一直停滞在：</p>
+<blockquote>
+<p>git pull</br><br>git add </br><br>git commit -m</br><br>git push</br></p>
+</blockquote>
+<p>这几大简单操作上，于是想着开个文档，记录一下其他学习内容，方便后续回顾。</br></p>
+<h1 id="Git缓存区"><a href="#Git缓存区" class="headerlink" title="Git缓存区"></a>Git缓存区</h1><h6 id="git-add-files把当前工作目录中的文件放入暂存区域，其实主要做了以下两件事："><a href="#git-add-files把当前工作目录中的文件放入暂存区域，其实主要做了以下两件事：" class="headerlink" title="git add files把当前工作目录中的文件放入暂存区域，其实主要做了以下两件事："></a>git add files把当前工作目录中的文件放入暂存区域，其实主要做了以下两件事：</h6><blockquote>
+<p>1.将本地文件的时间戳、长度，当前文档对象的id等信息保存到一个树形目录中去</br><br>2.将本地文件的内容做快照并保存到Git的对象库。</p>
+</blockquote>
+<p>综上所述，暂存区实际上就是一个包含文件索引的目录树，像是一个虚拟的工作区。在这个虚拟工作区的目录树中，记录了文件名、文件的状态信息（时间戳、文件长度等），文件的内容并不存储其中，而是保存在Git对象库(.git/objects)中，文件索引建立了文件和对象库中对象实体之间的对应。</br><br>有关git暂存区的命令学习：</br></p>
+<blockquote>
+<p>1.<code>git rm --cached 文件名</code></br><br>这个命令不会删除物理文件，只是将已经add进缓存的文件删除。</br><br>2.<code>git rm --f 文件名</code></br><br>这个命令不仅将文件从缓存中删除，还会将物理文件删除，所以使用这个命令要非常谨慎。</br><br>3.若删除已经添加缓存的某一个目录下所有文件的话需要添加一个参数-r</br><br><code>git rm -r --cached 文件名</code></p>
+</blockquote>
+<h1 id="git-submodule用法整理"><a href="#git-submodule用法整理" class="headerlink" title="git submodule用法整理"></a>git submodule用法整理</h1><p>&emsp;&emsp;有submodule的仓库在当前目录会有个<code>.gitmodules</code>文件。记录path和url。这里表示项目引用子模块的关系</br><br>&emsp;&emsp;克隆带有子模块的项目后，需要初始化并拉取子模块</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">git submodule init</span><br><span class="line">git submodule update</span><br><span class="line"># 上面两条命令的组合，一般直接使用组合命令</span><br><span class="line">git submodule update --init</span><br><span class="line">#可以加上--recursive拉取嵌套的子模块（子模块中还包含有其他子模块）</span><br><span class="line">git submodule update --init --recursive</span><br></pre></td></tr></table></figure>
+<p>&emsp;&emsp;或者可以在clone代码时加上<code>--recurse-submodules</code>选项自动完成拉取</br><br><code>git clone --recurse-submodules &lt;main-project-repo-url&gt;</code><br>当需要更新子模块时，可以使用下面的指令，不用切目录就能进行手动更新：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git submodule update --remote [submodule-path]</span><br></pre></td></tr></table></figure>
+<p>上述所有命令都默认拉取的是master分支的代码，如果想拉取其他分支，则进行如下配置：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git config -f .gitmodules submodule.&lt;submodule-name&gt;.branch &lt;branch-name&gt;</span><br></pre></td></tr></table></figure> 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/python/" rel="tag">python</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%8A%80%E6%9C%AF/" rel="tag">技术</a></li></ul>
+
+    </footer>
+  </div>
+
+    
+ 
+    
+</article>
+
+    
+    <article
   id="post-Linux入门学习指南"
   class="article article-type-post"
   itemscope

@@ -9,7 +9,7 @@
     
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   <title>
-    利用docker commit理解镜像构成 |  瑟兰迪尔
+    Docker基础知识查漏补缺 |  瑟兰迪尔
   </title>
   <meta name="generator" content="hexo-theme-ayer">
   
@@ -40,7 +40,7 @@
     <main class="content on">
       <section class="outer">
   <article
-  id="post-利用docker commit理解镜像构成"
+  id="post-Docker基础知识查漏补缺"
   class="article article-type-post"
   itemscope
   itemprop="blogPost"
@@ -51,15 +51,15 @@
     <header class="article-header">
        
 <h1 class="article-title sea-center" style="border-left:0" itemprop="name">
-  利用docker commit理解镜像构成
+  Docker基础知识查漏补缺
 </h1>
  
 
     </header>
      
     <div class="article-meta">
-      <a href="/2023/02/17/%E5%88%A9%E7%94%A8docker%20commit%E7%90%86%E8%A7%A3%E9%95%9C%E5%83%8F%E6%9E%84%E6%88%90/" class="article-date">
-  <time datetime="2023-02-17T11:15:03.000Z" itemprop="datePublished">2023-02-17</time>
+      <a href="/2023/02/22/Docker%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E6%9F%A5%E6%BC%8F%E8%A1%A5%E7%BC%BA/" class="article-date">
+  <time datetime="2023-02-22T13:37:03.000Z" itemprop="datePublished">2023-02-22</time>
 </a> 
   <div class="article-category">
     <a class="article-category-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
@@ -70,7 +70,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-quill-pen-line"></i>
             <span class="post-meta-item-text"> 字数统计:</span>
-            <span class="post-count">1.5k</span>
+            <span class="post-count">1.4k</span>
         </span>
     </span>
 
@@ -94,28 +94,29 @@
   
     <div class="article-entry" itemprop="articleBody">
        
-  <h1 id="利用docker-commit-理解镜像构成"><a href="#利用docker-commit-理解镜像构成" class="headerlink" title="利用docker commit 理解镜像构成"></a>利用docker commit 理解镜像构成</h1><blockquote>
-<p>不要使用<code>docker commit</code>来定制镜像，定制镜像的工作应该由Dockerfile构成。镜像是多层存储，每一层是在前一层的基础上进行修改。容器同样也是多层存储，是以镜像为基础层，在其基础上加一层来作为容器运行时的存储层。</p>
+  <h1 id="Docker基础知识查漏补缺"><a href="#Docker基础知识查漏补缺" class="headerlink" title="Docker基础知识查漏补缺"></a>Docker基础知识查漏补缺</h1><h2 id="Docker-Compose"><a href="#Docker-Compose" class="headerlink" title="Docker Compose"></a>Docker Compose</h2><blockquote>
+<p>docker-compose是Docker官方的开源项目，负责实现对Docker容器集群的快速编排。日常工作中，我们经常会碰到需要多个容器相互配合来完成某项任务的情况。例如要实现一个Web项目，除了Web服务容器本身，往往还需要加上后端的数据库服务容器，甚至还包括负载均衡容器等。</p>
 </blockquote>
-<h2 id="镜像构建实例"><a href="#镜像构建实例" class="headerlink" title="镜像构建实例"></a>镜像构建实例</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker search nginx</span><br><span class="line">docker run --name webserver -d -p 80:80 nginx</span><br></pre></td></tr></table></figure>
-<p>首先第一条命令用Nginx镜像启动一个容器，命名为webserver，并且映射了80端口。此时通过浏览器访问<code>http://localhost</code>可以看到nginx欢迎页面。假设现在我没希望更改nginx欢迎页面上的文字为欢迎Docker的文字，我们可以使用<code>docker exec</code>命令进入容器，并执行以下操作：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">docker exec -it webserver bash</span><br><span class="line">echo &#39;&lt;h1&gt;Hello, Docker!&lt;&#x2F;h1&gt;&#39; &gt; &#x2F;usr&#x2F;share&#x2F;nginx&#x2F;html&#x2F;index.html</span><br><span class="line">exit</span><br></pre></td></tr></table></figure>
-<p>&emsp;&emsp;上面这些执行的意思是，我们以交互终端的方式进入了webserver容器，用新的html内容覆盖了原有的nginx欢迎页面，此时再刷新浏览器，可以看到欢迎页面的字样改变了。</br><br>&emsp;&emsp;我们修改了容器的文件，也就是改动了容器的存储层，我们可以通过<code>docker diff</code>命令来查看这种改动。</br><br>&emsp;&emsp;现在我们定制好了变化，希望能将其保存下来形成镜像。</p>
-<blockquote>
-<p>要知道，当我们运行一个容器的时候（如果不使用卷的话），我们做的任何文件修改都会被记录于容器存储层里面。Docker为我们提供了一个<code>docker commit</code>命令，可以将容器的存储层保存下来成为镜像。换句话说，<b>就是再原有镜像的基础上，再叠加上容器的存储层，并构成新的镜像，以后我们运行这个新镜像的时候，就会拥有原有容器最后的文件变化。</b></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&#96;&#96;&#96;Compose&#96;&#96;&#96;中有两个重要的概念：</span><br><span class="line">- 服务(service)：一个应用的容器，实际上可以包括若干运行相同镜像的容器实例。</span><br><span class="line">- 项目(project)：由一组关联的应用容器组成的一个完整业务单元，在&#96;&#96;&#96;docker-compose.yml&#96;&#96;&#96;文件中定义。</span><br><span class="line"></span><br><span class="line">&#96;&#96;&#96;Compose&#96;&#96;&#96;的默认管理对象是项目，通过子命令对项目中的一组容器进行便捷地生命周期管理</span><br><span class="line">### 使用:Compose面向项目进行管理</span><br><span class="line">安装方法见教程</span><br><span class="line">当能打印以下版本信息时，说明&#96;&#96;&#96;docker-compose&#96;&#96;&#96;安装成功</span><br></pre></td></tr></table></figure>
+<p>[root@localhost ~]# docker-compose –version<br>docker-compose version 1.27.4, build 40524192</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">### 重要命令说明</span><br><span class="line">#### docker-compose命令选项</span><br><span class="line">- &#96;&#96;&#96;-f&#96;&#96;&#96;指定使用的Compose模板文件，默认为&#96;&#96;&#96;docker-compose.yml&#96;&#96;&#96;，可以多次指定</span><br><span class="line">- &#96;&#96;&#96;-p&#96;&#96;&#96;指定项目名称，默认使用所在目录名称</span><br><span class="line">- &#96;&#96;&#96;--verbose&#96;&#96;&#96;输出更多调试信息</span><br><span class="line">- &#96;&#96;&#96;-v&#96;&#96;&#96;打印版本并退出</span><br><span class="line"></span><br><span class="line">###### up</span><br><span class="line">该命令的完整格式为：</span><br></pre></td></tr></table></figure>
+<p>docker-compose up [options] [SERVICE…]</p>
+<p><code> 其功能十分强大，它将尝试自动完成包括构建镜像、（重新）创建服务，启动服务，并关联服务相关容器的一系列操作。&lt;/br&gt; 链接的服务都将被自动启动，除非已经处于运行状态。&lt;b&gt;大部分时候都可以直接通过该命令来启动一个项目&lt;/b&gt;&lt;/br&gt; 如果使用</code>docker-compose up -d```将会在后台启动并运行所有的容器，一般推荐在生产环境下使用该选项</p>
+<h2 id="Docker安全"><a href="#Docker安全" class="headerlink" title="Docker安全"></a>Docker安全</h2><h3 id="Linux-Namespace简介"><a href="#Linux-Namespace简介" class="headerlink" title="Linux Namespace简介"></a>Linux Namespace简介</h3><blockquote>
+<p>Linux namespce提供的是一种内核级别的隔离系统资源的方法。不同的Namespace程序，可以享有一份独立的系统资源。目前Linux提供了六类系统资源的隔离机制，分别是：</p>
 </blockquote>
-<h3 id="docker-commit-构建基础知识"><a href="#docker-commit-构建基础知识" class="headerlink" title="docker commit 构建基础知识"></a>docker commit 构建基础知识</h3><figure class="highlight docker"><figcaption><span>commit```的语法格式为</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">```</span><br><span class="line">docker commit [选项] &lt;容器ID或容器名&gt; [&lt;仓库名&gt;[:&lt;标签&gt;]]</span><br></pre></td></tr></table></figure>
-<p>我们现在来尝试运行以下命令：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">docker commit \</span><br><span class="line">  --author &quot;Tao Wang &lt;twang2218@gmail.com&gt;&quot; \</span><br><span class="line">  --message &quot;modify origin page&quot; \</span><br><span class="line">  webserver \</span><br><span class="line">  nginx:v2</span><br></pre></td></tr></table></figure>
-<p>解读：其中<code>--author</code>是指定修改的作者，<code>--message</code>则是记录本次修改的内容，这点和Git的使用方法是一致的。</br><br>这时候我们就可以通过<code>docker images</code>命令在镜像列表查看到新构建的这个镜像</p>
-<h3 id="构建验证"><a href="#构建验证" class="headerlink" title="构建验证"></a>构建验证</h3><p>我们用以下命令来运行这个镜像</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run --name web2 -d -p 81:80 nginx:v2</span><br></pre></td></tr></table></figure>
-<p>这里我们将新的服务web2映射到81端口，我们可以通过访问<code>http://localhost:81</code>看到结果</p>
-<h3 id="慎用docker-commit"><a href="#慎用docker-commit" class="headerlink" title="慎用docker commit"></a>慎用docker commit</h3><p>我们通过使用<code>docker commit</code>命令虽然可以比较直观的帮助理解镜像分层存储的概念，但是在实际环境中并不这样使用。</br><br>首先，如果我们仔细观察之前<code>docker diff webserver</code>的结果，会发现除了真正想要的一条echo命令，很多其他的文件被改动或者添加了。这还只是针对最简单的操作，如果是安装软件包、编译构建，那会有大量无关内容被添加进来，会导致镜像变得极为臃肿。</br><br>此外，使用<code>docker commit</code>意味着所有对镜像的操作都是黑箱操作，生成的镜像也被称为<b>黑箱镜像</b>，就是说除了制作镜像的人知道自己执行过什么命令，怎么生成的镜像，别人是无从得知的。这种镜像的维护工作是非常耗费精力的。</br><br>最后，<code>docker commit</code>修改的结果仅仅是在当前层进行标记、添加、修改，而不会改动上一层。如果我们全都依靠<code>docker commit</code>来定制镜像的话，每一次修改都会让镜像更加臃肿一次，所删除的上一层的东西并不会丢失，会一直如影随形的跟着这个镜像，即使根本无法访问到。这会让镜像更加臃肿。</p>
-<h1 id="镜像构建上下文"><a href="#镜像构建上下文" class="headerlink" title="镜像构建上下文"></a>镜像构建上下文</h1><p>一般我们常用的用来构建镜像的命令<code>docker build</code>命令最后有一个<code>.</code>。这不是在指定Dockerfile所在的路径，而是在指定docker的上下文路径。</p>
-<h3 id="docker-build的工作原理"><a href="#docker-build的工作原理" class="headerlink" title="docker build的工作原理"></a>docker build的工作原理</h3><p>Docker在运行时分为Docker引擎(也就是服务端守护进程)和客户端工具。Docker引擎提供了一组REST API，被称为<code>Docker Remote API</code>，而如<code>docker</code>命令这样的客户端工具，是通过这组API和docker引擎交互，从而完成各种功能。</br><br>因此在表面上，我们好像是在本机执行各种<code>docker</code>命令，而实际上一切都是使用的远程调用形式在服务端(Docker引擎)完成的。也因为这种C/S的设计，让我们操作远程服务器的Docker引擎变得轻而易举。</br><br>根据上文的知识点，<code>docker build</code>命令构建镜像，并非是在本地进行构建的，而是在服务器端。那么在这种客户端/服务端的架构中，如何才能让服务端获得本地文件呢？</br><br>这就引入了上下文的概念。构建时，用户会指定构建镜像上下文的路径，<code>docker build</code>命令在得知这个路径后，会将路径下的所有内容打包，然后上传给Docker引擎。这样Docker引擎收到这个上下文包后，展开就会获得构建镜像所需要的一切文件。</br><br>如果我们在Dockerfile中这么写：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">COPY .&#x2F;package.json &#x2F;app&#x2F;</span><br></pre></td></tr></table></figure>
-<p>这并不是要复制执行<code>docker build</code>命令所在目录下的package.json，也不是复制Dockerfile所在目录下的package.json，而是复制上下文目录下的package.json</p>
+<ul>
+<li>Mount: 隔离文件系统挂载点</li>
+<li>UTS: 隔离主机名和域名信息</li>
+<li>IPC： 隔离进程间通信</li>
+<li>PID： 隔离进程的PID</li>
+<li>Network: 隔离网络资源</li>
+<li>User: 隔离用户和用户组的ID<h3 id="Docker的安全隔离机制"><a href="#Docker的安全隔离机制" class="headerlink" title="Docker的安全隔离机制"></a>Docker的安全隔离机制</h3>当我们用<code>docker run</code>启动一个容器时，在后台Docker为容器创建了一个独立的命名空间和控制组结合。命名空间提供了最基础也是最直接的隔离，在容器中运行的进程不会被运行在主机上的进程和其他容器发现和作用。</br><br>从网络架构的角度来看，所有的容器通过本地主机的网桥接口相互通信，就像物理机器通过物理交换机通信一样<h2 id="Docker的底层实现"><a href="#Docker的底层实现" class="headerlink" title="Docker的底层实现"></a>Docker的底层实现</h2>&emsp;Docker的底层核心技术包括Linux上的命名空间(Namespace)、控制组(COntrol groups)、Union文件系统(Union file systems)和容器格式(Container format)。</br><br>&emsp;Docker的实现基于Linux的命名空间机制，让某些进程在彼此隔离的命名空间中运行。大家虽然都共用一个内核和某些运行时环境(例如一些系统命令和一些系统库)，但是彼此却看不到，都以为系统中只有自己存在。</br><br>&emsp;&emsp;这种机制就是容器(Container)，利用命名空间来做权限的隔离控制，利用cgroups来做资源分配。<h3 id="基本架构"><a href="#基本架构" class="headerlink" title="基本架构"></a>基本架构</h3>&emsp;&emsp;Docker采用了<code>C/S</code>架构。Docker守护进程(Daemon)作为服务端接收来自客户端的请求，并处理这些请求(创建、运行、分发容器)。</br><br>&emsp;&emsp;客户端和服务端既可以运行在一台机器上，也可以通过<code>socket</code>或者<code>RESTful API</code>来进行通信。</br><br>&emsp;&emsp;Docker守护进程一般在宿主机后台运行，等待接收来自客户端的消息。Docker客户端则为用户提供一系列可执行命令，用户用这些命令实现和Docker守护进程交互。<h3 id="联合文件系统"><a href="#联合文件系统" class="headerlink" title="联合文件系统"></a>联合文件系统</h3>&emsp;&emsp;联合文件系统时一种分层、轻量级且高性能的文件系统。支持对文件系统的修改作为一次提交来一层层的进行叠加。同时可以将不同的目录挂载到同一个虚拟文件系统下。</br><br>&emsp;&emsp;联合文件系统就是Docker镜像的基础。镜像可以通过分层来进行继承，基于基础镜像，可以制作各种具体的应用镜像。</br><br>&emsp;&emsp;不同Docker容器就可以共享一些基础的文件系统层，同时再加上自己独有的改动层，大大提高了存储的效率。<h3 id="网络实现"><a href="#网络实现" class="headerlink" title="网络实现"></a>网络实现</h3>Docker创建一个容器时，会执行以下操作：</li>
+<li>创建一对虚拟接口，分别放到本地主机和新容器中。</li>
+<li>本地主机一段桥接到默认的docker0或指定网桥上，并且具有一个唯一的名字。</li>
+<li>容器一段放到新容器中，并修改名字作为eth0，这个接口只在容器的命名空间可见。</li>
+<li>从网桥可用地址段中获取一个空闲地址分配给容器的eth0，并且配置默认路由到桥接网卡。</li>
+</ul>
  
       <!-- reward -->
       
@@ -180,7 +181,7 @@
     <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://twilight2017.github.io/2023/02/17/%E5%88%A9%E7%94%A8docker%20commit%E7%90%86%E8%A7%A3%E9%95%9C%E5%83%8F%E6%9E%84%E6%88%90/" alt="微信分享二维码">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://twilight2017.github.io/2023/02/22/Docker%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E6%9F%A5%E6%BC%8F%E8%A1%A5%E7%BC%BA/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -193,19 +194,10 @@
    
   <nav class="article-nav">
     
-      <a href="/2023/02/22/Docker%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E6%9F%A5%E6%BC%8F%E8%A1%A5%E7%BC%BA/" class="article-nav-link">
-        <strong class="article-nav-caption">上一篇</strong>
-        <div class="article-nav-title">
-          
-            Docker基础知识查漏补缺
-          
-        </div>
-      </a>
     
-    
-      <a href="/2023/02/08/Jedis%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" class="article-nav-link">
+      <a href="/2023/02/17/%E5%88%A9%E7%94%A8docker%20commit%E7%90%86%E8%A7%A3%E9%95%9C%E5%83%8F%E6%9E%84%E6%88%90/" class="article-nav-link">
         <strong class="article-nav-caption">下一篇</strong>
-        <div class="article-nav-title">Jedis学习笔记</div>
+        <div class="article-nav-title">利用docker commit理解镜像构成</div>
       </a>
     
   </nav>
