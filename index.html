@@ -141,6 +141,332 @@
     
     
     <article
+  id="post-HTTP协议概览"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2023/03/03/HTTP%E5%8D%8F%E8%AE%AE%E6%A6%82%E8%A7%88/"
+    >HTTP协议概览</a> 
+</h2>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2023/03/03/HTTP%E5%8D%8F%E8%AE%AE%E6%A6%82%E8%A7%88/" class="article-date">
+  <time datetime="2023-03-03T09:02:52.000Z" itemprop="datePublished">2023-03-03</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+  </div>
+   
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="HTTP协议"><a href="#HTTP协议" class="headerlink" title="HTTP协议"></a>HTTP协议</h1><h2 id="一-使用HTTP协议访问Web"><a href="#一-使用HTTP协议访问Web" class="headerlink" title="一.使用HTTP协议访问Web"></a>一.使用HTTP协议访问Web</h2><blockquote>
+<p>基本工作方式：Web浏览器地址栏中指定URL，Web浏览器从Web服务器端获取文件资源(resource)等信息，从而显示出Web页面。这种通过发送请求获取服务器资源的Web浏览器等，都可以称为客户端(client)。</p>
+</blockquote>
+<p>Web使用一种名为HTTP(HyperText Transfer Protocol，超文本传输协议)的协议作为规范，完成从客户端到服务器端等一系列运作流程。可以说：<b>Web是建立在HTTP协议上通信的。</b></p>
+<h2 id="二-网络基础TCP-IP"><a href="#二-网络基础TCP-IP" class="headerlink" title="二.网络基础TCP/IP"></a>二.网络基础TCP/IP</h2><blockquote>
+<p>通常使用的网络(包括互联网)是在TCP/IP协议族的基础上运作的。而HTTP属于它内部的一个子集。</p>
+</blockquote>
+<h3 id="2-1-TCP-IP协议族"><a href="#2-1-TCP-IP协议族" class="headerlink" title="2.1 TCP/IP协议族"></a>2.1 TCP/IP协议族</h3><blockquote>
+<p>TCP/IP是互联网相关的各类协议族的总称，其家族成员包括：IP、ICMP、IEEEE802.3、FDDI、TCP、FTP、SNMP、HTTP、DNS、UDP等。</p>
+</blockquote>
+<p>协议中存在着各式各样的内容，从电缆的规格到IP地址的选定方法，寻找异地用户的方法、双方建立通信的顺序、以及Web页面显示需要处理的步骤。</br><br>TCP/IP协议族里最重要的一点就是分层。TCP/IP协议族按层次分为以下4层：应用层、传输层、网络层和数据链路层</p>
+<ul>
+<li>应用层：决定了向用户提供应用服务时通信的活动。TCP/IP协议族内预存了各类通用的应用服务。比如：FTP(File Transfer Protocol， 文件传输协议)和DNS(DOmain Name System， 域名系统)服务就是其中的两类。HTTP协议也处于该层。</li>
+<li>传输层：对上层应用层，提供处于网络连接中的两台计算机之间的数据传输。在传输层有两个性质不同的协议：TCP(Transmission COntrol Protocol，传输控制协议)和UDP(User Data protocol， 用户数据报协议)。</li>
+<li>网络层：用来处理在网络上流动的数据包。数据包是网络传输的最小数据单位，该层规定了通过怎样的路径到达对方计算机，并把数据包发送给对方。</li>
+<li>链路层：又名数据链路层，网络接口层。用来处理连接网络的硬件部分。包括控制操作系统、硬件的设备驱动、NIC网卡，及光纤等物理可见部分。</li>
+</ul>
+<p>举例：</br><br>&emsp;&emsp;首先作为发送端的客户端在应用层(HTTP协议)发出一个想看某个Web页面的HTTP请求。接着，为了传输方便，在传输层(TCP)协议把从应用层处收到的数据(HTTP请求报文)进行分割，并在各个报文上打上标记符号及端口号后转发给网络层。</br><br>&emsp;&emsp;在网络层(IP)协议，增加作为通信目的地的MAC地址后转发给链路层，这样一来，发往网络的通信请求就准备齐全了。</br><br>&emsp;&emsp;接收端的服务器在链路层接收到数据，按序往上层发送，一直到应用层。当传输到应用层，才能算真正接收到由客户端发送过来的HTTP请求。</br><br>&emsp;&emsp;发送端在层与层之间传输数据时，每经过一层时必定会被打上一个该层所属的首部信息。反之，接收端在层与层之间传输数据时，每经过一层会把对应的首部消去。这种把数据信息包装起来的做法称为封装(en-capsilate)。</p>
+<h3 id="2-2-与HTTP关系密切的协议：IP、TCP和DNS"><a href="#2-2-与HTTP关系密切的协议：IP、TCP和DNS" class="headerlink" title="2.2 与HTTP关系密切的协议：IP、TCP和DNS"></a>2.2 与HTTP关系密切的协议：IP、TCP和DNS</h3><h4 id="2-2-1-负责传输的IP协议"><a href="#2-2-1-负责传输的IP协议" class="headerlink" title="2.2.1 负责传输的IP协议"></a>2.2.1 负责传输的IP协议</h4><blockquote>
+<p>按层次分，IP网络协议位于网络层。</p>
+</blockquote>
+<p>IP地址指明了节点被分配到的地址，MAC地址是指网卡所属的固定地址。IP地址可以和MAC地址进行配对。IP地址可变换，但MAC地址基本上不会更改。简单来说，MAC地址标记了计算机的物理地址。</p>
+<ul>
+<li>ARP协议凭借MAC地址进行通信：Address Resolution Protocol。一种用于解析地址的协议，根据通信方的IP地址就可以反查出对应的MAC地址。<h4 id="2-2-2-确保可靠性的TCP协议"><a href="#2-2-2-确保可靠性的TCP协议" class="headerlink" title="2.2.2 确保可靠性的TCP协议"></a>2.2.2 确保可靠性的TCP协议</h4><blockquote>
+<p>按层次分，TCP位于传输层，提供可靠的字节流服务。所谓的字节流服务(Byte Stream Service)是指，为了方便传输，将大块数据分割成以报文段(segment)为单位的数据包进行管理，而可靠的传输服务是指，能够把数据准确可靠地传给对方。</p>
+</blockquote>
+</li>
+<li>确保数据能到达目标：三次握手策略<h4 id="2-2-3-负责域名解析的DNS服务"><a href="#2-2-3-负责域名解析的DNS服务" class="headerlink" title="2.2.3 负责域名解析的DNS服务"></a>2.2.3 负责域名解析的DNS服务</h4><blockquote>
+<p>DNS(Domain Name System)服务适合HTTP协议一样位于应用层的协议。它提供域名到IP地址之间的解析服务。</p>
+</blockquote>
+</li>
+</ul>
+<p>用户通常使用主机名或域名来访问对方的计算机，而非直接通过IP地址访问。DNS协议提供通过域名查找IP地址，或逆向从IP地址反查域名的服务。</p>
+<h2 id="三-深入理解HTTP协议"><a href="#三-深入理解HTTP协议" class="headerlink" title="三.深入理解HTTP协议"></a>三.深入理解HTTP协议</h2><blockquote>
+<p>在两台计算机之间使用HTTP协议通信时，在一条通信线路上必定有一段是客户端，另一端则是服务器端。有时候，按实际情况，两台计算机作为客户端和服务器端的角色有可能会互换。但就仅从一条通信路线来说，服务器端和客户端的角色是确定的。而用HTTP协议能够明确区分哪端是客户端，哪端是服务器端。</p>
+</blockquote>
+<p>下面是从客户端发送给某个HTTP服务器端的请求报文中的内容：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">GET &#x2F;index.htm HTTP&#x2F;1.1</span><br><span class="line">Host:hacker.jp</span><br></pre></td></tr></table></figure>
+<p>&emsp;&emsp;起始行开头的GET表示请求访问服务器的类型。称为方法(method)。随后的字符串<code>/index.htm</code>指明了请求访问的资源对象，也叫做请求URI。最后的<code>HTTP/1.1</code>，即HTTP的版本号，用来提示客户端使用的HTTP协议功能。</br><br>&emsp;&emsp;综合来看，这段请求的含义是：请求访问某台HTTP服务器上的/index.htm页面资源。</br><br>&emsp;&emsp;请求报文是由请求方法、请求URI、协议版本、可选的请求首部字段和内容实体构成的。</br><br>接收到请求的服务器，会将请求内容的处理结果以响应的形式返回</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">HTTP&#x2F;1.1 200 OK</span><br><span class="line">Date: Tue, 10 Jul 2012 06:50:15 GMT</span><br><span class="line">Content-Length: 362</span><br><span class="line">Content-Type: text&#x2F;html</span><br></pre></td></tr></table></figure>
+<ul>
+<li>起始行开头的HTTP/1.1表示服务器对应的HTTP版本</li>
+<li>200 OK表示请求结果的状态码和原因短语。下一行显示了创建响应的日期时间，是首部字段内的一个属性。</li>
+</ul>
+<p>响应报文基本上由协议版本、状态码、用以解释状态码的原因短语、可选的响应首部字段以及实体主体构成</p>
+<h3 id="3-1-不保存状态的HTTP协议"><a href="#3-1-不保存状态的HTTP协议" class="headerlink" title="3.1 不保存状态的HTTP协议"></a>3.1 不保存状态的HTTP协议</h3><blockquote>
+<p>HTTP是一种无状态协议。HTTP协议自身不对请求和响应之间的通信状态进行保存，也就是说在HTTP这个级别，协议对于发送过的请求或响应都不做持久化处理。这是为了更快地处理大量事务，确保协议的可伸缩性，而特意把HTTP协议设计的如此简单的。</p>
+</blockquote>
+<p>HTTP/1.1虽然是无状态协议，但为了实现期望的保持状态功能。于是引入了Cookie技术。有了Cookie技术再用HTTP协议通信，就可以管理状态了</p>
+<h3 id="3-2-介绍HTTP-1-1中可使用的方法"><a href="#3-2-介绍HTTP-1-1中可使用的方法" class="headerlink" title="3.2 介绍HTTP/1.1中可使用的方法"></a>3.2 介绍HTTP/1.1中可使用的方法</h3><h4 id="3-2-1-GET"><a href="#3-2-1-GET" class="headerlink" title="3.2.1 GET"></a>3.2.1 GET</h4><blockquote>
+<p>用来请求访问已被URI识别的资源。指定的资源经服务器端解析后返回响应内容</p>
+</blockquote>
+<h4 id="3-2-2-POST"><a href="#3-2-2-POST" class="headerlink" title="3.2.2 POST"></a>3.2.2 POST</h4><blockquote>
+<p>用来传输实体的主体</p>
+</blockquote>
+<h4 id="3-2-3-PUT"><a href="#3-2-3-PUT" class="headerlink" title="3.2.3 PUT"></a>3.2.3 PUT</h4><blockquote>
+<p>用于传输文件。</p>
+</blockquote>
+<p>但是，鉴于HTTP/1.1方法自身不带验证机制，任何人都可以上传文件，存在安全性问题，因此一般的Web网站不使用该方法。若配合Web应用程序的验证机制，或架构设计采用REST标准的同类Web网站，就可能会开放使用PUT方法。</p>
+<h4 id="3-2-4-HEAD"><a href="#3-2-4-HEAD" class="headerlink" title="3.2.4 HEAD"></a>3.2.4 HEAD</h4><blockquote>
+<p>获取报文首部。HEAD方法和GET方法一样，只是不返回报文主体部分。用于确认URI的有效性及资源更新的日期时间等。</p>
+</blockquote>
+<h4 id="3-2-5-DELETE"><a href="#3-2-5-DELETE" class="headerlink" title="3.2.5 DELETE"></a>3.2.5 DELETE</h4><blockquote>
+<p>删除文件。是与PUT相反的方法。DELETE方法按请求URI删除指定的资源。</p>
+</blockquote>
+<p>但是，HTTP/1.1的DELETE方法本身和PUT方法一样不带验证机制，所以一般的Web网站也不使用DELETE方法。当配合Web应用程序的验证机制，或遵守REST标准时还是有可能会开放使用的。</p>
+<h4 id="3-2-6-OPTIONS"><a href="#3-2-6-OPTIONS" class="headerlink" title="3.2.6 OPTIONS"></a>3.2.6 OPTIONS</h4><blockquote>
+<p>查询针对请求URI指定的资源支持的方法<br>请求</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">OPTIONS * HTTP&#x2F;1.1</span><br><span class="line">Host: www.hackr.jp</span><br></pre></td></tr></table></figure>
+<p>响应</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">HTTP&#x2F;1.1 200 OK</span><br><span class="line">Allow: GET、POST、HEAD、OPTIONS</span><br></pre></td></tr></table></figure>
+<h3 id="3-3-持久连接"><a href="#3-3-持久连接" class="headerlink" title="3.3 持久连接"></a>3.3 持久连接</h3><blockquote>
+<p>HTTP协议的初始版本中，每进行一次HTTP通信就要断开一次TCP连接。随着请求量增大，每次的请求都会造成无谓的TCP连接建立和断开，增加通信量的开销。</p>
+</blockquote>
+<p>未解决上述TCP连接的问题，想出了HTTP持久连接即HTTP keep-alive的方法。持久连接的特点是，只要任意一段没有明确提出断开连接，则保持TCP连接状态</p>
+<h4 id="3-3-1-使用Cookie的状态管理"><a href="#3-3-1-使用Cookie的状态管理" class="headerlink" title="3.3.1 使用Cookie的状态管理"></a>3.3.1 使用Cookie的状态管理</h4><blockquote>
+<p>HTTP是无状态协议，不对之前发生过的请求和响应进行管理。假设要求登录认证的Web页面本身无法进行状态的管理，就要在每次请求报文中附加参数来管理登录状态。于是引入了Cookie技术</p>
+</blockquote>
+<h5 id="Cookie技术通过在请求和响应报文中写入Cookie信息来控制客户端的状态"><a href="#Cookie技术通过在请求和响应报文中写入Cookie信息来控制客户端的状态" class="headerlink" title="Cookie技术通过在请求和响应报文中写入Cookie信息来控制客户端的状态"></a>Cookie技术通过在请求和响应报文中写入Cookie信息来控制客户端的状态</h5><p>&emsp;&emsp;Cookie会根据从服务器端发出的响应报文内的一个叫做<code>Set-Cookie</code>的首部字段信息，通知客户端保存Cookie。当下次客户端再往服务器发送请求时，客户端会自动在请求报文中加入Cookie值后发送出去。</br><br>&emsp;&emsp;服务器端发现客户端发从过来的Cookie后，会去检查究竟是从哪一个客户端发送过来的连接请求，然后对比服务器上的记录，最后得到之前的状态信息。<br>下述报文描述了Cookie报文交互的情景<br>请求报文（没有Cookie信息的状态）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">GET &#x2F;reader&#x2F; HTTP&#x2F;1.1</span><br><span class="line">Host: hackr.jp</span><br><span class="line">* 首部字段内没有Cookie的相关信息</span><br></pre></td></tr></table></figure>
+<p>响应报文（服务器端生成Cookie信息）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">HTTP&#x2F;1.1 200 OK</span><br><span class="line">Date: Thu, 12 Jul 2012 07:12:20 GMT</span><br><span class="line">Server:Apache</span><br><span class="line">&lt;Set-Cookie: sid&#x3D;1236987890;path&#x3D;,</span><br><span class="line">;expired&#x3D;Wed,</span><br><span class="line">10-Oct-12 07:12:20 GMT&gt;</span><br><span class="line">Content-type: text&#x2F;plain;charset&#x3D;UTF-8</span><br></pre></td></tr></table></figure>
+<p>请求报文（自动发送保存着的Cookie信息）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">GET &#x2F;image&#x2F; HTTP&#x2F;1.1</span><br><span class="line">Host: hackr.jp</span><br><span class="line">Cookie: sid&#x3D;1236987890</span><br></pre></td></tr></table></figure>
+<h4 id="3-3-2-HTTP状态码"><a href="#3-3-2-HTTP状态码" class="headerlink" title="3.3.2 HTTP状态码"></a>3.3.2 HTTP状态码</h4><h5 id="状态码告知从服务器端返回的请求结果"><a href="#状态码告知从服务器端返回的请求结果" class="headerlink" title="状态码告知从服务器端返回的请求结果"></a>状态码告知从服务器端返回的请求结果</h5><blockquote>
+<p>状态码的职责是当客户端向服务器端发送请求时，描述返回的请求结果。借助状态码，用户可以知道服务器端是正常处理了请求，还是出现了错误。</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>类别</th>
+<th>原因短语</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1XX</td>
+<td>Informational(信息状态码)</td>
+<td>接收的请求正在处理</td>
+</tr>
+<tr>
+<td>2XX</td>
+<td>Success(成功状态码)</td>
+<td>请求正常处理完毕</td>
+</tr>
+<tr>
+<td>3XX</td>
+<td>Rediction(重定向状态码)</td>
+<td>需要进行附加操作以完成请求</td>
+</tr>
+<tr>
+<td>4XX</td>
+<td>Client Error(客户端错误状态码)</td>
+<td>服务器无法处理请求</td>
+</tr>
+<tr>
+<td>5XX</td>
+<td>Server Error(服务器错误状态码)</td>
+<td>服务器处理请求出错</td>
+</tr>
+</tbody></table>
+<ul>
+<li>200 OK:从客户端发来的请求在服务器端被正常处理了</li>
+<li>204 No Content:在返回的响应报文中不含实体的主体部分</li>
+<li>206 Partial Content:客户端进行了范围请求，响应报文中包含由Content-Range指定范围的实体内容。</li>
+<li>301 Moved Permanently:请求的资源已经被分配了新的URI，以后应使用资源现在所指的URI</li>
+<li>302 Found:表示请求的资源已经被分配了新的URI，希望用户本次能使用新的URI访问</li>
+<li>303 See Other:请求对应的资源存在着另一个URI，应使用<b>GET方法</b>定向获取请求的资源</li>
+<li>304 Not Modified:客户端发送附带条件的请求时，服务器端允许请求访问资源，但未满足条件的情况。</li>
+<li>307 Temporary Redirect:与302 Found有着相同的含义</li>
+<li>400 Bad Request:请求报文中存在语法错误</li>
+<li>401 Unauthorized:发送的请求必须有通过HTTP认证的认证信息</li>
+<li>403 Forbidden:请求资源的访问被服务器拒绝了</li>
+<li>404 Not Found: 服务器上无法找到请求的资源</li>
+<li>500 Internal Server Error:服务器端在执行请求时发生了错误</li>
+<li>503 Service Unavailable：服务器暂时处于超负载或正在进行停机维护，现在无法处理请求<h3 id="3-4-通信数据转发程序：代理、网关、隧道"><a href="#3-4-通信数据转发程序：代理、网关、隧道" class="headerlink" title="3.4 通信数据转发程序：代理、网关、隧道"></a>3.4 通信数据转发程序：代理、网关、隧道</h3><h4 id="3-4-1-代理"><a href="#3-4-1-代理" class="headerlink" title="3.4.1 代理"></a>3.4.1 代理</h4><blockquote>
+<p>资源中转站</p>
+</blockquote>
+</li>
+</ul>
+<p>在HTTP通信过程中，可以级联多台代理服务器，请求和响应的转发会经过数台类似锁链一样连接起来的代理服务器。使用代理服务器的理由有：</p>
+<ul>
+<li>利用缓存技术减少网络带宽的流量</li>
+<li>组织内部针对特定网站的访问控制</li>
+<li>以获取访问日志为主要目的</li>
+</ul>
+<p>代理有多种使用方式，按两种基准分类。一种是是否使用缓存，另一种是是否会修改报文。</p>
+<h5 id="缓存代理"><a href="#缓存代理" class="headerlink" title="缓存代理"></a>缓存代理</h5><p>代理转发响应时，缓存代理(Caching Proxy)会预先将资源的副本(缓存)保存在代理服务器上。当代理再次接收到相对资源的请求时，就可以不从源服务器那里获取资源，而是将之前缓存的资源作为响应返回</p>
+<h5 id="透明代理"><a href="#透明代理" class="headerlink" title="透明代理"></a>透明代理</h5><p>转发请求或响应时，不对报文做任何加工的代理。对报文内容进行加工的代理被称为非透明代理</p>
+<h4 id="3-4-2-网关"><a href="#3-4-2-网关" class="headerlink" title="3.4.2 网关"></a>3.4.2 网关</h4><blockquote>
+<p>利用网关能提高通信的安全性，因为可以在客户端与网关之间的通信线路上加密以确保连接的安全。比如，网关可以连接数据库，使用SQL语句查询数据。另外，在Web购物网站上进行信用卡结算时，网关可以和信用卡结算系统联动。</p>
+</blockquote>
+<h4 id="3-4-3-隧道"><a href="#3-4-3-隧道" class="headerlink" title="3.4.3 隧道"></a>3.4.3 隧道</h4><p>&emsp;&emsp;隧道可按要求建立起一条与其他服务器的通信线路，届时使用SSL等加密手段进行通信。隧道的目的是确保客户端能与服务器进行安全的通信。</br><br>&emsp;&emsp;隧道本身不会去解析HTTP请求。也就是说，请求保持鸳鸯中转给之后的服务器。隧道会在通信双方断开连接时结束。</p>
+<h3 id="3-5-HTTP首部"><a href="#3-5-HTTP首部" class="headerlink" title="3.5 HTTP首部"></a>3.5 HTTP首部</h3><blockquote>
+<p>HTTP协议的请求和响应报文中必定包含HTTP首部，只是我们平常在使用Web的时候感受不到它，这一部分重点讨论这部分内容。报文首部在客户端和服务器处理时起到至关重要的作用。<br>下面是一段HTTP请求报文的示例</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">GET &#x2F; HTTP&#x2F;1.1</span><br><span class="line">Host:hackr.jp</span><br><span class="line">User-Agent:Mozilla&#x2F;5.0 (Windows NT 6.1;WOW64;rv:13.0) Gecko&#x2F;20100101 Firefox&#x2F;13.0</span><br><span class="line">Accept:text&#x2F;html,application&#x2F;xhtml+xml,application&#x2F;xml;q&#x3D;0.9,*&#x2F;*;q&#x3D;0.8</span><br><span class="line">Accept-Language:ja，en-usq。3</span><br><span class="line">Accept-Encoding:gzip,deflate</span><br><span class="line">DNT:1</span><br><span class="line">Connection-keep-alive</span><br><span class="line">If-Modified-Since: Fri, 31 Aug 2007 02:02:20 GMT</span><br><span class="line">IF-None-Match: &quot;45bae1-16a-46d776ed&quot;</span><br><span class="line">Cache-Control:max-age&#x3D;0</span><br></pre></td></tr></table></figure>
+<p>下面是一段HTTP响应报文示例</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">HTTP&#x2F;1.1 304 Not Modified</span><br><span class="line">Date: Thu, 07 Jun 2012 07:12:36 GMT</span><br><span class="line">Server: Apache</span><br><span class="line">Connection: close</span><br><span class="line">Etag: &quot;45bae1-16a-46d6787&quot;</span><br></pre></td></tr></table></figure>
+<p>首部字段同时存在于请求和响应报文内，并涵盖HTTP报文相关的内容信息。HTTP首部字段是构成HTTP报文的要素之一。在客户端和服务器之间以HTTP协议进行通信的过程中，无论是请求还是响应都会使用首部字段，它能起到传递额外重要信息的作用。</p>
+<h4 id="3-5-1-HTTP-1-1-通用首部字段"><a href="#3-5-1-HTTP-1-1-通用首部字段" class="headerlink" title="3.5.1 HTTP/1.1 通用首部字段"></a>3.5.1 HTTP/1.1 通用首部字段</h4><ul>
+<li><p>Cache-Control：操作缓存的工作机制</p>
+</li>
+<li><p>Connection：控制不再转发给代理的首部字段；管理持久连接（HTTP/1.1版本的默认连接都是持久连接）</p>
+</li>
+<li><p>Date：创建HTTP报文的日期和时间</p>
+</li>
+<li><p>Transfer-Encoing：传输报文主体时采用的编码方式</p>
+</li>
+<li><p>Upgrade:检测HTTP协议以及其他协议是否可使用更高的版本进行通信。</p>
+</li>
+<li><p>Via:追踪客户端和服务器之间的请求和响应报文的传输路径。当报文经过代理或者网关时，会先在首部字段Via中附加该服务器信息，然后再进行转发。还可以避免请求回环的发生。所以必须在经过代理时附加该首部字段的内容</p>
+</li>
+<li><p>Warning：通常会告知用户一些与缓存相关的问题的警告</p>
+<h4 id="3-5-2-请求首部字段"><a href="#3-5-2-请求首部字段" class="headerlink" title="3.5.2 请求首部字段"></a>3.5.2 请求首部字段</h4><blockquote>
+<p>请求首部字段是从客户端发往服务器端发送的请求报文中所使用的字段，用于补充请求的附加信息、客户端信息、对响应内容相关的优先级等内容。</p>
+</blockquote>
+</li>
+<li><p>Accept：通知服务器，用户代理能够处理的媒体类型及媒体类型的相对优先级。若想要给显示的媒体类型增加优先级，则使用<code>q=</code>字段来额外表示权重，权重范围是0~1。</p>
+</li>
+<li><p>Accept-Charset：通知服务器用户代理支持的字符集及字符集的相对优先顺序</p>
+</li>
+<li><p>Accept-Encoding：告知服务器用户代理支持的内容编码及内容编码的优先级顺序。</p>
+</li>
+<li><p>Accept-Language：告知服务器用户代理能够处理的自然语言集以及自然语言集的相对优先级</p>
+</li>
+<li><p>Authorization：告知服务器，用户代理的认证信息</p>
+</li>
+<li><p>From：告知服务器使用用户代理的用户的电子邮件地址</p>
+</li>
+<li><p>Host：告知服务器，请求的资源所处的互联网主机名和端口号。Host首部字段在HTTP/1.1规范内是唯一一个必须被包含在请求内的首部字段</p>
+</li>
+<li><p>If-Match：条件请求字段，服务器接收到附带条件的请求后，只有判断指定条件为真时，才会执行请求。</p>
+</li>
+<li><p>Proxy-Authorization：从代理服务器发送来的认证质询。这个认证过程发生在客户端和代理之间</p>
+</li>
+<li><p>User-Agent：会将创建请求的浏览器和用户代理名称等信息传达给服务器。</p>
+<h4 id="3-5-3-响应首部字段"><a href="#3-5-3-响应首部字段" class="headerlink" title="3.5.3 响应首部字段"></a>3.5.3 响应首部字段</h4><blockquote>
+<p>是由服务器端向客户端返回响应报文中所使用的字段。用于补充响应的附加信息、服务器信息，以及对客户端的附加要求等信息</p>
+</blockquote>
+</li>
+<li><p>Retry-After：告知客户端应该在多久之后再次发送请求</p>
+</li>
+<li><p>Server：告知客户端当前服务器上安装的HTTP服务器应用程序的信息。</p>
+</li>
+<li><p>Vary：可对缓存进行控制</p>
+</li>
+<li><p>WWW-Authentication：用于HTTP访问认证。它会告知客户端适用于访问请求URI所指定资源的认证方案(Basic或是Digest)</p>
+<h4 id="3-5-3-实体首部字段"><a href="#3-5-3-实体首部字段" class="headerlink" title="3.5.3 实体首部字段"></a>3.5.3 实体首部字段</h4><blockquote>
+<p>包含在请求报文和响应报文中的实体部分所使用的首部，用于补充内容的更新时间等与实体相关的信息。</p>
+</blockquote>
+</li>
+<li><p>Allow-通知客户端能够支持Request-URI指定资源的所有HTTP方法，当服务器接收到不支持的HTTP方法时，会以状态码<code>405 Method Not Allowed</code>作为响应返回。</p>
+</li>
+<li><p>Content-Encoding：告知客户端服务器对实体的主体部分选用的内容编码方式。内容编码是指在不丢失实体信息的前提下所进行的压缩。(可选：gzip、compress、deflate、identity)</p>
+</li>
+<li><p>Content-Language：告知客户端，实体主体使用的自然语言</p>
+</li>
+<li><p>Content-Length：实体主体部分的大小(单位：字节)</p>
+</li>
+<li><p>Content-Location：与报文主体部分相对应的URI</p>
+</li>
+<li><p>Content-MD5：一串由MD5算法生成的值，目的在于检查报文主体在传输过程中是否保持完整，以及确认传输到达</p>
+</li>
+<li><p>Content-Type：实体主体内对象的媒体类型</p>
+</li>
+<li><p>Expires：将资源的失效日期告知客户端。在Expires字段指定的时间之前，响应的副本会一直以缓存的形式保存</p>
+<h4 id="3-5-4-为Cookie服务的首部字段"><a href="#3-5-4-为Cookie服务的首部字段" class="headerlink" title="3.5.4 为Cookie服务的首部字段"></a>3.5.4 为Cookie服务的首部字段</h4><blockquote>
+<p>Cookie的工作机制是用户识别及状态管理。调用Cookie时，由于可校验Cookie的有效期、以及发送方的域、路径、协议等信息，所以正规发布的Cookie内的数据不会因来自其他Web站点和攻击者的攻击而泄露。</p>
+</blockquote>
+<h2 id="四-确保Web安全的HTTPS"><a href="#四-确保Web安全的HTTPS" class="headerlink" title="四.确保Web安全的HTTPS"></a>四.确保Web安全的HTTPS</h2><blockquote>
+<p>在HTTP协议中有可能存在信息窃听或身份伪装等安全问题。使用HTTPS通信机制可以有效地防止这些问题。</p>
+</blockquote>
+<h3 id="4-1-HTTP的缺点"><a href="#4-1-HTTP的缺点" class="headerlink" title="4.1 HTTP的缺点"></a>4.1 HTTP的缺点</h3><p>事物兼具两面性，HTTP协议具有以下不足之处：</p>
+</li>
+<li><p>通信使用明文(不加密)，内容可能会被窃听</p>
+</li>
+<li><p>不验证通信方的身份，因此有可能遭遇伪装</p>
+</li>
+<li><p>无法证明报文的完整性，所以有可能已遭篡改</p>
+</li>
+</ul>
+<p>这些问题不仅在HTTP上出现，其他未加密的协议中也会存在这类问题。HTTP协议中没有加密机制，但可以通过和SSL(Secure Socket Layer,安全套接层)或TLS(Transport Layer, Security，安全层传输协议)的组合使用，加密HTTP的通信内容。用SSL建立安全通信线路之后，就可以在这条线路上进行HTTP通信了。与SSL组合使用的HTTP被称为HTTPS。</br></p>
+<h3 id="4-2-不验证通信方的身份就可能遭遇伪装"><a href="#4-2-不验证通信方的身份就可能遭遇伪装" class="headerlink" title="4.2 不验证通信方的身份就可能遭遇伪装"></a>4.2 不验证通信方的身份就可能遭遇伪装</h3><blockquote>
+<p>常说的证书用于通信双方的权限验证。虽然使用HTTP协议无法确定通信方，但如果使用SSL则可以。SSL不仅提供加密处理，而且还使用了一种被称为证书的手段。</p>
+</blockquote>
+<p>证书由值得信任的第三方机构颁发，用以证明服务器和客户端是实际存在的。另外，伪造证书从技术角度来说是异常苦难的。所以只要能够确认通信方（客户端或者服务器端）持有的证书，即可判断通信方的真实身份</p>
+<h3 id="4-3-HTTP-加密-认证-完整性保护-HTTPS"><a href="#4-3-HTTP-加密-认证-完整性保护-HTTPS" class="headerlink" title="4.3 HTTP+加密+认证+完整性保护=HTTPS"></a>4.3 HTTP+加密+认证+完整性保护=HTTPS</h3><blockquote>
+<p>&emsp;&emsp;<br>HTTPS并非是应用层的一个新协议。只是HTTP通信接口部分用SSL和TLS协议代替而已。通常情况下，HTTP直接和TCP通信。当使用SSL时，变成HTTP先和SSL通信，再由SSL和TCP通信。HTTPS就是身披SSL协议这层外壳的HTTP。在采用SSL之后，HTTPS就拥有了HTTPS的加密、整数和完整性保护这些功能。。</br><br>&emsp;&emsp;SSL本身独立于HTTP协议，其他运行在应用层的SMTP、Telnet等协议均可配合SSL协议使用，SSL是当今世界应用最为广泛的网络安全技术。</br><br>&emsp;&emsp;HTTPS的通信速度可能比HTTP慢2-100倍。除去和TCP建立连接的部分，更重要的是SSL必须进行加密处理。在服务器端和客户端都必须进行加解密处理，这会更多的消耗服务器端和客户端的硬件资源，导致负载增强。</p>
+</blockquote>
+<h2 id="五-确认访问用户身份的认证"><a href="#五-确认访问用户身份的认证" class="headerlink" title="五.确认访问用户身份的认证"></a>五.确认访问用户身份的认证</h2><p>HTTP使用的认证方式：</p>
+<ul>
+<li>BASIC认证(基本认证)</li>
+<li>DIGEST认证(摘要认证)</li>
+<li>SSL客户端认证</li>
+<li>FormBase认证(基于表单认证)<h3 id="5-1-BASIC认证"><a href="#5-1-BASIC认证" class="headerlink" title="5.1 BASIC认证"></a>5.1 BASIC认证</h3><blockquote>
+<p>当请求的资源需要BASIC认证时，服务器会随状态码<code>401 Authorization Required</code>，返回带<code>WWW-Authenticate</code>首部字段的响应。该字段内涵盖了认证的方式(BASIC)及Request-URI安全域字符串(realm)。</p>
+</blockquote>
+</li>
+</ul>
+<p>BASIC认证采用的是Base64的编码方式，但这不是加密处理。发送的还是用户的明文密码</p>
+<h3 id="5-2-DIGEST认证"><a href="#5-2-DIGEST认证" class="headerlink" title="5.2 DIGEST认证"></a>5.2 DIGEST认证</h3><h3 id="5-3-SSL客户端认证"><a href="#5-3-SSL客户端认证" class="headerlink" title="5.3 SSL客户端认证"></a>5.3 SSL客户端认证</h3><ul>
+<li>1.接收到需要认证资源的请求，服务器会先发送<code>Certificate Request</code>报文，要求客户端提供客户端证书。</li>
+<li>用户选择将发送的客户端证书后，客户端会把客户端证书以<code>Client Certificate</code>报文方式发送给服务器。</li>
+<li>服务器验证客户端证书验证通过后可以领取证书内客户端的公开密钥，然后开始HTTPS请求<h3 id="5-4-基于表单的认证方式"><a href="#5-4-基于表单的认证方式" class="headerlink" title="5.4 基于表单的认证方式"></a>5.4 基于表单的认证方式</h3><blockquote>
+<p>应用自己的代码实现用户登录验证，将客户端发送来的用户ID和密码与之前登陆过的信息做匹配来进行认证</p>
+</blockquote>
+<h4 id="5-4-1-使用Cookie管理Session"><a href="#5-4-1-使用Cookie管理Session" class="headerlink" title="5.4.1 使用Cookie管理Session"></a>5.4.1 使用Cookie管理Session</h4></li>
+<li>1.客户端把用户ID和密码等登录信息放入报文实体部分，通常采用POST方法把请求发送给服务器。这时会使用HTTPS通信来进行HTML表单画面的显示和用户输入数据的发送。</li>
+<li>2.服务器会发方用以识别用户的<code>Session ID</code>。然后验证从客户端发送过来的登录信息进行身份认证，然后把用户的认证状态与Session ID绑定后记录在服务器端。(会在首部字段<code>Set-Cookie</code>内写入<code>Session ID</code>)</li>
+<li>客户端接收到从服务器端发来的<code>Session ID</code>后，会将其作为Cookie保存在本地。下次向服务器发送请求时，浏览器会自动发送Cookie。所以Session ID也随之发送到服务器。服务器端可以通过验证接收到的Session ID识别用户和其认证状态</li>
+<li></li>
+</ul>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/HTTP/" rel="tag">HTTP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%8A%80%E6%9C%AF/" rel="tag">技术</a></li></ul>
+
+    </footer>
+  </div>
+
+    
+ 
+    
+</article>
+
+    
+    <article
   id="post-Docker基础知识查漏补缺"
   class="article article-type-post"
   itemscope
@@ -756,192 +1082,6 @@
 
     
     <article
-  id="post-Django高级使用：二"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2022/11/21/Django%E9%AB%98%E7%BA%A7%E4%BD%BF%E7%94%A8%EF%BC%9A%E4%BA%8C/"
-    >Django高级使用：二</a> 
-</h2>
- 
-
-    </header>
-     
-    <div class="article-meta">
-      <a href="/2022/11/21/Django%E9%AB%98%E7%BA%A7%E4%BD%BF%E7%94%A8%EF%BC%9A%E4%BA%8C/" class="article-date">
-  <time datetime="2022-11-21T13:08:52.000Z" itemprop="datePublished">2022-11-21</time>
-</a> 
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
-  </div>
-   
-    </div>
-      
-    <div class="article-entry" itemprop="articleBody">
-       
-  <h1 id="Django高级使用：二"><a href="#Django高级使用：二" class="headerlink" title="Django高级使用：二"></a>Django高级使用：二</h1><h2 id="一-Django全局上下文处理器"><a href="#一-Django全局上下文处理器" class="headerlink" title="一.Django全局上下文处理器"></a>一.Django全局上下文处理器</h2><blockquote>
-<p>前言：Django的全局上下文处理器(COntext Processors)的作用就是向模板传递需要全局使用的变量。</p>
-</blockquote>
-<h3 id="1-全局上下文处理器-Context-Processors-应用场景"><a href="#1-全局上下文处理器-Context-Processors-应用场景" class="headerlink" title="1.全局上下文处理器(Context Processors)应用场景"></a>1.全局上下文处理器(Context Processors)应用场景</h3><p>&emsp;&emsp;当需要向所有模板传递一个可以被全局使用的变量时。我们在编写Django视图函数时，一般会在视图函数中以字典形式向模板中传递需要被调用或使用的变量并指定渲染模板。</br><br>&emsp;&emsp;如果每个视图函数分别去查询数据库，然后向每个模板传递这些变量，不仅造成代码冗余，而且会造成对数据库的重复查询，一个更好的解决方案就是使用自定义的上下文处理器(Context Processors)给模板传递全局变量，一次查询全局使用，完美解决上述问题。</p>
-<h3 id="2-Django内置的全局上下文处理器"><a href="#2-Django内置的全局上下文处理器" class="headerlink" title="2.Django内置的全局上下文处理器"></a>2.Django内置的全局上下文处理器</h3><blockquote>
-<p>思考：我们没有向某个模板中传递过权限perms对象，我们却可以在所有模板中随时调用它。同样可以在模板中全局使用的变量还有request和user对象。</p>
-</blockquote>
-<p>这是因为Django的<code>settings.py</code>里已经包含了<code>django.template.context_processors.request</code>和<code>django.contrib.auth.context_processors.auth</code>这两个全局上下文处理器。如果把他们移除，看看还能不能在模板中调用<code>user</code>和<code>perms</code>？</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">TEMPLATES &#x3D; [</span><br><span class="line">    &#123;</span><br><span class="line">        &#39;BACKEND&#39;: &#39;django.template.backends.django.DjangoTemplates&#39;</span><br><span class="line">        &#39;DIRS&#39;: [</span><br><span class="line">            os.path.join(BASE_DIR, &#39;templates&#39;)</span><br><span class="line">        ],</span><br><span class="line">        &#39;APP_DIRS&#39;: True</span><br><span class="line">        &#39;OPTIONS&#39;: &#123;</span><br><span class="line">            &#39;context_processors&#39;:[</span><br><span class="line">                # 以下包含了4个默认的全局上下文处理器</span><br><span class="line">                &#39;django.template.context_processors.debug&#39;,</span><br><span class="line">                &#39;django.template.context_processors.request&#39;,</span><br><span class="line">                &#39;django.contrib.auth.context_processors.auth&#39;,</span><br><span class="line">                &#39;django.contrib.messages.context_processors.messages&#39;,</span><br><span class="line">                &#39;myapp.custom_context_processors.xxx&#39;, # 自定义全局上下文处理器</span><br><span class="line">            ]</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
-<p>Django一般包含了上述4个默认全局上下文处理器，它们作用如下所示：</p>
-<ul>
-<li>django.template.context_processors.debug:在模板里可以直接使用settings的DEBUG参数及强大的sql_queries：它本身是一个字典，其中包括当前执行页面执行SQL查询所需的时间</li>
-<li>django.template.context_processors.request：在模板中可以直接使用request对象</li>
-<li>django.contrib.auth.context_processors.auth：在模板里面可以直接使用user, perms对象</li>
-<li>django.contrib.messages.context_processors.messages:在模板里面可以直接使用message对象</li>
-</ul>
-<p>另外Django还提供了几个全局上下文处理器：</p>
-<ul>
-<li>django.template.context_processors.i18n：在模板里面可以直接使用settings的LANGUAGES和LANGUAGE_CODE</li>
-<li>django.template.context_processors.media：可以在模板里面使用settings的MEDIA_URL参数</li>
-<li>django.template.context_processors.csrf:给模板标签 csrf_token提供值</li>
-<li>django.template.context_processors.tz： 可以在模板里面使用TIME_ZONE参数</li>
-</ul>
-<h3 id="3-如何自定义全局上下文处理器"><a href="#3-如何自定义全局上下文处理器" class="headerlink" title="3.如何自定义全局上下文处理器"></a>3.如何自定义全局上下文处理器</h3><p>自定义的全局上下文处理器本质是个函数，使用它必须满足3个条件：</p>
-<ul>
-<li>1.传入参数必须有<code>request</code>对象</li>
-<li>2.返回值必须是个字典</li>
-<li>3.使用前需要在settings的<code>context_processors</code>里声明。<h4 id="3-1-如何使用全局上下文处理器"><a href="#3-1-如何使用全局上下文处理器" class="headerlink" title="3.1 如何使用全局上下文处理器"></a>3.1 如何使用全局上下文处理器</h4>现要向模板传递一个叫做<code>site_name</code>的全局变量以便在所有模板中都能使用<code>site_name</code>输出站点名称。现在blog(app)的目录下新建<code>context_processors.py</code>中，新增如下代码：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># blog&#x2F;context_processors.py</span><br><span class="line"></span><br><span class="line">from django.conf import settings</span><br><span class="line">def global_site_name(request):</span><br><span class="line">    return &#123;&#39;site_name&#39;, settings.SITE_NAME,&#125;</span><br></pre></td></tr></table></figure>
-然后在<code>settings</code>文件里增加如下申明：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#39;context_processors&#39;: [ # 以下包含了4个默认的全局上下文处理器</span><br><span class="line">    &#39;django.template.context_processors.debug&#39;,</span><br><span class="line">    &#39;django.template.context_processors.request&#39;,</span><br><span class="line">    &#39;django.contrib.auth.context_processors.auth&#39;,</span><br><span class="line">    &#39;django.contrib.messages.context_processors.messages&#39;,</span><br><span class="line">    &#39;blog.context_processors.global_site_name&#39;, # 自定义全局上下文处理器</span><br></pre></td></tr></table></figure>
-<h3 id="全局变量与本地变量的优先级"><a href="#全局变量与本地变量的优先级" class="headerlink" title="全局变量与本地变量的优先级"></a>全局变量与本地变量的优先级</h3>全局上下文处理器提供的变量优先级高于单个视图函数给单个模板传递的变量。这意味着全局上下文处理器提供的变量可能会覆盖你视图函数中自定义的本地变量，因此具体使用时请注意避免本地变量名与全局上下文处理器提供的变量名称重复。这些变量名包括perms，user和debug等等。<br>如果我们要设计单个视图函数定义的变量名覆盖全局变量，请使用如下强制模式：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">from django.template import RequestContext</span><br><span class="line"></span><br><span class="line">high_priority_context &#x3D; RequestContext(request)</span><br><span class="line">high_priority_context.push(&#123;&quot;my_name&quot;: &quot;Adrian&quot;&#125;)</span><br></pre></td></tr></table></figure>
-<h2 id="二-Django信号机制及示例"><a href="#二-Django信号机制及示例" class="headerlink" title="二.Django信号机制及示例"></a>二.Django信号机制及示例</h2><blockquote>
-<p>前言：Django框架包含了一个信号机制，它允许若干个发送者(sender)通知一组接收者(receiver)某些特定操作或事件(events)已经发生了，接收者收到指令信号(signals)后再去执行特定的操作。这部分介绍Django信号的工作机制、应用场景、如何在项目中使用信号已经如何自定义信号。</p>
-</blockquote>
-<h3 id="1-信号的工作机制"><a href="#1-信号的工作机制" class="headerlink" title="1.信号的工作机制"></a>1.信号的工作机制</h3>Django中的信号工作机制依赖如下三个主要要素：</li>
-<li>发送者(sender)：信号的发出方，可以是模型，也可以是视图。当某个操作发生时，发送者会发出信号。</li>
-<li>信号(signal)：发送的信号本身</li>
-<li>接收者(receiver)：信号的接收者，其本质是一个回调函数。将这个函数注册到信号上，当特定的事件发生时，发送者发送信号，回调函数就会被执行。<h3 id="2-信号的应用场景"><a href="#2-信号的应用场景" class="headerlink" title="2.信号的应用场景"></a>2.信号的应用场景</h3>信号主要用于Django项目内不同时间得联动，实现程序的解耦。发送通知也是一个信号常用的场景。<blockquote>
-<p>注意：Django中信号监听函数不是异步执行，而是同步执行，所以需要异步执行耗时的任务时(比如发送邮件或写入文件)，不建议使用Django自带的信号。</p>
-</blockquote>
-<h3 id="3-使用举例"><a href="#3-使用举例" class="headerlink" title="3.使用举例"></a>3.使用举例</h3>假设我们的Profile模型，与User模型是一对一关系。我们希望创建User对象实例时能自动创建Profile对象实例，而更新User对象实例时不创建新的Profile对象实例。这时我们可以自定义<code>create_user_profile</code>和<code>save_user_profile</code>两个监听函数，同时监听sender(User模型)发出的<code>post_save</code>信号。由于<code>post_save</code>可同时用于模型的创建和更新，我们用<code>if created</code>这个判断来加以区别。<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">from django.db import models</span><br><span class="line">from django.db.models.signals import post_save</span><br><span class="line">from django.dispatch import receiver</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class Profile(models.Model):</span><br><span class="line">    user &#x3D; models.OneToOneField(User, on_delete&#x3D;models.CASCADE)</span><br><span class="line">    birth_date &#x3D; models.DateField(null&#x3D;True, bland&#x3D;True)</span><br><span class="line"></span><br><span class="line"># 监听User模型创建</span><br><span class="line">@receiver(post_save, sender&#x3D;User)</span><br><span class="line">def create_user_profile(sender, instance, created, **kwargs):</span><br><span class="line">    if created:</span><br><span class="line">        Profile.objects.create(user&#x3D;instance)</span><br><span class="line"></span><br><span class="line"># 监听User模型更新</span><br><span class="line">@receiver(post_save, sender&#x3D;User)</span><br><span class="line">def save_user_profile(sender,instance, **kwargs):</span><br><span class="line">    instance.profile.save()</span><br></pre></td></tr></table></figure>
-我们再来看一个使用信号清除缓存的例子。当模型A被更新或被删除时，会分别发出<code>post_save</code>和<code>post_delete</code>的信号，监听这两个信号的receivers函数会自动清楚缓存里的A对象列表。<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">from django.core.cache import cache</span><br><span class="line">from django.db.models.signals import post_delete, post_save</span><br><span class="line">from django.dispatch import receiver</span><br><span class="line"></span><br><span class="line">@receiver(post_save, sender&#x3D;ModelA)</span><br><span class="line">def cache_post_save_handler(sender, **kwargs)：</span><br><span class="line">    cache.delete(&#39;cached_a_objetcs&#39;)</span><br><span class="line">    </span><br><span class="line">@receiver(post_delete, sneder&#x3D;ModelA)</span><br><span class="line">def cache_post_delete_handler(sender, **kwargs):</span><br><span class="line">    cache.delete(&#39;cached_a_objects&#39;)</span><br></pre></td></tr></table></figure>
-<h3 id="4-Django常用内置信号："><a href="#4-Django常用内置信号：" class="headerlink" title="4.Django常用内置信号："></a>4.Django常用内置信号：</h3>前面例子举例了<code>post_save</code>和<code>post_delete</code>信号。Django还内置了其他信号：</li>
-<li>pre_save&amp;post_save：在模型调用save()方法之前或之后发送</li>
-<li>pre_init&amp;post_init：在模型调用_init_方法之前或之后发送。</li>
-<li>pre_delete &amp; post_delete：在模型调用delete()方法或查询集调用delete()方法之前或之后发送。</li>
-<li>request_started &amp; request_finished：Django建立或关闭HTTP请求时发送。<h2 id="二-自定义Django-admin管理命令"><a href="#二-自定义Django-admin管理命令" class="headerlink" title="二.自定义Django-admin管理命令"></a>二.自定义Django-admin管理命令</h2><blockquote>
-<p>前言：每次在启动Django服务之前，我们都会在终端运行<code>python mnaage.py xxx</code>的管理命令。其实我们还可以自定义管理命令，这对于执行独立的脚本或任务非常有用，比如清除缓存、导出用户邮件清单或发送邮件等等。</br><br>自定义的管理命令不仅可以通过<code>manage.py</code>运行，还可以通过Linux或Celery的crontab服务将其设成定时任务。这部分主要讲解如何自定义Django-admin命令，并提供一些演示案例。</br><br>自定义Django-admin命令一共分三步：创建文件夹布局、编写命令代码和测试使用。</p>
-</blockquote>
-<h3 id="1-创建文件夹布局"><a href="#1-创建文件夹布局" class="headerlink" title="1.创建文件夹布局"></a>1.创建文件夹布局</h3>自定义的Django-admin管理命令本质上是一个python脚本文件，它的存放路径必须遵循一定的规范，一般位于<code>app/management/commands</code>目录。整个文件夹的布局如下所示：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">app01&#x2F;</span><br><span class="line">    __init__.py</span><br><span class="line">    models.py</span><br><span class="line">    management&#x2F;</span><br><span class="line">        __init__.py</span><br><span class="line">        commands&#x2F;</span><br><span class="line">            __init__.py</span><br><span class="line">            _private.py # 以下划线开头文件不能用作管理命令</span><br><span class="line">            my_commands.py # 这个就是自定义的管理命令脚本，文件名即为命令名</span><br><span class="line">    tests.py</span><br><span class="line">    views.py</span><br></pre></td></tr></table></figure>
-注意：</li>
-<li><code>management</code>和<code>commands</code>每个目录下都必须有个<code>__init__.py</code>文件，表明这是一个python包。另外以下划线开头的文件名不能用作管理命令脚本。</li>
-<li><code>management/commands</code>目录可以位于任何一个app的目录下，Django都能找到它。</li>
-<li>一般建议每个python脚本文件对应一条管理命令<h3 id="2-编写命令代码"><a href="#2-编写命令代码" class="headerlink" title="2.编写命令代码"></a>2.编写命令代码</h3>每一个自定义的管理命令本质是一个<code>Command</code>类，它继承了Django的<code>Basecommand</code>或其子类，主要通过重写<code>handle()</code>方法实现自己的业务逻辑代码，而<code>add_argument()</code>则用于帮助处理命令行的参数，如果运行命令时不需要额外参数，可以不写这个方法。<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">from django.core.management.base import BaseCommand</span><br><span class="line"></span><br><span class="line">class Command(BaseCommand):</span><br><span class="line">    # 帮助文本，一般备注命令的用途及如何使用</span><br><span class="line">    help &#x3D; &#39;Some help texts&#39;</span><br><span class="line">    </span><br><span class="line">    # 处理命令行参数，可选</span><br><span class="line">    def add_argument(self, parser)：</span><br><span class="line">        pass</span><br><span class="line">        </span><br><span class="line">    # 核心业务逻辑</span><br><span class="line">    def handle(self, *args, **options):</span><br><span class="line">        pass</span><br></pre></td></tr></table></figure>
-<h3 id="3-实践"><a href="#3-实践" class="headerlink" title="3.实践"></a>3.实践</h3><blockquote>
-<p>前言：我们现在来看一个最简单的例子，希望定义一个<code>heelo_world</code>的命令。这样当我们运行<code>python manage.py hello_world</code>命令时，控制台会打印出<code>Hello World!</code>的字样。在<code>app/management/commands</code>目录下新建<code>hello_world.py</code>，添加如下代码：</p>
-</blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">from django.core.management.base iport BaseCommand</span><br><span class="line"></span><br><span class="line">class Command(BaseCommand):</span><br><span class="line">    # 帮助文本，一般备注命令的用途及如何使用</span><br><span class="line">    help &#x3D; &quot;Print Hello World！&quot;</span><br><span class="line">    </span><br><span class="line">    # 核心业务逻辑</span><br><span class="line">    def handle(self, *args, **options):</span><br><span class="line">        # 注意：当我们使用管理命令并希望在控制台输出指定信息时，我们应该使用self.stdout和self.stderr方法，而不应该直接使用python的print方法。另外，我们不需要在消息的末尾加上换行符，它将被自动添加。</span><br><span class="line">        self.stdout.write(&#39;Hello World!&#39;)</span><br></pre></td></tr></table></figure>
-&emsp;&emsp;现在我们来稍微增加点难度，来通过命令行给<code>hello_world</code>命令传递参数，以实现运行<code>python manage.py hello_world John</code>命令时，打印出<code>Hello World! John</code>。</br><br>&emsp;&emsp;现在我们修改原<code>hello_world.py</code>，添加<code>add_arguments</code>方法，该方法的作用是给自定义的handle方法添加一个或多个参数<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">from django.core.managements.base import BaseCommand</span><br><span class="line"></span><br><span class="line">class Command(BaseCommand):</span><br><span class="line">    # 帮助文本，一般备注命令的用途及如何使用</span><br><span class="line">    help &#x3D; &quot;Print Hello World!&quot;</span><br><span class="line">    </span><br><span class="line">    # 给命令添加一个名为name的参数</span><br><span class="line">    def add_argument(self, parser):</span><br><span class="line">        parser.add_argument(&#39;name&#39;)</span><br><span class="line">        </span><br><span class="line">    # 核心业务逻辑，通过options字典接收name参数值，拼接字符串后输出</span><br><span class="line">    def handle(self, *args, **options):</span><br><span class="line">        msg &#x3D; &#39;Hello World !&#39; + options[&#39;name&#39;]</span><br><span class="line">        self.stdout.write(msg)</span><br></pre></td></tr></table></figure>
-<h3 id="4-实际使用场景"><a href="#4-实际使用场景" class="headerlink" title="4.实际使用场景"></a>4.实际使用场景</h3><blockquote>
-<p>前言：我们来看两个自定义管理命令的实际应用案例</p>
-</blockquote>
-<h4 id="4-1检查数据库连接是否已经就绪"><a href="#4-1检查数据库连接是否已经就绪" class="headerlink" title="4.1检查数据库连接是否已经就绪"></a>4.1检查数据库连接是否已经就绪</h4>无论使用常规方式还是Docker在生产环境部署Django项目，我们都需要确保数据库连接已经就绪后才进行数据库迁移(migrate)操作，否则Django应用程序一定会报错。</br><br>此时我们可以自定义一个<code>wair_for_db</code>的命令，如下所示：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"># app&#x2F;management&#x2F;commands&#x2F;wait_for_db.py</span><br><span class="line"></span><br><span class="line">import time</span><br><span class="line">from django.db import connections</span><br><span class="line">from django.db.utils import OperationError</span><br><span class="line">from django.core.management import BaseCommand</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Class Command(BaseCommand):</span><br><span class="line">    help &#x3D; &#39;Run data migrations util db is available.&#39;</span><br><span class="line">    </span><br><span class="line">    def handle(self, *args, **options):</span><br><span class="line">        self.stdout.write(&#39;Waiting for database...&#39;)</span><br><span class="line">        db_conn &#x3D; None</span><br><span class="line">        while not db_conn:</span><br><span class="line">            try:</span><br><span class="line">                # try to build connection</span><br><span class="line">                db_conn &#x3D; connections[&#39;default&#39;]</span><br><span class="line">            except OperationalError:</span><br><span class="line">                # 连接失败，就等待1s</span><br><span class="line">                self.stdout.write(&#39;Database unavilable, waiting 1 second...&#39;)</span><br><span class="line">                time.sleep(1)</span><br><span class="line">        </span><br><span class="line">        self.stdout.write(self.style.SUCCESS(&#39;Database available!&#39;))</span><br></pre></td></tr></table></figure>
-定义好这个命令之后每次在运行<code>python manage.py migrate</code>命令前先运行<code>python manage.py wait_for_db</code>即可<h4 id="4-2-周期性发送邮件"><a href="#4-2-周期性发送邮件" class="headerlink" title="4.2 周期性发送邮件"></a>4.2 周期性发送邮件</h4><blockquote>
-<p>应用场景：如果你是网站管理员，你肯定希望知道每天有多少新用户已注册，这时你可以自定义一条<code>mail_admin</code>的管理命令，将每天新注册用户数量以邮件形式发送给自己，如下所示：</p>
-</blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"># app&#x2F;management&#x2F;commands&#x2F;mail_admin.py</span><br><span class="line"></span><br><span class="line">#-*- coding:utf-8 -*-</span><br><span class="line">from datetime import timedelta, time, datetime</span><br><span class="line">from django.core.mail import mail_admins</span><br><span class="line">from django.core.managements import BaseCommand</span><br><span class="line">from django.utils import timezone</span><br><span class="line">from django.contrib.auth import get_user_model</span><br><span class="line"></span><br><span class="line">User &#x3D; get_user_model()</span><br><span class="line"></span><br><span class="line">today &#x3D; timezone.now()</span><br><span class="line">yesterday &#x3D; today - timedelta(1)</span><br><span class="line"></span><br><span class="line">Class Command(BaseCommand):</span><br><span class="line">    # 获取过去一天注册的用户数量</span><br><span class="line">    user_count &#x3D; User.objects.filter(data_joined_range&#x3D;(yesterday, today)).count()</span><br><span class="line">    </span><br><span class="line">    # 发送给管理员</span><br><span class="line">    if user_count &gt;&#x3D; 1:</span><br><span class="line">        message &#x3D; &quot;You have got &#123;&#125; user(s) in the past 24 hours&quot;.format(user_count)</span><br><span class="line">        </span><br><span class="line">        subject &#x3D; (</span><br><span class="line">            f&quot;New user count for &#123;today.strftime(&quot;%Y-%m-%d&quot;)&#125;:&#123;user_count&#125;&quot;</span><br><span class="line">        )</span><br><span class="line">        </span><br><span class="line">        mail_admin(subject&#x3D;subject, message&#x3D;message, html_message&#x3D;None)</span><br><span class="line">        </span><br><span class="line">        self.stdout.write(&quot;Email was sent&quot;)</span><br><span class="line">    else:</span><br><span class="line">        self.stdout.write(&quot;No new users today&quot;)</span><br></pre></td></tr></table></figure>
-其中，真正发送邮件成功需要设置Email后台及管理员，测试环境下可以使用如下简单配置：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">EMAIL_BACKEND &#x3D; &quot;dkjango.core.mail.bakends.EmailBackend&quot;</span><br><span class="line">DEFAULT_FROM_EAIL &#x3D; &quot;noreply@example.com&quot;</span><br><span class="line">ADMINS &#x3D; [(&quot;大江狗&quot;, &quot;yunbo.shi@example.com&quot;),]</span><br></pre></td></tr></table></figure>
-但是如果每天都要进入终端运行这个命令实在太麻烦了，我们完全可以使用Linux的crontab服务或Celery-Beat将其设置成周期性定时任务task，这时只需要调用Django的<code>call_command</code>方法即可<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"># app&#x2F;tasks.py， 可以在任一app目录下新建task</span><br><span class="line">from celery import shared_task</span><br><span class="line">from django.core.management import call_command</span><br><span class="line"></span><br><span class="line">@shared_task</span><br><span class="line">def mail_admin():</span><br><span class="line">    call_command(&quot;mail_admin&quot;,)</span><br></pre></td></tr></table></figure>
-<h2 id="三-Django项目中使用Celery执行异步和周期性任务"><a href="#三-Django项目中使用Celery执行异步和周期性任务" class="headerlink" title="三.Django项目中使用Celery执行异步和周期性任务"></a>三.Django项目中使用Celery执行异步和周期性任务</h2><blockquote>
-<p>前言：Django Web项目中我们经常需要执行耗时的任务比如发送邮件、调用第三方接口、批量处理文件等等，将这些任务异步化放在后台运行可以有效缩短请求响应时间。另外服务器上经常会有定时任务的需求，比如清除缓存、备份数据库等工作。Celery是一个高效的异步任务队列/基于分布式消息传递的作业队列，可以轻松帮助我们在Django项目中设置执行异步和周期性任务。</p>
-</blockquote>
-<h3 id="1-Celery的工作原理"><a href="#1-Celery的工作原理" class="headerlink" title="1.Celery的工作原理"></a>1.Celery的工作原理</h3>Celery是一个高效的基于分布式消息传递的作业队列，它主要通过消息(messages)传递任务，通常使用一个叫Broker(中间人)来协调client(任务的发出者)和worker(任务的处理者)。clients发出消息到队列中，broker将队列中的消息派发给Celery worker来处理。Celery本身不提供消息服务，它支持的消息服务(Broker)有RabbitMQ和Redis，Redis一般多是Django项目中首选的缓存后台。<h3 id="2-安装项目依赖文件"><a href="#2-安装项目依赖文件" class="headerlink" title="2.安装项目依赖文件"></a>2.安装项目依赖文件</h3>本项目使用了最新Django和Celery版本。因为本项目使用Redis做消息队列的broker，所以还需要安装redis。如果你需要另外设置定时或周期性任务，还需要安装<code>django-celery-beat</code>。<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"># pip 安装首选</span><br><span class="line">Django&#x3D;&#x3D;3.2</span><br><span class="line">celery&#x3D;&#x3D;5.0.5</span><br><span class="line">redis&#x3D;&#x3D;3.5.3</span><br><span class="line"></span><br><span class="line"># 可选,windows下运行celery 4以后版本，还需要额外安装eventlet库</span><br><span class="line">eventlet</span><br><span class="line"></span><br><span class="line"># 推荐安装，需要设置定时或周期任务时安装，推荐安装</span><br><span class="line">django-celery-results&#x3D;&#x3D;2.0.1</span><br><span class="line"></span><br><span class="line"># 视情况需要，需要监控celery运行定时任务时安装</span><br><span class="line">folower&#x3D;&#x3D;0.9.7</span><br></pre></td></tr></table></figure>
-<h3 id="3-Celery配置"><a href="#3-Celery配置" class="headerlink" title="3.Celery配置"></a>3.Celery配置</h3>在正式使用<code>celery</code>和<code>django-celery-beat</code>之前，需要做基础的配置工作。加入Django项目文件夹布局如下所示，我们首先需要在myproject/myproject目录下新增<code>celery.py</code>并修改<code>__init__.py</code><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">- myproject&#x2F;</span><br><span class="line">  - manage.py</span><br><span class="line">  - project&#x2F;</span><br><span class="line">    - __init__.py # 修改这个文件</span><br><span class="line">    - celery.py # 新增这个文件</span><br><span class="line">    - asgi.py</span><br><span class="line">    - settings.py</span><br><span class="line">    - urls.py</span><br><span class="line">    - wsgi.py</span><br></pre></td></tr></table></figure>
-新建<code>celery.py</code>，添加如下代码：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">import os</span><br><span class="line">from celery import Celery</span><br><span class="line"></span><br><span class="line"># 设置环境变量</span><br><span class="line">os.environ.setdefault(&#39;DJANGO_SETTINGS_MODULE&#39;, &#39;myproject.settings&#39;)</span><br><span class="line"></span><br><span class="line"># 实例化</span><br><span class="line">app &#x3D; Celery(&#39;myproject&#39;)</span><br><span class="line"></span><br><span class="line"># namespace &#x3D;&#39;CELERY&#39;作用是允许在Django配置文件中对Celery进行配置</span><br><span class="line"># 但所有Celery配置项必须以CELERY开头，防止冲突</span><br><span class="line">app.config_from_object(&#39;django.conf:settings&#39;, namespace&#x3D;&#39;CELERY&#39;)</span><br><span class="line"></span><br><span class="line"># 自动的从Django的已注册app中发现任务</span><br><span class="line">app.autodiscover_tasks()</span><br><span class="line"></span><br><span class="line"># 一个测试任务</span><br><span class="line">@app.task(bind&#x3D;True)</span><br><span class="line">def debug_task(self):</span><br><span class="line">    print(f&#39;Request: &#123;self.request!r&#125;&#39;)</span><br></pre></td></tr></table></figure>
-修改<strong>init</strong>.py，如下所示：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">from .celery import app as celery_app</span><br><span class="line">__all__ &#x3D; (&#39;celery_app&#39;,)</span><br></pre></td></tr></table></figure>
-接下来修改Django项目的<code>settings.py</code>，添加Celery有关配置选项，如下所示：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># 最重要的配置，设置消息broker，格式为：db:&#x2F;&#x2F;user:password@host:port&#x2F;dbname</span><br><span class="line"># 如果redis安装在本机，使用localhost</span><br><span class="line"># 如果docker部署的redis,使用redis:&#x2F;&#x2F;redis:6379</span><br><span class="line">CELERY_BROKER_URL &#x3D; &quot;redis:&#x2F;&#x2F;127.0.0.1:6379&#x2F;0&quot;</span><br><span class="line"></span><br><span class="line"># celery时区设置，建议与Django settings中TIME_ZONE同样时区，防止时差</span><br><span class="line"># Django设置时区需同时设置USE_TZ&#x3D;True和TIME_ZONE &#x3D; &#39;Asia&#x2F;Shanghai&#39;</span><br><span class="line">CELERY_TIMEZONE &#x3D; TIME_ZONE</span><br></pre></td></tr></table></figure>
-其他Celery常用配置选项包括：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"># 为Django_celery_results存储Celery任务执行结果设置后台</span><br><span class="line"># 格式为： db+scheme:&#x2F;&#x2F;user:paasword@host:port&#x2F;dbname</span><br><span class="line"># 支持数据库django-db和缓存django-cache存储任务状态及结果</span><br><span class="line">CELERY_RESULT_BACKEND &#x3D; &quot;django-db&quot;</span><br><span class="line"># celery内容等消息的格式设置，默认为json</span><br><span class="line">CELERY_ACCEPT_CONTENT &#x3D; [&#39;application&#x2F;json&#39;,]</span><br><span class="line">CELERY_TASK_SERIALIZER &#x3D; &#39;json&#39;</span><br><span class="line">CELERY_RESULT_SERIALIZER &#x3D; &#39;json&#39;</span><br><span class="line"></span><br><span class="line"># 为任务设置超时时间，单位秒。超时即终止，执行下个任务</span><br><span class="line">CELERT_TASK_TIME_LIMIT &#x3D; 5</span><br><span class="line"></span><br><span class="line"># 为存储结果设置过期日期，默认1天过期。如果beat开启,Celery每天会自动清除</span><br><span class="line"># 设为0，则存储结果用不过期</span><br><span class="line">CELERY_RESULT_EXPIRES &#x3D; xx</span><br><span class="line"></span><br><span class="line"># 任务限流</span><br><span class="line">CELERY_TASK_ANNOTATIONS &#x3D; &#123;&#39;tasks.add&#39;:&#123;&#39;rate_limit&#39;: &#39;10&#x2F;s&#39;&#125;&#125;</span><br><span class="line"></span><br><span class="line"># worker并发数量，一般默认CPU核数，可以不设置</span><br><span class="line">CELERY_WORKER_CONCURRENCY &#x3D; 2</span><br><span class="line"></span><br><span class="line"># 每个worker执行了多少任务就会死掉，默认是无限的</span><br><span class="line">CELERY_WORKER_MAX_TASKS_PER_CHILD &#x3D; 200</span><br></pre></td></tr></table></figure>
-注意：</li>
-<li>在Django中正式编写和执行自己的异步任务前，一定要先测试redis和celery是否安装好并配置成功</li>
-<li>一个无限期阻塞的任务会使得工作单元无法再做其他事情，建议给任务设置超时时间<h3 id="4-测试Celery是否工作正常"><a href="#4-测试Celery是否工作正常" class="headerlink" title="4.测试Celery是否工作正常"></a>4.测试Celery是否工作正常</h3>&emsp;&emsp;首先需要启动redis服务</br><br>&emsp;&emsp;启动redis服务后，要先进入项目所在文件夹运行<code>python manage.py runserver</code>命令启动Django服务器(无需创建任何app)，然后再打开一个终端terminal窗口输入celery命令，启动worker<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># Linux下测试，启动Celery</span><br><span class="line">Celery -A myproject worker -l info</span><br><span class="line"></span><br><span class="line"># windows下测试，启动Celery</span><br><span class="line">Celery -A myproject worker -l info -P eventlet</span><br><span class="line"></span><br><span class="line"># 如果Windows下Celery不工作，输入如下命令</span><br><span class="line">Celery -A myproject worker -l info --pool&#x3D;solo</span><br></pre></td></tr></table></figure>
-<h3 id="5-编写任务"><a href="#5-编写任务" class="headerlink" title="5.编写任务"></a>5.编写任务</h3>Celery配置完成后，可以编写任务了。Django项目中所有需要Celery执行的异步或周期性任务都放在tasks.py文件里，该文件可以位于project目录下，也可以位于各个app的目录下，专属于某个Celery实例化项目的task可以使用<code>@app.task</code>装饰器定义，各个app目录下可以复用的task建议使用<code>@shared_task</code>定义<br>示例如下所示：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"># myproject&#x2F;tasks.py</span><br><span class="line"># 专属于myproject项目的任务</span><br><span class="line">app &#x3D; Celery(&#39;myproject&#39;)</span><br><span class="line">@app.task</span><br><span class="line">def test():</span><br><span class="line">    pass</span><br><span class="line">    </span><br><span class="line"># app&#x2F;tasks.py,可以复用的task</span><br><span class="line">from celery import shared_task</span><br><span class="line">import time</span><br><span class="line"></span><br><span class="line">@shared_task</span><br><span class="line">def add(x, y):</span><br><span class="line">    time.sleep(2)</span><br><span class="line">    return x + y</span><br></pre></td></tr></table></figure>
-上面我们定义了一个名为<code>add</code>的任务，它接收两个参数，并返回计算结果。为了模拟耗时任务，我们中途让其sleep 2s。现在已经定义了一个耗时任务，我们希望在Django的视图或其他地方中以异步方式调用执行它，做法如下面所示：<br>注意：</li>
-<li>使用celery定义任务时，避免在一个任务中调用另一个异步任务，容易造成阻塞。</li>
-<li>当我们使用<code>@app.task</code>装饰器定义我们的异步任务时，那么这个任务依赖于根据项目名myproject生成的Celery实例。然而我们在进行Django开发时为了保证每个app的可重用性。我们经常会在每个app文件夹下编写异步任务，这些任务并不依赖于具体的Django项目名。使用<code>@shared_app</code>装饰器能让我们避免对某个项目名对应Celery实例的依赖，使app的可移植性更强<h3 id="6-异步调用任务"><a href="#6-异步调用任务" class="headerlink" title="6.异步调用任务"></a>6.异步调用任务</h3>Celery提供了2种以异步方式调用任务的方法，<code>delay</code>和<code>apply_async</code>方法，如下所示：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># 方法一： delay方法</span><br><span class="line">task_name.delay(args1, args2, kwargs&#x3D;value_1, kwargs2&#x3D;value_2)</span><br><span class="line"></span><br><span class="line"># 方法二： apply_async方法，与delay类似，但支持更多的参数</span><br><span class="line">task.apply_async(args&#x3D;[arg1, arg2], kwargs&#x3D;&#123;key:value, key:value&#125;)</span><br></pre></td></tr></table></figure>
-接下来我们来看一个具体的例子，我们编写了一个Django视图函数，使用<code>delay</code>方法调用<code>add</code>任务。<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"># app&#x2F;views.py</span><br><span class="line">from .tasks import add</span><br><span class="line"></span><br><span class="line">def test_celery(request):</span><br><span class="line">    add.delay(3, 5)</span><br><span class="line">    return HttpResponse(&#39;Celery works&#39;)</span><br><span class="line">    </span><br><span class="line"># app&#x2F;urls.py</span><br><span class="line">uslpatterns &#x3D; [</span><br><span class="line">    re_path(r&#39;^test&#x2F;$&#39;, views.test_celery, name&#x3D;&quot;test_celery&quot;)</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
-我们现在再次使用<code>apply_async</code>方法调用<code>add</code>任务，不过还要打印初任务的id(task.id)和状态status。Celery会为每个加入到队列中的任务分配独一无二的uuid，可以通过<code>task.status</code>获取状态和<code>task.result</code>获取结果。注意：<code>apply_async</code>传递参数的方式与delay方法略有不同。<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># app&#x2F;views.py</span><br><span class="line">from .tasks import add</span><br><span class="line"></span><br><span class="line">def test_celery(request):</span><br><span class="line">    result &#x3D; add.apply_async(args&#x3D;[3,5])</span><br><span class="line">    return HttpResponse(result.task_id + &#39; : &#39; + result.status)</span><br></pre></td></tr></table></figure>
-除了在Django admin后台中查看任务状态和结果，你还可以在视图中通过<code>AsyncResult</code>方法获取任务执行状态和结果，它需要接收一个任务的task_id(通常为uuid格式)<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">from celery.result imprt AsyncResult</span><br><span class="line"># 调用异步任务</span><br><span class="line">async_task &#x3D; add.apply_async(args&#x3D;[3, 5])</span><br><span class="line"># 获取任务状态及结果</span><br><span class="line">AsyncResult(async_task.task_id).status</span><br><span class="line">AsyncResult(async_task.task_id).result</span><br></pre></td></tr></table></figure>
-<h3 id="7-设置定时和周期性任务"><a href="#7-设置定时和周期性任务" class="headerlink" title="7.设置定时和周期性任务"></a>7.设置定时和周期性任务</h3>借助于装<code>django-celery-beat</code>后，可以将任一Celery任务设置为定时任务或周期性任务，使用它你只需要通过pip安装它，并加入INSTALLED_APPS里去。</br><figure class="highlight plain"><figcaption><span>admin后台添加</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#### 7.1 配置文件添加任务</span><br><span class="line">同一任务可以设置成不同的调用周期，给它们不同的任务名就好了</span><br></pre></td></tr></table></figure>
-from datetime import timedelta<br>CELERY_BEAT_SCHEDULE = {<br>  “add-every-30s”:{<pre><code>  &quot;task&quot;: &quot;app.tasks.add&quot;,
-  &quot;schedule&quot;: 30.0, # 每30s执行一次
-  &#39;args&#39;: (3, 8)
-</code></pre>
-  },<br>  “add-every-day”:{<pre><code>  &quot;task&quot;: &quot;app.tasks.add&quot;,
-  &#39;schedule&#39;: timedelta(hours=1), #每1小时执行1次
-  &#39;args&#39;: (3,8)
-</code></pre>
-  }<br>}<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#### 7.2 通过Crontab设置定时任务</span><br><span class="line">如果你希望在特定的时间(某月某周或某天)执行一个任务，你可以通过crontab设置定时任务，如下例所示：</span><br></pre></td></tr></table></figure>
-CELERY_BEAT_SCHEDULE = {<h1 id="每周一早上7点半执行"><a href="#每周一早上7点半执行" class="headerlink" title="每周一早上7点半执行"></a>每周一早上7点半执行</h1>  ‘add-every-monday-morning’:{<pre><code>  &#39;task&#39;: &#39;app.tasks.add&#39;,
-  &#39;schedule&#39;: crontab(hour=7, minute=30,day_of_week=1),
-  &#39;args&#39;: (7, 8)
-</code></pre>
-  }<br>}<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">### 8.启动任务调度器beat</span><br><span class="line">前面我们只是添加了定时或周期性任务，我们还需要启动任务调度器beat分发定时和周期任务给Celery的worker</span><br><span class="line">#### 8.1启动任务调度器beat</span><br><span class="line">多开几个终端，一个用来启动任务调度器beat，另一个启动celery worker，任务就可以在后台执行了</span><br></pre></td></tr></table></figure>
-<h1 id="开启任务调度器"><a href="#开启任务调度器" class="headerlink" title="开启任务调度器"></a>开启任务调度器</h1>Celery -A myproject beat</li>
-</ul>
-<h1 id="Linux下开启Celery-worker"><a href="#Linux下开启Celery-worker" class="headerlink" title="Linux下开启Celery worker"></a>Linux下开启Celery worker</h1><p>Celery -A myproject worker -l info</p>
-<h1 id="windows下开启Celery-worker"><a href="#windows下开启Celery-worker" class="headerlink" title="windows下开启Celery worker"></a>windows下开启Celery worker</h1><p>Celery -A myproject worker -l info -P eventlet</p>
-<h1 id="windows下如果报Pid错误"><a href="#windows下如果报Pid错误" class="headerlink" title="windows下如果报Pid错误"></a>windows下如果报Pid错误</h1><p>Celery -A myproject worker -l info –pool=solo</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#### 8.2 Flower监控任务执行状态</span><br><span class="line">除了&#96;&#96;&#96;django_celery_results&#96;&#96;&#96;，你可以使用&#96;&#96;&#96;flower&#96;&#96;&#96;监控后台执行任务状态。它提供了一个可视化的界面，在测试环境中非常有用</span><br></pre></td></tr></table></figure>
-<p>pip install flower</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">安装好后，你有如下两种方式启动服务器。启动服务器后，打开&#96;&#96;&#96;http:&#x2F;&#x2F;localhost:5555&#96;&#96;&#96;即可查看监控情况</span><br></pre></td></tr></table></figure>
-<h1 id="从terminal终端启动，proj为项目名"><a href="#从terminal终端启动，proj为项目名" class="headerlink" title="从terminal终端启动，proj为项目名"></a>从terminal终端启动，proj为项目名</h1><p>$ flower -A proj –port=5555</p>
-<h1 id="从celery启动"><a href="#从celery启动" class="headerlink" title="从celery启动"></a>从celery启动</h1><h1 id="celery-flower-A-proj-–address-127-0-0-1-–port-5555"><a href="#celery-flower-A-proj-–address-127-0-0-1-–port-5555" class="headerlink" title="celery flower -A proj –address=127.0.0.1 –port=5555"></a>celery flower -A proj –address=127.0.0.1 –port=5555</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">### 9.Celery高级用法与注意事项</span><br><span class="line">#### 9.1给任务设置最大重试次数</span><br><span class="line">定义任务时可以通过&#96;&#96;&#96;max_retries&#96;&#96;&#96;设置最大重试次数，并调用&#96;&#96;&#96;self.retry&#96;&#96;&#96;方法调用。因为要调用&#96;&#96;&#96;self&#96;&#96;&#96;这个参数，定时任务必须设置&#96;&#96;&#96;bind&#x3D;True&#96;&#96;&#96;</span><br></pre></td></tr></table></figure>
-<p>@shared_task(bind=True, max_retries=3)<br>def send_batch_notification(self):<br>    try:<br>        something_raising()<br>        raise Excepton(‘Can’t send email.’)<br>    except Exception as exec:<br>        self.retry(exc=exc, countdown=5)<br>    send_email(<br>        subject=’Batch email notifications’,<br>        message=’Test mail’,<br>        from_email=’no-reply@example.com’,<br>        recipient_list=[‘john@example.com’]<br>    )</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#### 9.2 不同任务交由不同Queue处理</span><br><span class="line">不同任务所需要的时间和资源不一样。为了防止一些非常占用资源或耗时的任务阻塞任务队列导致一些简单的任务也无法执行，可以将不同的任务交由不同的Queue处理。下例定义了两个Queue队列，default执行普通任务，heavy_tasks执行重型任务。</span><br></pre></td></tr></table></figure>
-<p>CELERY_TASK_DEFAULT_QUEUE = ‘default’<br>CELERY_TASK_DEFAULT_ROUTING_KEY = ‘default’<br>CELERY_QUEUES = (<br>    Queue(‘default’, Exchage(‘default’), routing_key=’default’)<br>    Queue(‘heavy_tasks’, Exchage(‘heavy_tasks’), routing_key=’heavy_tasks’)<br>)<br>CELERY_TASK_ROUTES = {<br>    ‘mysqpp.tasks.havy_tasks’: ‘heavy_tasks’<br>}</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#### 9.3 Django的模型对象不应该作为参数传递</span><br><span class="line">Django的模型对象不应该作为参数传递给任务，几乎总时在任务运行时从数据库获取对象是最好的，因为老的数据会导致竞态条件。假象有这样一个场景，你有一篇文章，以及自动展开文章中缩写的任务：</span><br></pre></td></tr></table></figure>
-<p>class Article(models.Model):<br>    title = models.Charfield()<br>    body = models.Textfield()</p>
-<p>@app.task<br>def expend_abbreviations(article):<br>    article.body.replace(‘Old text’, ‘New text’)<br>    article.save()</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">首先，作者创建一篇文章并保存，这时作者点击一个按钮初始化一个缩写展开任务：</span><br></pre></td></tr></table></figure>
-<blockquote>
-<blockquote>
-<blockquote>
-<p>article = Article.objects.get(id=102)<br>expand_abbreviations.delay(article)</p>
-</blockquote>
-</blockquote>
-</blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">现在，队列非常忙，所以任务在2分钟内都不会运行。与此同时，另一个作者修改了这篇文章，当这个任务最终运行，因为老版本的文章作为参数传递给了这个任务，所以这篇文章会回滚到老的版本。修复这个竞态条件很简单，只要参数传递文章的id即可，此时可以在任务中重新获取这篇文章：</span><br></pre></td></tr></table></figure>
-<p>@app.task<br>def expand_abbreviation(article_id):<br>    article = Article.objects.get(id=article_id)<br>    article.body.replace(‘MyCorp’, ‘My Corporation’)<br>    article.save()</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#### 9.4 使用on_commit函数处理事务</span><br><span class="line">再看另外一个celery中处理事务的例子。这是在数据库中创建一个文章对象的Django视图，此时传递主键给任务，它使用&#96;&#96;&#96;commit_on_success&#96;&#96;&#96;装饰器，当视图返回时该事务会被提交，当视图抛出异常时会进行回滚。</span><br></pre></td></tr></table></figure>
-<p>from django.db import transaction</p>
-<p>@transaction.commit_on_success<br>def create_article(request):<br>    article = Article.objects.create()<br>    expand_abbreviation.delay(article.pk)</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">如果在事务提交之前已经开始执行会产生一个竞态条件；数据库对象还不存在。解决方案时使用&#96;&#96;&#96;on_commit&#96;&#96;&#96;回调函数来在所有事务提交成功后启动任务。</span><br></pre></td></tr></table></figure>
-<p>from django.db.transaction import on_commit</p>
-<p>def create_article(request):<br>    article = Artile.objects.create()<br>    on_commit(lambda: expand_abbreiation.delay(article.pk))<br>```</p>
- 
-      <!-- reward -->
-      
-    </div>
-    
-
-    <!-- copyright -->
-    
-    <footer class="article-footer">
-       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Django/" rel="tag">Django</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%8A%80%E6%9C%AF/" rel="tag">技术</a></li></ul>
-
-    </footer>
-  </div>
-
-    
- 
-    
-</article>
-
-    
-    <article
   id="post-Django高级使用：一"
   class="article article-type-post"
   itemscope
@@ -1106,6 +1246,192 @@ OBJECTPERMISSIONCHECKER,该方法可以缓存用户对一个对象的全部权�
 <p>备注：<code>request.path_info</code>用于获得当前请求的相对路径，如<code>/articles</code>，而<code>request.get_full_path()</code>用于获取当前请求完整的相对路径，包括请求参数，如：<code>/articles/?page=2</code>。使用<code>request.get_full_path()</code>要记得加括号，否则返回的是uwsgi请求对象，而不是字符串。<br>在<code>settings.py</code>文件里需要做的修改如下：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">MIDDLEWARE &#x3D; [</span><br><span class="line">    ...</span><br><span class="line">    &#39;blog.middleware.LoginRequiredMiddleware&#39;,</span><br><span class="line">]</span><br><span class="line">LOGIN_URL &#x3D; &quot;&#x2F;admin&#x2F;login&#x2F;&quot;</span><br><span class="line">OPEN_URLS &#x3D; [&quot;&#x2F;admin&#x2F;&quot;]</span><br></pre></td></tr></table></figure>
 <h4 id="3-其他中间件钩子函数"><a href="#3-其他中间件钩子函数" class="headerlink" title="3.其他中间件钩子函数"></a>3.其他中间件钩子函数</h4><p>Django还提供了其他三个中间件钩子函数，分别在执行视图函数，处理异常和进行模板渲染时使用。</p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Django/" rel="tag">Django</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%8A%80%E6%9C%AF/" rel="tag">技术</a></li></ul>
+
+    </footer>
+  </div>
+
+    
+ 
+    
+</article>
+
+    
+    <article
+  id="post-Django高级使用：二"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2022/11/21/Django%E9%AB%98%E7%BA%A7%E4%BD%BF%E7%94%A8%EF%BC%9A%E4%BA%8C/"
+    >Django高级使用：二</a> 
+</h2>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2022/11/21/Django%E9%AB%98%E7%BA%A7%E4%BD%BF%E7%94%A8%EF%BC%9A%E4%BA%8C/" class="article-date">
+  <time datetime="2022-11-21T13:08:52.000Z" itemprop="datePublished">2022-11-21</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+  </div>
+   
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="Django高级使用：二"><a href="#Django高级使用：二" class="headerlink" title="Django高级使用：二"></a>Django高级使用：二</h1><h2 id="一-Django全局上下文处理器"><a href="#一-Django全局上下文处理器" class="headerlink" title="一.Django全局上下文处理器"></a>一.Django全局上下文处理器</h2><blockquote>
+<p>前言：Django的全局上下文处理器(COntext Processors)的作用就是向模板传递需要全局使用的变量。</p>
+</blockquote>
+<h3 id="1-全局上下文处理器-Context-Processors-应用场景"><a href="#1-全局上下文处理器-Context-Processors-应用场景" class="headerlink" title="1.全局上下文处理器(Context Processors)应用场景"></a>1.全局上下文处理器(Context Processors)应用场景</h3><p>&emsp;&emsp;当需要向所有模板传递一个可以被全局使用的变量时。我们在编写Django视图函数时，一般会在视图函数中以字典形式向模板中传递需要被调用或使用的变量并指定渲染模板。</br><br>&emsp;&emsp;如果每个视图函数分别去查询数据库，然后向每个模板传递这些变量，不仅造成代码冗余，而且会造成对数据库的重复查询，一个更好的解决方案就是使用自定义的上下文处理器(Context Processors)给模板传递全局变量，一次查询全局使用，完美解决上述问题。</p>
+<h3 id="2-Django内置的全局上下文处理器"><a href="#2-Django内置的全局上下文处理器" class="headerlink" title="2.Django内置的全局上下文处理器"></a>2.Django内置的全局上下文处理器</h3><blockquote>
+<p>思考：我们没有向某个模板中传递过权限perms对象，我们却可以在所有模板中随时调用它。同样可以在模板中全局使用的变量还有request和user对象。</p>
+</blockquote>
+<p>这是因为Django的<code>settings.py</code>里已经包含了<code>django.template.context_processors.request</code>和<code>django.contrib.auth.context_processors.auth</code>这两个全局上下文处理器。如果把他们移除，看看还能不能在模板中调用<code>user</code>和<code>perms</code>？</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">TEMPLATES &#x3D; [</span><br><span class="line">    &#123;</span><br><span class="line">        &#39;BACKEND&#39;: &#39;django.template.backends.django.DjangoTemplates&#39;</span><br><span class="line">        &#39;DIRS&#39;: [</span><br><span class="line">            os.path.join(BASE_DIR, &#39;templates&#39;)</span><br><span class="line">        ],</span><br><span class="line">        &#39;APP_DIRS&#39;: True</span><br><span class="line">        &#39;OPTIONS&#39;: &#123;</span><br><span class="line">            &#39;context_processors&#39;:[</span><br><span class="line">                # 以下包含了4个默认的全局上下文处理器</span><br><span class="line">                &#39;django.template.context_processors.debug&#39;,</span><br><span class="line">                &#39;django.template.context_processors.request&#39;,</span><br><span class="line">                &#39;django.contrib.auth.context_processors.auth&#39;,</span><br><span class="line">                &#39;django.contrib.messages.context_processors.messages&#39;,</span><br><span class="line">                &#39;myapp.custom_context_processors.xxx&#39;, # 自定义全局上下文处理器</span><br><span class="line">            ]</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+<p>Django一般包含了上述4个默认全局上下文处理器，它们作用如下所示：</p>
+<ul>
+<li>django.template.context_processors.debug:在模板里可以直接使用settings的DEBUG参数及强大的sql_queries：它本身是一个字典，其中包括当前执行页面执行SQL查询所需的时间</li>
+<li>django.template.context_processors.request：在模板中可以直接使用request对象</li>
+<li>django.contrib.auth.context_processors.auth：在模板里面可以直接使用user, perms对象</li>
+<li>django.contrib.messages.context_processors.messages:在模板里面可以直接使用message对象</li>
+</ul>
+<p>另外Django还提供了几个全局上下文处理器：</p>
+<ul>
+<li>django.template.context_processors.i18n：在模板里面可以直接使用settings的LANGUAGES和LANGUAGE_CODE</li>
+<li>django.template.context_processors.media：可以在模板里面使用settings的MEDIA_URL参数</li>
+<li>django.template.context_processors.csrf:给模板标签 csrf_token提供值</li>
+<li>django.template.context_processors.tz： 可以在模板里面使用TIME_ZONE参数</li>
+</ul>
+<h3 id="3-如何自定义全局上下文处理器"><a href="#3-如何自定义全局上下文处理器" class="headerlink" title="3.如何自定义全局上下文处理器"></a>3.如何自定义全局上下文处理器</h3><p>自定义的全局上下文处理器本质是个函数，使用它必须满足3个条件：</p>
+<ul>
+<li>1.传入参数必须有<code>request</code>对象</li>
+<li>2.返回值必须是个字典</li>
+<li>3.使用前需要在settings的<code>context_processors</code>里声明。<h4 id="3-1-如何使用全局上下文处理器"><a href="#3-1-如何使用全局上下文处理器" class="headerlink" title="3.1 如何使用全局上下文处理器"></a>3.1 如何使用全局上下文处理器</h4>现要向模板传递一个叫做<code>site_name</code>的全局变量以便在所有模板中都能使用<code>site_name</code>输出站点名称。现在blog(app)的目录下新建<code>context_processors.py</code>中，新增如下代码：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># blog&#x2F;context_processors.py</span><br><span class="line"></span><br><span class="line">from django.conf import settings</span><br><span class="line">def global_site_name(request):</span><br><span class="line">    return &#123;&#39;site_name&#39;, settings.SITE_NAME,&#125;</span><br></pre></td></tr></table></figure>
+然后在<code>settings</code>文件里增加如下申明：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#39;context_processors&#39;: [ # 以下包含了4个默认的全局上下文处理器</span><br><span class="line">    &#39;django.template.context_processors.debug&#39;,</span><br><span class="line">    &#39;django.template.context_processors.request&#39;,</span><br><span class="line">    &#39;django.contrib.auth.context_processors.auth&#39;,</span><br><span class="line">    &#39;django.contrib.messages.context_processors.messages&#39;,</span><br><span class="line">    &#39;blog.context_processors.global_site_name&#39;, # 自定义全局上下文处理器</span><br></pre></td></tr></table></figure>
+<h3 id="全局变量与本地变量的优先级"><a href="#全局变量与本地变量的优先级" class="headerlink" title="全局变量与本地变量的优先级"></a>全局变量与本地变量的优先级</h3>全局上下文处理器提供的变量优先级高于单个视图函数给单个模板传递的变量。这意味着全局上下文处理器提供的变量可能会覆盖你视图函数中自定义的本地变量，因此具体使用时请注意避免本地变量名与全局上下文处理器提供的变量名称重复。这些变量名包括perms，user和debug等等。<br>如果我们要设计单个视图函数定义的变量名覆盖全局变量，请使用如下强制模式：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">from django.template import RequestContext</span><br><span class="line"></span><br><span class="line">high_priority_context &#x3D; RequestContext(request)</span><br><span class="line">high_priority_context.push(&#123;&quot;my_name&quot;: &quot;Adrian&quot;&#125;)</span><br></pre></td></tr></table></figure>
+<h2 id="二-Django信号机制及示例"><a href="#二-Django信号机制及示例" class="headerlink" title="二.Django信号机制及示例"></a>二.Django信号机制及示例</h2><blockquote>
+<p>前言：Django框架包含了一个信号机制，它允许若干个发送者(sender)通知一组接收者(receiver)某些特定操作或事件(events)已经发生了，接收者收到指令信号(signals)后再去执行特定的操作。这部分介绍Django信号的工作机制、应用场景、如何在项目中使用信号已经如何自定义信号。</p>
+</blockquote>
+<h3 id="1-信号的工作机制"><a href="#1-信号的工作机制" class="headerlink" title="1.信号的工作机制"></a>1.信号的工作机制</h3>Django中的信号工作机制依赖如下三个主要要素：</li>
+<li>发送者(sender)：信号的发出方，可以是模型，也可以是视图。当某个操作发生时，发送者会发出信号。</li>
+<li>信号(signal)：发送的信号本身</li>
+<li>接收者(receiver)：信号的接收者，其本质是一个回调函数。将这个函数注册到信号上，当特定的事件发生时，发送者发送信号，回调函数就会被执行。<h3 id="2-信号的应用场景"><a href="#2-信号的应用场景" class="headerlink" title="2.信号的应用场景"></a>2.信号的应用场景</h3>信号主要用于Django项目内不同时间得联动，实现程序的解耦。发送通知也是一个信号常用的场景。<blockquote>
+<p>注意：Django中信号监听函数不是异步执行，而是同步执行，所以需要异步执行耗时的任务时(比如发送邮件或写入文件)，不建议使用Django自带的信号。</p>
+</blockquote>
+<h3 id="3-使用举例"><a href="#3-使用举例" class="headerlink" title="3.使用举例"></a>3.使用举例</h3>假设我们的Profile模型，与User模型是一对一关系。我们希望创建User对象实例时能自动创建Profile对象实例，而更新User对象实例时不创建新的Profile对象实例。这时我们可以自定义<code>create_user_profile</code>和<code>save_user_profile</code>两个监听函数，同时监听sender(User模型)发出的<code>post_save</code>信号。由于<code>post_save</code>可同时用于模型的创建和更新，我们用<code>if created</code>这个判断来加以区别。<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">from django.db import models</span><br><span class="line">from django.db.models.signals import post_save</span><br><span class="line">from django.dispatch import receiver</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class Profile(models.Model):</span><br><span class="line">    user &#x3D; models.OneToOneField(User, on_delete&#x3D;models.CASCADE)</span><br><span class="line">    birth_date &#x3D; models.DateField(null&#x3D;True, bland&#x3D;True)</span><br><span class="line"></span><br><span class="line"># 监听User模型创建</span><br><span class="line">@receiver(post_save, sender&#x3D;User)</span><br><span class="line">def create_user_profile(sender, instance, created, **kwargs):</span><br><span class="line">    if created:</span><br><span class="line">        Profile.objects.create(user&#x3D;instance)</span><br><span class="line"></span><br><span class="line"># 监听User模型更新</span><br><span class="line">@receiver(post_save, sender&#x3D;User)</span><br><span class="line">def save_user_profile(sender,instance, **kwargs):</span><br><span class="line">    instance.profile.save()</span><br></pre></td></tr></table></figure>
+我们再来看一个使用信号清除缓存的例子。当模型A被更新或被删除时，会分别发出<code>post_save</code>和<code>post_delete</code>的信号，监听这两个信号的receivers函数会自动清楚缓存里的A对象列表。<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">from django.core.cache import cache</span><br><span class="line">from django.db.models.signals import post_delete, post_save</span><br><span class="line">from django.dispatch import receiver</span><br><span class="line"></span><br><span class="line">@receiver(post_save, sender&#x3D;ModelA)</span><br><span class="line">def cache_post_save_handler(sender, **kwargs)：</span><br><span class="line">    cache.delete(&#39;cached_a_objetcs&#39;)</span><br><span class="line">    </span><br><span class="line">@receiver(post_delete, sneder&#x3D;ModelA)</span><br><span class="line">def cache_post_delete_handler(sender, **kwargs):</span><br><span class="line">    cache.delete(&#39;cached_a_objects&#39;)</span><br></pre></td></tr></table></figure>
+<h3 id="4-Django常用内置信号："><a href="#4-Django常用内置信号：" class="headerlink" title="4.Django常用内置信号："></a>4.Django常用内置信号：</h3>前面例子举例了<code>post_save</code>和<code>post_delete</code>信号。Django还内置了其他信号：</li>
+<li>pre_save&amp;post_save：在模型调用save()方法之前或之后发送</li>
+<li>pre_init&amp;post_init：在模型调用_init_方法之前或之后发送。</li>
+<li>pre_delete &amp; post_delete：在模型调用delete()方法或查询集调用delete()方法之前或之后发送。</li>
+<li>request_started &amp; request_finished：Django建立或关闭HTTP请求时发送。<h2 id="二-自定义Django-admin管理命令"><a href="#二-自定义Django-admin管理命令" class="headerlink" title="二.自定义Django-admin管理命令"></a>二.自定义Django-admin管理命令</h2><blockquote>
+<p>前言：每次在启动Django服务之前，我们都会在终端运行<code>python mnaage.py xxx</code>的管理命令。其实我们还可以自定义管理命令，这对于执行独立的脚本或任务非常有用，比如清除缓存、导出用户邮件清单或发送邮件等等。</br><br>自定义的管理命令不仅可以通过<code>manage.py</code>运行，还可以通过Linux或Celery的crontab服务将其设成定时任务。这部分主要讲解如何自定义Django-admin命令，并提供一些演示案例。</br><br>自定义Django-admin命令一共分三步：创建文件夹布局、编写命令代码和测试使用。</p>
+</blockquote>
+<h3 id="1-创建文件夹布局"><a href="#1-创建文件夹布局" class="headerlink" title="1.创建文件夹布局"></a>1.创建文件夹布局</h3>自定义的Django-admin管理命令本质上是一个python脚本文件，它的存放路径必须遵循一定的规范，一般位于<code>app/management/commands</code>目录。整个文件夹的布局如下所示：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">app01&#x2F;</span><br><span class="line">    __init__.py</span><br><span class="line">    models.py</span><br><span class="line">    management&#x2F;</span><br><span class="line">        __init__.py</span><br><span class="line">        commands&#x2F;</span><br><span class="line">            __init__.py</span><br><span class="line">            _private.py # 以下划线开头文件不能用作管理命令</span><br><span class="line">            my_commands.py # 这个就是自定义的管理命令脚本，文件名即为命令名</span><br><span class="line">    tests.py</span><br><span class="line">    views.py</span><br></pre></td></tr></table></figure>
+注意：</li>
+<li><code>management</code>和<code>commands</code>每个目录下都必须有个<code>__init__.py</code>文件，表明这是一个python包。另外以下划线开头的文件名不能用作管理命令脚本。</li>
+<li><code>management/commands</code>目录可以位于任何一个app的目录下，Django都能找到它。</li>
+<li>一般建议每个python脚本文件对应一条管理命令<h3 id="2-编写命令代码"><a href="#2-编写命令代码" class="headerlink" title="2.编写命令代码"></a>2.编写命令代码</h3>每一个自定义的管理命令本质是一个<code>Command</code>类，它继承了Django的<code>Basecommand</code>或其子类，主要通过重写<code>handle()</code>方法实现自己的业务逻辑代码，而<code>add_argument()</code>则用于帮助处理命令行的参数，如果运行命令时不需要额外参数，可以不写这个方法。<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">from django.core.management.base import BaseCommand</span><br><span class="line"></span><br><span class="line">class Command(BaseCommand):</span><br><span class="line">    # 帮助文本，一般备注命令的用途及如何使用</span><br><span class="line">    help &#x3D; &#39;Some help texts&#39;</span><br><span class="line">    </span><br><span class="line">    # 处理命令行参数，可选</span><br><span class="line">    def add_argument(self, parser)：</span><br><span class="line">        pass</span><br><span class="line">        </span><br><span class="line">    # 核心业务逻辑</span><br><span class="line">    def handle(self, *args, **options):</span><br><span class="line">        pass</span><br></pre></td></tr></table></figure>
+<h3 id="3-实践"><a href="#3-实践" class="headerlink" title="3.实践"></a>3.实践</h3><blockquote>
+<p>前言：我们现在来看一个最简单的例子，希望定义一个<code>heelo_world</code>的命令。这样当我们运行<code>python manage.py hello_world</code>命令时，控制台会打印出<code>Hello World!</code>的字样。在<code>app/management/commands</code>目录下新建<code>hello_world.py</code>，添加如下代码：</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">from django.core.management.base iport BaseCommand</span><br><span class="line"></span><br><span class="line">class Command(BaseCommand):</span><br><span class="line">    # 帮助文本，一般备注命令的用途及如何使用</span><br><span class="line">    help &#x3D; &quot;Print Hello World！&quot;</span><br><span class="line">    </span><br><span class="line">    # 核心业务逻辑</span><br><span class="line">    def handle(self, *args, **options):</span><br><span class="line">        # 注意：当我们使用管理命令并希望在控制台输出指定信息时，我们应该使用self.stdout和self.stderr方法，而不应该直接使用python的print方法。另外，我们不需要在消息的末尾加上换行符，它将被自动添加。</span><br><span class="line">        self.stdout.write(&#39;Hello World!&#39;)</span><br></pre></td></tr></table></figure>
+&emsp;&emsp;现在我们来稍微增加点难度，来通过命令行给<code>hello_world</code>命令传递参数，以实现运行<code>python manage.py hello_world John</code>命令时，打印出<code>Hello World! John</code>。</br><br>&emsp;&emsp;现在我们修改原<code>hello_world.py</code>，添加<code>add_arguments</code>方法，该方法的作用是给自定义的handle方法添加一个或多个参数<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">from django.core.managements.base import BaseCommand</span><br><span class="line"></span><br><span class="line">class Command(BaseCommand):</span><br><span class="line">    # 帮助文本，一般备注命令的用途及如何使用</span><br><span class="line">    help &#x3D; &quot;Print Hello World!&quot;</span><br><span class="line">    </span><br><span class="line">    # 给命令添加一个名为name的参数</span><br><span class="line">    def add_argument(self, parser):</span><br><span class="line">        parser.add_argument(&#39;name&#39;)</span><br><span class="line">        </span><br><span class="line">    # 核心业务逻辑，通过options字典接收name参数值，拼接字符串后输出</span><br><span class="line">    def handle(self, *args, **options):</span><br><span class="line">        msg &#x3D; &#39;Hello World !&#39; + options[&#39;name&#39;]</span><br><span class="line">        self.stdout.write(msg)</span><br></pre></td></tr></table></figure>
+<h3 id="4-实际使用场景"><a href="#4-实际使用场景" class="headerlink" title="4.实际使用场景"></a>4.实际使用场景</h3><blockquote>
+<p>前言：我们来看两个自定义管理命令的实际应用案例</p>
+</blockquote>
+<h4 id="4-1检查数据库连接是否已经就绪"><a href="#4-1检查数据库连接是否已经就绪" class="headerlink" title="4.1检查数据库连接是否已经就绪"></a>4.1检查数据库连接是否已经就绪</h4>无论使用常规方式还是Docker在生产环境部署Django项目，我们都需要确保数据库连接已经就绪后才进行数据库迁移(migrate)操作，否则Django应用程序一定会报错。</br><br>此时我们可以自定义一个<code>wair_for_db</code>的命令，如下所示：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"># app&#x2F;management&#x2F;commands&#x2F;wait_for_db.py</span><br><span class="line"></span><br><span class="line">import time</span><br><span class="line">from django.db import connections</span><br><span class="line">from django.db.utils import OperationError</span><br><span class="line">from django.core.management import BaseCommand</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Class Command(BaseCommand):</span><br><span class="line">    help &#x3D; &#39;Run data migrations util db is available.&#39;</span><br><span class="line">    </span><br><span class="line">    def handle(self, *args, **options):</span><br><span class="line">        self.stdout.write(&#39;Waiting for database...&#39;)</span><br><span class="line">        db_conn &#x3D; None</span><br><span class="line">        while not db_conn:</span><br><span class="line">            try:</span><br><span class="line">                # try to build connection</span><br><span class="line">                db_conn &#x3D; connections[&#39;default&#39;]</span><br><span class="line">            except OperationalError:</span><br><span class="line">                # 连接失败，就等待1s</span><br><span class="line">                self.stdout.write(&#39;Database unavilable, waiting 1 second...&#39;)</span><br><span class="line">                time.sleep(1)</span><br><span class="line">        </span><br><span class="line">        self.stdout.write(self.style.SUCCESS(&#39;Database available!&#39;))</span><br></pre></td></tr></table></figure>
+定义好这个命令之后每次在运行<code>python manage.py migrate</code>命令前先运行<code>python manage.py wait_for_db</code>即可<h4 id="4-2-周期性发送邮件"><a href="#4-2-周期性发送邮件" class="headerlink" title="4.2 周期性发送邮件"></a>4.2 周期性发送邮件</h4><blockquote>
+<p>应用场景：如果你是网站管理员，你肯定希望知道每天有多少新用户已注册，这时你可以自定义一条<code>mail_admin</code>的管理命令，将每天新注册用户数量以邮件形式发送给自己，如下所示：</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"># app&#x2F;management&#x2F;commands&#x2F;mail_admin.py</span><br><span class="line"></span><br><span class="line">#-*- coding:utf-8 -*-</span><br><span class="line">from datetime import timedelta, time, datetime</span><br><span class="line">from django.core.mail import mail_admins</span><br><span class="line">from django.core.managements import BaseCommand</span><br><span class="line">from django.utils import timezone</span><br><span class="line">from django.contrib.auth import get_user_model</span><br><span class="line"></span><br><span class="line">User &#x3D; get_user_model()</span><br><span class="line"></span><br><span class="line">today &#x3D; timezone.now()</span><br><span class="line">yesterday &#x3D; today - timedelta(1)</span><br><span class="line"></span><br><span class="line">Class Command(BaseCommand):</span><br><span class="line">    # 获取过去一天注册的用户数量</span><br><span class="line">    user_count &#x3D; User.objects.filter(data_joined_range&#x3D;(yesterday, today)).count()</span><br><span class="line">    </span><br><span class="line">    # 发送给管理员</span><br><span class="line">    if user_count &gt;&#x3D; 1:</span><br><span class="line">        message &#x3D; &quot;You have got &#123;&#125; user(s) in the past 24 hours&quot;.format(user_count)</span><br><span class="line">        </span><br><span class="line">        subject &#x3D; (</span><br><span class="line">            f&quot;New user count for &#123;today.strftime(&quot;%Y-%m-%d&quot;)&#125;:&#123;user_count&#125;&quot;</span><br><span class="line">        )</span><br><span class="line">        </span><br><span class="line">        mail_admin(subject&#x3D;subject, message&#x3D;message, html_message&#x3D;None)</span><br><span class="line">        </span><br><span class="line">        self.stdout.write(&quot;Email was sent&quot;)</span><br><span class="line">    else:</span><br><span class="line">        self.stdout.write(&quot;No new users today&quot;)</span><br></pre></td></tr></table></figure>
+其中，真正发送邮件成功需要设置Email后台及管理员，测试环境下可以使用如下简单配置：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">EMAIL_BACKEND &#x3D; &quot;dkjango.core.mail.bakends.EmailBackend&quot;</span><br><span class="line">DEFAULT_FROM_EAIL &#x3D; &quot;noreply@example.com&quot;</span><br><span class="line">ADMINS &#x3D; [(&quot;大江狗&quot;, &quot;yunbo.shi@example.com&quot;),]</span><br></pre></td></tr></table></figure>
+但是如果每天都要进入终端运行这个命令实在太麻烦了，我们完全可以使用Linux的crontab服务或Celery-Beat将其设置成周期性定时任务task，这时只需要调用Django的<code>call_command</code>方法即可<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"># app&#x2F;tasks.py， 可以在任一app目录下新建task</span><br><span class="line">from celery import shared_task</span><br><span class="line">from django.core.management import call_command</span><br><span class="line"></span><br><span class="line">@shared_task</span><br><span class="line">def mail_admin():</span><br><span class="line">    call_command(&quot;mail_admin&quot;,)</span><br></pre></td></tr></table></figure>
+<h2 id="三-Django项目中使用Celery执行异步和周期性任务"><a href="#三-Django项目中使用Celery执行异步和周期性任务" class="headerlink" title="三.Django项目中使用Celery执行异步和周期性任务"></a>三.Django项目中使用Celery执行异步和周期性任务</h2><blockquote>
+<p>前言：Django Web项目中我们经常需要执行耗时的任务比如发送邮件、调用第三方接口、批量处理文件等等，将这些任务异步化放在后台运行可以有效缩短请求响应时间。另外服务器上经常会有定时任务的需求，比如清除缓存、备份数据库等工作。Celery是一个高效的异步任务队列/基于分布式消息传递的作业队列，可以轻松帮助我们在Django项目中设置执行异步和周期性任务。</p>
+</blockquote>
+<h3 id="1-Celery的工作原理"><a href="#1-Celery的工作原理" class="headerlink" title="1.Celery的工作原理"></a>1.Celery的工作原理</h3>Celery是一个高效的基于分布式消息传递的作业队列，它主要通过消息(messages)传递任务，通常使用一个叫Broker(中间人)来协调client(任务的发出者)和worker(任务的处理者)。clients发出消息到队列中，broker将队列中的消息派发给Celery worker来处理。Celery本身不提供消息服务，它支持的消息服务(Broker)有RabbitMQ和Redis，Redis一般多是Django项目中首选的缓存后台。<h3 id="2-安装项目依赖文件"><a href="#2-安装项目依赖文件" class="headerlink" title="2.安装项目依赖文件"></a>2.安装项目依赖文件</h3>本项目使用了最新Django和Celery版本。因为本项目使用Redis做消息队列的broker，所以还需要安装redis。如果你需要另外设置定时或周期性任务，还需要安装<code>django-celery-beat</code>。<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"># pip 安装首选</span><br><span class="line">Django&#x3D;&#x3D;3.2</span><br><span class="line">celery&#x3D;&#x3D;5.0.5</span><br><span class="line">redis&#x3D;&#x3D;3.5.3</span><br><span class="line"></span><br><span class="line"># 可选,windows下运行celery 4以后版本，还需要额外安装eventlet库</span><br><span class="line">eventlet</span><br><span class="line"></span><br><span class="line"># 推荐安装，需要设置定时或周期任务时安装，推荐安装</span><br><span class="line">django-celery-results&#x3D;&#x3D;2.0.1</span><br><span class="line"></span><br><span class="line"># 视情况需要，需要监控celery运行定时任务时安装</span><br><span class="line">folower&#x3D;&#x3D;0.9.7</span><br></pre></td></tr></table></figure>
+<h3 id="3-Celery配置"><a href="#3-Celery配置" class="headerlink" title="3.Celery配置"></a>3.Celery配置</h3>在正式使用<code>celery</code>和<code>django-celery-beat</code>之前，需要做基础的配置工作。加入Django项目文件夹布局如下所示，我们首先需要在myproject/myproject目录下新增<code>celery.py</code>并修改<code>__init__.py</code><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">- myproject&#x2F;</span><br><span class="line">  - manage.py</span><br><span class="line">  - project&#x2F;</span><br><span class="line">    - __init__.py # 修改这个文件</span><br><span class="line">    - celery.py # 新增这个文件</span><br><span class="line">    - asgi.py</span><br><span class="line">    - settings.py</span><br><span class="line">    - urls.py</span><br><span class="line">    - wsgi.py</span><br></pre></td></tr></table></figure>
+新建<code>celery.py</code>，添加如下代码：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">import os</span><br><span class="line">from celery import Celery</span><br><span class="line"></span><br><span class="line"># 设置环境变量</span><br><span class="line">os.environ.setdefault(&#39;DJANGO_SETTINGS_MODULE&#39;, &#39;myproject.settings&#39;)</span><br><span class="line"></span><br><span class="line"># 实例化</span><br><span class="line">app &#x3D; Celery(&#39;myproject&#39;)</span><br><span class="line"></span><br><span class="line"># namespace &#x3D;&#39;CELERY&#39;作用是允许在Django配置文件中对Celery进行配置</span><br><span class="line"># 但所有Celery配置项必须以CELERY开头，防止冲突</span><br><span class="line">app.config_from_object(&#39;django.conf:settings&#39;, namespace&#x3D;&#39;CELERY&#39;)</span><br><span class="line"></span><br><span class="line"># 自动的从Django的已注册app中发现任务</span><br><span class="line">app.autodiscover_tasks()</span><br><span class="line"></span><br><span class="line"># 一个测试任务</span><br><span class="line">@app.task(bind&#x3D;True)</span><br><span class="line">def debug_task(self):</span><br><span class="line">    print(f&#39;Request: &#123;self.request!r&#125;&#39;)</span><br></pre></td></tr></table></figure>
+修改<strong>init</strong>.py，如下所示：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">from .celery import app as celery_app</span><br><span class="line">__all__ &#x3D; (&#39;celery_app&#39;,)</span><br></pre></td></tr></table></figure>
+接下来修改Django项目的<code>settings.py</code>，添加Celery有关配置选项，如下所示：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># 最重要的配置，设置消息broker，格式为：db:&#x2F;&#x2F;user:password@host:port&#x2F;dbname</span><br><span class="line"># 如果redis安装在本机，使用localhost</span><br><span class="line"># 如果docker部署的redis,使用redis:&#x2F;&#x2F;redis:6379</span><br><span class="line">CELERY_BROKER_URL &#x3D; &quot;redis:&#x2F;&#x2F;127.0.0.1:6379&#x2F;0&quot;</span><br><span class="line"></span><br><span class="line"># celery时区设置，建议与Django settings中TIME_ZONE同样时区，防止时差</span><br><span class="line"># Django设置时区需同时设置USE_TZ&#x3D;True和TIME_ZONE &#x3D; &#39;Asia&#x2F;Shanghai&#39;</span><br><span class="line">CELERY_TIMEZONE &#x3D; TIME_ZONE</span><br></pre></td></tr></table></figure>
+其他Celery常用配置选项包括：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"># 为Django_celery_results存储Celery任务执行结果设置后台</span><br><span class="line"># 格式为： db+scheme:&#x2F;&#x2F;user:paasword@host:port&#x2F;dbname</span><br><span class="line"># 支持数据库django-db和缓存django-cache存储任务状态及结果</span><br><span class="line">CELERY_RESULT_BACKEND &#x3D; &quot;django-db&quot;</span><br><span class="line"># celery内容等消息的格式设置，默认为json</span><br><span class="line">CELERY_ACCEPT_CONTENT &#x3D; [&#39;application&#x2F;json&#39;,]</span><br><span class="line">CELERY_TASK_SERIALIZER &#x3D; &#39;json&#39;</span><br><span class="line">CELERY_RESULT_SERIALIZER &#x3D; &#39;json&#39;</span><br><span class="line"></span><br><span class="line"># 为任务设置超时时间，单位秒。超时即终止，执行下个任务</span><br><span class="line">CELERT_TASK_TIME_LIMIT &#x3D; 5</span><br><span class="line"></span><br><span class="line"># 为存储结果设置过期日期，默认1天过期。如果beat开启,Celery每天会自动清除</span><br><span class="line"># 设为0，则存储结果用不过期</span><br><span class="line">CELERY_RESULT_EXPIRES &#x3D; xx</span><br><span class="line"></span><br><span class="line"># 任务限流</span><br><span class="line">CELERY_TASK_ANNOTATIONS &#x3D; &#123;&#39;tasks.add&#39;:&#123;&#39;rate_limit&#39;: &#39;10&#x2F;s&#39;&#125;&#125;</span><br><span class="line"></span><br><span class="line"># worker并发数量，一般默认CPU核数，可以不设置</span><br><span class="line">CELERY_WORKER_CONCURRENCY &#x3D; 2</span><br><span class="line"></span><br><span class="line"># 每个worker执行了多少任务就会死掉，默认是无限的</span><br><span class="line">CELERY_WORKER_MAX_TASKS_PER_CHILD &#x3D; 200</span><br></pre></td></tr></table></figure>
+注意：</li>
+<li>在Django中正式编写和执行自己的异步任务前，一定要先测试redis和celery是否安装好并配置成功</li>
+<li>一个无限期阻塞的任务会使得工作单元无法再做其他事情，建议给任务设置超时时间<h3 id="4-测试Celery是否工作正常"><a href="#4-测试Celery是否工作正常" class="headerlink" title="4.测试Celery是否工作正常"></a>4.测试Celery是否工作正常</h3>&emsp;&emsp;首先需要启动redis服务</br><br>&emsp;&emsp;启动redis服务后，要先进入项目所在文件夹运行<code>python manage.py runserver</code>命令启动Django服务器(无需创建任何app)，然后再打开一个终端terminal窗口输入celery命令，启动worker<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># Linux下测试，启动Celery</span><br><span class="line">Celery -A myproject worker -l info</span><br><span class="line"></span><br><span class="line"># windows下测试，启动Celery</span><br><span class="line">Celery -A myproject worker -l info -P eventlet</span><br><span class="line"></span><br><span class="line"># 如果Windows下Celery不工作，输入如下命令</span><br><span class="line">Celery -A myproject worker -l info --pool&#x3D;solo</span><br></pre></td></tr></table></figure>
+<h3 id="5-编写任务"><a href="#5-编写任务" class="headerlink" title="5.编写任务"></a>5.编写任务</h3>Celery配置完成后，可以编写任务了。Django项目中所有需要Celery执行的异步或周期性任务都放在tasks.py文件里，该文件可以位于project目录下，也可以位于各个app的目录下，专属于某个Celery实例化项目的task可以使用<code>@app.task</code>装饰器定义，各个app目录下可以复用的task建议使用<code>@shared_task</code>定义<br>示例如下所示：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"># myproject&#x2F;tasks.py</span><br><span class="line"># 专属于myproject项目的任务</span><br><span class="line">app &#x3D; Celery(&#39;myproject&#39;)</span><br><span class="line">@app.task</span><br><span class="line">def test():</span><br><span class="line">    pass</span><br><span class="line">    </span><br><span class="line"># app&#x2F;tasks.py,可以复用的task</span><br><span class="line">from celery import shared_task</span><br><span class="line">import time</span><br><span class="line"></span><br><span class="line">@shared_task</span><br><span class="line">def add(x, y):</span><br><span class="line">    time.sleep(2)</span><br><span class="line">    return x + y</span><br></pre></td></tr></table></figure>
+上面我们定义了一个名为<code>add</code>的任务，它接收两个参数，并返回计算结果。为了模拟耗时任务，我们中途让其sleep 2s。现在已经定义了一个耗时任务，我们希望在Django的视图或其他地方中以异步方式调用执行它，做法如下面所示：<br>注意：</li>
+<li>使用celery定义任务时，避免在一个任务中调用另一个异步任务，容易造成阻塞。</li>
+<li>当我们使用<code>@app.task</code>装饰器定义我们的异步任务时，那么这个任务依赖于根据项目名myproject生成的Celery实例。然而我们在进行Django开发时为了保证每个app的可重用性。我们经常会在每个app文件夹下编写异步任务，这些任务并不依赖于具体的Django项目名。使用<code>@shared_app</code>装饰器能让我们避免对某个项目名对应Celery实例的依赖，使app的可移植性更强<h3 id="6-异步调用任务"><a href="#6-异步调用任务" class="headerlink" title="6.异步调用任务"></a>6.异步调用任务</h3>Celery提供了2种以异步方式调用任务的方法，<code>delay</code>和<code>apply_async</code>方法，如下所示：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># 方法一： delay方法</span><br><span class="line">task_name.delay(args1, args2, kwargs&#x3D;value_1, kwargs2&#x3D;value_2)</span><br><span class="line"></span><br><span class="line"># 方法二： apply_async方法，与delay类似，但支持更多的参数</span><br><span class="line">task.apply_async(args&#x3D;[arg1, arg2], kwargs&#x3D;&#123;key:value, key:value&#125;)</span><br></pre></td></tr></table></figure>
+接下来我们来看一个具体的例子，我们编写了一个Django视图函数，使用<code>delay</code>方法调用<code>add</code>任务。<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"># app&#x2F;views.py</span><br><span class="line">from .tasks import add</span><br><span class="line"></span><br><span class="line">def test_celery(request):</span><br><span class="line">    add.delay(3, 5)</span><br><span class="line">    return HttpResponse(&#39;Celery works&#39;)</span><br><span class="line">    </span><br><span class="line"># app&#x2F;urls.py</span><br><span class="line">uslpatterns &#x3D; [</span><br><span class="line">    re_path(r&#39;^test&#x2F;$&#39;, views.test_celery, name&#x3D;&quot;test_celery&quot;)</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+我们现在再次使用<code>apply_async</code>方法调用<code>add</code>任务，不过还要打印初任务的id(task.id)和状态status。Celery会为每个加入到队列中的任务分配独一无二的uuid，可以通过<code>task.status</code>获取状态和<code>task.result</code>获取结果。注意：<code>apply_async</code>传递参数的方式与delay方法略有不同。<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># app&#x2F;views.py</span><br><span class="line">from .tasks import add</span><br><span class="line"></span><br><span class="line">def test_celery(request):</span><br><span class="line">    result &#x3D; add.apply_async(args&#x3D;[3,5])</span><br><span class="line">    return HttpResponse(result.task_id + &#39; : &#39; + result.status)</span><br></pre></td></tr></table></figure>
+除了在Django admin后台中查看任务状态和结果，你还可以在视图中通过<code>AsyncResult</code>方法获取任务执行状态和结果，它需要接收一个任务的task_id(通常为uuid格式)<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">from celery.result imprt AsyncResult</span><br><span class="line"># 调用异步任务</span><br><span class="line">async_task &#x3D; add.apply_async(args&#x3D;[3, 5])</span><br><span class="line"># 获取任务状态及结果</span><br><span class="line">AsyncResult(async_task.task_id).status</span><br><span class="line">AsyncResult(async_task.task_id).result</span><br></pre></td></tr></table></figure>
+<h3 id="7-设置定时和周期性任务"><a href="#7-设置定时和周期性任务" class="headerlink" title="7.设置定时和周期性任务"></a>7.设置定时和周期性任务</h3>借助于装<code>django-celery-beat</code>后，可以将任一Celery任务设置为定时任务或周期性任务，使用它你只需要通过pip安装它，并加入INSTALLED_APPS里去。</br><figure class="highlight plain"><figcaption><span>admin后台添加</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#### 7.1 配置文件添加任务</span><br><span class="line">同一任务可以设置成不同的调用周期，给它们不同的任务名就好了</span><br></pre></td></tr></table></figure>
+from datetime import timedelta<br>CELERY_BEAT_SCHEDULE = {<br>  “add-every-30s”:{<pre><code>  &quot;task&quot;: &quot;app.tasks.add&quot;,
+  &quot;schedule&quot;: 30.0, # 每30s执行一次
+  &#39;args&#39;: (3, 8)
+</code></pre>
+  },<br>  “add-every-day”:{<pre><code>  &quot;task&quot;: &quot;app.tasks.add&quot;,
+  &#39;schedule&#39;: timedelta(hours=1), #每1小时执行1次
+  &#39;args&#39;: (3,8)
+</code></pre>
+  }<br>}<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#### 7.2 通过Crontab设置定时任务</span><br><span class="line">如果你希望在特定的时间(某月某周或某天)执行一个任务，你可以通过crontab设置定时任务，如下例所示：</span><br></pre></td></tr></table></figure>
+CELERY_BEAT_SCHEDULE = {<h1 id="每周一早上7点半执行"><a href="#每周一早上7点半执行" class="headerlink" title="每周一早上7点半执行"></a>每周一早上7点半执行</h1>  ‘add-every-monday-morning’:{<pre><code>  &#39;task&#39;: &#39;app.tasks.add&#39;,
+  &#39;schedule&#39;: crontab(hour=7, minute=30,day_of_week=1),
+  &#39;args&#39;: (7, 8)
+</code></pre>
+  }<br>}<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">### 8.启动任务调度器beat</span><br><span class="line">前面我们只是添加了定时或周期性任务，我们还需要启动任务调度器beat分发定时和周期任务给Celery的worker</span><br><span class="line">#### 8.1启动任务调度器beat</span><br><span class="line">多开几个终端，一个用来启动任务调度器beat，另一个启动celery worker，任务就可以在后台执行了</span><br></pre></td></tr></table></figure>
+<h1 id="开启任务调度器"><a href="#开启任务调度器" class="headerlink" title="开启任务调度器"></a>开启任务调度器</h1>Celery -A myproject beat</li>
+</ul>
+<h1 id="Linux下开启Celery-worker"><a href="#Linux下开启Celery-worker" class="headerlink" title="Linux下开启Celery worker"></a>Linux下开启Celery worker</h1><p>Celery -A myproject worker -l info</p>
+<h1 id="windows下开启Celery-worker"><a href="#windows下开启Celery-worker" class="headerlink" title="windows下开启Celery worker"></a>windows下开启Celery worker</h1><p>Celery -A myproject worker -l info -P eventlet</p>
+<h1 id="windows下如果报Pid错误"><a href="#windows下如果报Pid错误" class="headerlink" title="windows下如果报Pid错误"></a>windows下如果报Pid错误</h1><p>Celery -A myproject worker -l info –pool=solo</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#### 8.2 Flower监控任务执行状态</span><br><span class="line">除了&#96;&#96;&#96;django_celery_results&#96;&#96;&#96;，你可以使用&#96;&#96;&#96;flower&#96;&#96;&#96;监控后台执行任务状态。它提供了一个可视化的界面，在测试环境中非常有用</span><br></pre></td></tr></table></figure>
+<p>pip install flower</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">安装好后，你有如下两种方式启动服务器。启动服务器后，打开&#96;&#96;&#96;http:&#x2F;&#x2F;localhost:5555&#96;&#96;&#96;即可查看监控情况</span><br></pre></td></tr></table></figure>
+<h1 id="从terminal终端启动，proj为项目名"><a href="#从terminal终端启动，proj为项目名" class="headerlink" title="从terminal终端启动，proj为项目名"></a>从terminal终端启动，proj为项目名</h1><p>$ flower -A proj –port=5555</p>
+<h1 id="从celery启动"><a href="#从celery启动" class="headerlink" title="从celery启动"></a>从celery启动</h1><h1 id="celery-flower-A-proj-–address-127-0-0-1-–port-5555"><a href="#celery-flower-A-proj-–address-127-0-0-1-–port-5555" class="headerlink" title="celery flower -A proj –address=127.0.0.1 –port=5555"></a>celery flower -A proj –address=127.0.0.1 –port=5555</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">### 9.Celery高级用法与注意事项</span><br><span class="line">#### 9.1给任务设置最大重试次数</span><br><span class="line">定义任务时可以通过&#96;&#96;&#96;max_retries&#96;&#96;&#96;设置最大重试次数，并调用&#96;&#96;&#96;self.retry&#96;&#96;&#96;方法调用。因为要调用&#96;&#96;&#96;self&#96;&#96;&#96;这个参数，定时任务必须设置&#96;&#96;&#96;bind&#x3D;True&#96;&#96;&#96;</span><br></pre></td></tr></table></figure>
+<p>@shared_task(bind=True, max_retries=3)<br>def send_batch_notification(self):<br>    try:<br>        something_raising()<br>        raise Excepton(‘Can’t send email.’)<br>    except Exception as exec:<br>        self.retry(exc=exc, countdown=5)<br>    send_email(<br>        subject=’Batch email notifications’,<br>        message=’Test mail’,<br>        from_email=’no-reply@example.com’,<br>        recipient_list=[‘john@example.com’]<br>    )</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#### 9.2 不同任务交由不同Queue处理</span><br><span class="line">不同任务所需要的时间和资源不一样。为了防止一些非常占用资源或耗时的任务阻塞任务队列导致一些简单的任务也无法执行，可以将不同的任务交由不同的Queue处理。下例定义了两个Queue队列，default执行普通任务，heavy_tasks执行重型任务。</span><br></pre></td></tr></table></figure>
+<p>CELERY_TASK_DEFAULT_QUEUE = ‘default’<br>CELERY_TASK_DEFAULT_ROUTING_KEY = ‘default’<br>CELERY_QUEUES = (<br>    Queue(‘default’, Exchage(‘default’), routing_key=’default’)<br>    Queue(‘heavy_tasks’, Exchage(‘heavy_tasks’), routing_key=’heavy_tasks’)<br>)<br>CELERY_TASK_ROUTES = {<br>    ‘mysqpp.tasks.havy_tasks’: ‘heavy_tasks’<br>}</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#### 9.3 Django的模型对象不应该作为参数传递</span><br><span class="line">Django的模型对象不应该作为参数传递给任务，几乎总时在任务运行时从数据库获取对象是最好的，因为老的数据会导致竞态条件。假象有这样一个场景，你有一篇文章，以及自动展开文章中缩写的任务：</span><br></pre></td></tr></table></figure>
+<p>class Article(models.Model):<br>    title = models.Charfield()<br>    body = models.Textfield()</p>
+<p>@app.task<br>def expend_abbreviations(article):<br>    article.body.replace(‘Old text’, ‘New text’)<br>    article.save()</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">首先，作者创建一篇文章并保存，这时作者点击一个按钮初始化一个缩写展开任务：</span><br></pre></td></tr></table></figure>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>article = Article.objects.get(id=102)<br>expand_abbreviations.delay(article)</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">现在，队列非常忙，所以任务在2分钟内都不会运行。与此同时，另一个作者修改了这篇文章，当这个任务最终运行，因为老版本的文章作为参数传递给了这个任务，所以这篇文章会回滚到老的版本。修复这个竞态条件很简单，只要参数传递文章的id即可，此时可以在任务中重新获取这篇文章：</span><br></pre></td></tr></table></figure>
+<p>@app.task<br>def expand_abbreviation(article_id):<br>    article = Article.objects.get(id=article_id)<br>    article.body.replace(‘MyCorp’, ‘My Corporation’)<br>    article.save()</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#### 9.4 使用on_commit函数处理事务</span><br><span class="line">再看另外一个celery中处理事务的例子。这是在数据库中创建一个文章对象的Django视图，此时传递主键给任务，它使用&#96;&#96;&#96;commit_on_success&#96;&#96;&#96;装饰器，当视图返回时该事务会被提交，当视图抛出异常时会进行回滚。</span><br></pre></td></tr></table></figure>
+<p>from django.db import transaction</p>
+<p>@transaction.commit_on_success<br>def create_article(request):<br>    article = Article.objects.create()<br>    expand_abbreviation.delay(article.pk)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">如果在事务提交之前已经开始执行会产生一个竞态条件；数据库对象还不存在。解决方案时使用&#96;&#96;&#96;on_commit&#96;&#96;&#96;回调函数来在所有事务提交成功后启动任务。</span><br></pre></td></tr></table></figure>
+<p>from django.db.transaction import on_commit</p>
+<p>def create_article(request):<br>    article = Artile.objects.create()<br>    on_commit(lambda: expand_abbreiation.delay(article.pk))<br>```</p>
  
       <!-- reward -->
       
@@ -1384,183 +1710,6 @@ Location还支持正则匹配，比如下例可以禁止用户访问所有的图
     <footer class="article-footer">
        
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/python/" rel="tag">python</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%8A%80%E6%9C%AF/" rel="tag">技术</a></li></ul>
-
-    </footer>
-  </div>
-
-    
- 
-    
-</article>
-
-    
-    <article
-  id="post-Django REST Framework(DRF)学习笔记"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2022/11/01/Django%20REST%20Framework(DRF)%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"
-    >Django REST Framework(DRF)学习笔记</a> 
-</h2>
- 
-
-    </header>
-     
-    <div class="article-meta">
-      <a href="/2022/11/01/Django%20REST%20Framework(DRF)%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" class="article-date">
-  <time datetime="2022-11-01T11:31:52.000Z" itemprop="datePublished">2022-11-01</time>
-</a> 
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
-  </div>
-   
-    </div>
-      
-    <div class="article-entry" itemprop="articleBody">
-       
-  <h1 id="Django-REST-Framework-DRF-学习笔记"><a href="#Django-REST-Framework-DRF-学习笔记" class="headerlink" title="Django REST Framework(DRF)学习笔记"></a>Django REST Framework(DRF)学习笔记</h1><blockquote>
-<p>前言：</br><br>&emsp;&emsp;Django本身不是为了开发符合REST规范的Web API而设计，不过借助Django REST Framework这个神器我们可以快速开发出来优秀且符合规范的Web API来。Django REST Framework给Django提供了用于构建Web API的强大而灵活的工具包。包括序列化器、认证、权限、分页、过滤和限流。所以，我们应该感谢DRF，因为它，Django的应用前景更广了，减少了被淘汰的风险。</p>
-</blockquote>
-<h2 id="安装与使用指南"><a href="#安装与使用指南" class="headerlink" title="安装与使用指南"></a>安装与使用指南</h2><p>安装命令如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install djangorestframework</span><br></pre></td></tr></table></figure>
-<p>如果想要获得一个图形化的界面来操作API，需要将rest_framework注册到项目的INSTALL_APPS中，如下所示：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">INSTALLED_APPS &#x3D; [</span><br><span class="line">    &#96;django.contrib.admin&#96;,</span><br><span class="line">    &#96;django.contrib.auth&#96;,</span><br><span class="line">    &#96;django.contrib.contenttypes&#96;,</span><br><span class="line">    &#96;django.contrib.sessions&#96;,</span><br><span class="line">    &#96;django.contrib.messages&#96;,</span><br><span class="line">    &#96;django.contrib.staticfiles&#96;,</span><br><span class="line">    &#96;rest_framework&#96;,</span><br><span class="line">    &#96;your_app&#96;,</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
-<h2 id="序列化及RESTful规范基础知识"><a href="#序列化及RESTful规范基础知识" class="headerlink" title="序列化及RESTful规范基础知识"></a>序列化及RESTful规范基础知识</h2><h4 id="序列化基础知识"><a href="#序列化基础知识" class="headerlink" title="序列化基础知识"></a>序列化基础知识</h4><p>每种编程语言都有各自的数据类型，将属于自己语言的数据类型或对象转换为可以通过网络传输或可以存储到本地磁盘的数据格式（如：XML、JSON或特定格式的字符串）的过程称为序列化(serialization)；反之称为反序列化</p>
-<h4 id="python数据序列化"><a href="#python数据序列化" class="headerlink" title="python数据序列化"></a>python数据序列化</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">import json</span><br><span class="line">json.dump(&#123;&quot;name&quot;: &quot;John&quot;, &quot;score&quot;: 112&#125;)</span><br><span class="line">&#39;&#123;&quot;name&quot;: &quot;John&quot;, &quot;score&quot;: 112&#125;&#39;</span><br></pre></td></tr></table></figure>
-<p>从上述代码可以看出，生成的json格式数据外面都加了单引号，这说明dict类型都被转化为了json字符串</p>
-<h4 id="Django查询集序列化"><a href="#Django查询集序列化" class="headerlink" title="Django查询集序列化"></a>Django查询集序列化</h4><p>以上所介绍的序列化方法对Django也是适用的。不同的是Django还有自己专属的数据类型比如查询集QuerySet和ValueQuerySet类型数据，还提供了自带的serializer类。使用Django自带的serializer类也可以轻易将QuerySet格式的数据转化为json格式。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># Django QuerySet数据 to Json</span><br><span class="line">from django.core import serializers</span><br><span class="line">data &#x3D; serializers.serialize(&quot;json&quot;, SomeModel.objects.all())</span><br></pre></td></tr></table></figure>
-<p>有时候我们只需要查询结果集的部分字段，可以使用values(‘字段名’, ‘字段名2’)来要求返回所需要的数据，可以提升些性能，但是返回来的结果需要先转换成列表格式，再用json.dumps()方法序列化成json格式，示例代码如下所示：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">import json</span><br><span class="line">from django.core.serializers.json import DjangoJSONEncoder</span><br><span class="line"></span><br><span class="line">queryset &#x3D; myModel.objects.filter(foo_icontains&#x3D;bar).values(&#39;f1&#39;, &#39;f2&#39;, &#39;f3&#39;)</span><br><span class="line">data4&#x3D;json.dump(list(queryset), cls&#x3D;DjangoJSONEncoder)</span><br></pre></td></tr></table></figure>
-<h4 id="什么是符合RESTful规范的API？"><a href="#什么是符合RESTful规范的API？" class="headerlink" title="什么是符合RESTful规范的API？"></a>什么是符合RESTful规范的API？</h4><p>REST是REpresentational State Transfer三个单词的缩写，由Roy Fielding于2000年在论文中提出。简单来说，就是用URI表示资源，用HTTP方法（GET，POST，PUT，DELETE）表征对这些资源进行增删改查的操作。而如果你自己开发的API被称为RESTful API，就需要遵守其规定的约束。</p>
-<h4 id="RESTful-APi设计指南"><a href="#RESTful-APi设计指南" class="headerlink" title="RESTful APi设计指南"></a>RESTful APi设计指南</h4><blockquote>
-<p>前言：目前web应用程序的发展趋势，就是前端设备层出不穷(手机、平板、桌面电脑)。因此，必须有一种统一的机制，方便不同的前端设备与后端通信，这导致了API架构的流行，甚至出现了<code>API first</code>的思想。<code>RESTful API</code>是目前比较成熟的一套互联网应用程序的API设计理论</p>
-</blockquote>
-<h5 id="1-路径"><a href="#1-路径" class="headerlink" title="1.路径"></a>1.路径</h5><p>路径又称为endpoint，表示API的具体网址。</br><br>在RESTful架构中，每个网址代表一种资源，所以网址中不能有动词，只能有名词，而且所用的名词往往与数据库的表格名对应。</p>
-<h5 id="2-HTTP动词"><a href="#2-HTTP动词" class="headerlink" title="2.HTTP动词"></a>2.HTTP动词</h5><p>常用的HTTP动词有下面5个，展示对资源的具体操作类型，括号里展示对应的SQL语句</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">1.GET(SELECT)：从服务器取出一个资源（一项或多项）</span><br><span class="line">2.POST(CREATE)：在服务器新建一个资源。</span><br><span class="line">3.PUT(UPDATE)：在服务器更新资源(客户端提供改变后的完整资源)。</span><br><span class="line">4.PATCH(UPDATE)：在服务器更新资源（客户端提供改变的属性）。</span><br><span class="line">5.DELETE(DELETE)：从服务器删除资源</span><br></pre></td></tr></table></figure>
-<h5 id="3-状态码-STATUS-CODE"><a href="#3-状态码-STATUS-CODE" class="headerlink" title="3.状态码(STATUS_CODE)"></a>3.状态码(STATUS_CODE)</h5><p>服务器向用户返回的状态码和提示信息，常见的有以下一些(方括号中是该状态码对应的HTTP动词)。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">200 OK - [GET]：服务器成功返回用户请求的数据，该操作是幂等的（Idempotent）。</span><br><span class="line">201 CREATED - [POST&#x2F;PUT&#x2F;PATCH]：用户新建或修改数据成功。</span><br><span class="line">202 Accepted - [*]：表示一个请求已经进入后台排队（异步任务）</span><br><span class="line">204 NO CONTENT - [DELETE]：用户删除数据成功。</span><br><span class="line">400 INVALID REQUEST - [POST&#x2F;PUT&#x2F;PATCH]：用户发出的请求有错误，服务器没有进行新建或修改数据的操作，该操作是幂等的。</span><br><span class="line">401 Unauthorized - [*]：表示用户没有权限（令牌、用户名、密码错误）。</span><br><span class="line">403 Forbidden - [*] 表示用户得到授权（与401错误相对），但是访问是被禁止的。</span><br><span class="line">404 NOT FOUND - [*]：用户发出的请求针对的是不存在的记录，服务器没有进行操作，该操作是幂等的。</span><br><span class="line">406 Not Acceptable - [GET]：用户请求的格式不可得（比如用户请求JSON格式，但是只有XML格式）。</span><br><span class="line">410 Gone -[GET]：用户请求的资源被永久删除，且不会再得到的。</span><br><span class="line">422 Unprocesable entity - [POST&#x2F;PUT&#x2F;PATCH] 当创建一个对象时，发生一个验证错误。</span><br><span class="line">500 INTERNAL SERVER ERROR - [*]：服务器发生错误，用户将无法判断发出的请求是否成功。</span><br></pre></td></tr></table></figure>
-<h4 id="4-自定义序列化器-serializers"><a href="#4-自定义序列化器-serializers" class="headerlink" title="4.自定义序列化器(serializers)"></a>4.自定义序列化器(serializers)</h4><p>&emsp;&emsp;利用DRF开发Web API的第一步是自定义序列化器(serializers)，序列化器的作用是将模型实例(比如用户、文章)序列化和反序列化为诸如<code>json</code>之类的表示形式。一个模型实例可能有许多个字段属性，但一般情况下是不需要把所有字段信息以JSON格式数据返回给用户。<b>序列化器定义了需要对一个模型实例的哪些字段进行序列化/反序列化，并可对客户端发送过来的数据进行验证和存储。</b></br><br>&emsp;&emsp;就像Django提供了Form类和ModelForm类两种自定义表单一样， REST framework提供了Serializer类和ModelSerializer类两种方式供开发者自定义序列化器。前者需要手动指定序列化和反序列化的字段，后者根据模型(Model)生成需要序列化和反序列化的字段，可以使代码更简洁</p>
-<h4 id="5-DRF认证方案"><a href="#5-DRF认证方案" class="headerlink" title="5.DRF认证方案"></a>5.DRF认证方案</h4><p>Django默认支持session的认证方式，实际前后端分离开发项目中后台采用的是token(令牌认证)</p>
-<h6 id="5-1-身份验证"><a href="#5-1-身份验证" class="headerlink" title="5.1 身份验证"></a>5.1 身份验证</h6><p>&emsp;&emsp;是将传入的请求对象(request)与一组标识凭证(例如用户名+密码或者令牌token)相关联的机制。REST framwork提供了一些开箱即用的身份验证方案，并且还允许实现自定义的方案。</br><br>&emsp;&emsp;DRF的每个认证方案实际上是一个类。即我们可以在视图中使用一个或多个认证方案类。REST framework将尝试使用列表中的每个类进行身份验证，并使用成功完成验证的第一个类的返回的元组设置<code>request.user</code>和<code>request.auth</code>。</br><br>&emsp;&emsp;用户通过认证后<code>request.user</code>返回Django的User实例，否则返回<code>AnonymousUser</code>的实例。<code>request.auth</code>通常为None。如果使用token认证。<code>request.auth</code>可以包含认证过的token</p>
-<h6 id="5-2-DRF自带认证方案"><a href="#5-2-DRF自带认证方案" class="headerlink" title="5.2 DRF自带认证方案"></a>5.2 DRF自带认证方案</h6><p>Django REST Framework提供了以下几种认证方案：</p>
-<ul>
-<li>Session认证<code>SessionAuthentication</code>类：此认证方案使用Django的默认session后端进行身份验证。当客户端发送登录请求通过验证后，Django通过session将用户信息的请求状态。Session身份验证适用于与你的网站在相同的Session环境中运行的AJAX客户端上。(这也是Session认证的最大弊端)</li>
-<li>基本认证<code>BasicAuthentication</code>类：此认证方案使用HTTP基本认证，针对用户的用户名和密码进行认证。使用这种方式浏览器会跳出登录框让用户输入用户名和密码认证。基本认证通常只适用于测试。</li>
-<li>远程认证<code>RemoteAuthentication</code>类：此认证方案为用户名不存在的用户自动创建用户实例。这个方法较少使用</li>
-<li>Token认证<code>TokenAuthentication</code>类：该认证方案是DRF提供的使用简单的基于Token的HTTP认证方案。当客户端发送登录请求后，服务器便会生成一个Token并将该Token返回给客户端，作为客户端进行请求的一个表示以后客户端只需带上这个Token前来请求数据即可，无需再次带上用户名和密码<blockquote>
-<p>注：如果是在生产环境下使用<code>BasicAuthentication</code>和<code>TokenAuthentication</code>认证，必须确保API仅在<code>https</code>可用</p>
-</blockquote>
-</li>
-</ul>
-<p>DRF自带权限类还包括：</p>
-<ul>
-<li><code>IsAuthenticated</code>类：仅限已经通过身份验证的用户访问</li>
-<li><code>AllowAny</code>类：允许任何用户访问</li>
-<li><code>IsAdminUser</code>类：仅限管理员访问</li>
-<li><code>DjangoModelPermission</code>类：只有在用户经过身份验证并分配了相关模型权限时，才会获得授权访问相关模型。</li>
-<li><code>DjangoModelPermissionReadOnly</code>类：与前者类似，但可以给匿名用户访问API的可读权限。</li>
-<li><code>DjangoObjectPermission</code>类：只有在用户经过身份验证并分配了相关对象权限时，才会获得授权访问相关对象。通常与<code>django-gaurdian</code>联用实现对象级别的权限控制<h6 id="5-3权限设置"><a href="#5-3权限设置" class="headerlink" title="5.3权限设置"></a>5.3权限设置</h6>在<code>permission_classes</code>中可以限制谁可以访问特定的视图。以下例子使用的是<code>IsAuthenticatedOrReadOnly</code>类，它将确保经过身份验证的请求获得读写访问权限，未经身份验证的请求将获得只读的权限。<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">from rest_framework import generics</span><br><span class="line">from rest_framwork import permissions</span><br><span class="line">from .permissions import IsOwnerOrReadOnly</span><br><span class="line"></span><br><span class="line">class ArticleList(generics.ListCreteAPIViews):</span><br><span class="line">     queryset &#x3D; Article.objects.all()</span><br><span class="line">     serializer_class &#x3D; ArticleSerializer</span><br><span class="line">     permission_classes &#x3D; (permissions.IsAuthenticatedOrReadOnly,)</span><br></pre></td></tr></table></figure>
-<h6 id="5-4更多设置权限方式"><a href="#5-4更多设置权限方式" class="headerlink" title="5.4更多设置权限方式"></a>5.4更多设置权限方式</h6>在前面的案例中，我们都是在基于类的API视图里通过<code>permission_classes</code>属性设置的权限类。如果你有些权限是全局或全站通用的，你还可以在settings.py中使用<code>DEFAULT_PERMISSION_CLASSES</code>全局设置默认权限策略。<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">REST_FRAMEWORK &#x3D; &#123;</span><br><span class="line">    &#39;DEFAULT_PERMISSION_CLASSES&#39;:(</span><br><span class="line">        &#39;rest_framework.permissions.IsAuthenticated&#39;,</span><br><span class="line">    )</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-如果未指定，则此设置默认为允许无限制访问<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&#39;DEFAULT_PERMISSION_CLASSES&#39;: (</span><br><span class="line">&#39;rest_framework.permissions.AllowAny&#39;)</span><br></pre></td></tr></table></figure>
-<h4 id="6-认证详解与Token认证"><a href="#6-认证详解与Token认证" class="headerlink" title="6.认证详解与Token认证"></a>6.认证详解与Token认证</h4><h6 id="6-1-什么是认证-Authentication-？"><a href="#6-1-什么是认证-Authentication-？" class="headerlink" title="6.1 什么是认证(Authentication)？"></a>6.1 什么是认证(Authentication)？</h6>&emsp;&emsp;身份验证是将传入的请求对象(rquest)与一组标识凭据(例如用户名+密码或者令牌token)相关联的机制。REST framwork提供了一些开箱即用的身份验证方案，并且还允许程序设计者实现自定义方案。</br><br>&emsp;&emsp;DRF的每个认证方案实际上是一个类，你可以在视图里使用一个或多个认证方案类。REST framework将尝试使用列表中每个类进行身份验证。并使用成功完成验证的第一个类的返回的元组设置<code>request.user</code>和<code>request.auth</code>。</br><br>&emsp;&emsp;用户通过认证后<code>request.user</code>返回Django的User实例，否则返回<code>AnonymousUser</code>的实例。<code>request.auth</code>通常为None，如果使用token认证，<code>request.auth</code>可以包含认证过的token.<blockquote>
-<p>注： 认证一般发生在权限校验之前</p>
-</blockquote>
-<h6 id="6-2-如何在DRF中设置认证方案？"><a href="#6-2-如何在DRF中设置认证方案？" class="headerlink" title="6.2 如何在DRF中设置认证方案？"></a>6.2 如何在DRF中设置认证方案？</h6></li>
-</ul>
-<ol>
-<li>设置默认的全局认证方案<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"># settings.py</span><br><span class="line">REST_FRAMEWORK &#x3D; &#123;</span><br><span class="line">    &#39;DEFAULT_AUTHENTICATION_CLASSES&#39;:(</span><br><span class="line">        &#39;rest_framework.authentication.BasicAuthentication&#39;,</span><br><span class="line">        &#39;rest_framework.authentication.SessionAuthentication&#39;,</span><br><span class="line">    )</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-在基于类的视图(CBV)中使用<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">from rest_framework.authentication import SessionAuthentication, BasicAuthentication</span><br><span class="line">from rest_framework.permissions import IsAuthenticated</span><br><span class="line">from rest_framework.response import Response</span><br><span class="line">from rest_framework.views import APIView</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class ExampleView(APIView):</span><br><span class="line">    authentication_classes &#x3D; (SessionAuthentication, BasicAuthentication)</span><br><span class="line">    permission_classes &#x3D; (IsAuthenticated, )</span><br></pre></td></tr></table></figure>
-在基于函数的视图中使用<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">from rest_framework.decorators import api_view, authentication_classes, permission_classes</span><br><span class="line"></span><br><span class="line">@api_view([&#39;GET&#39;])</span><br><span class="line">@authentication_classes(SessionAuthentication, BasicAuthentication)</span><br><span class="line">@permission_classes((IsAuthenticated,))</span><br><span class="line">def example_view(request, format&#x3D;None):</span><br><span class="line">    content &#x3D; &#123;</span><br><span class="line">        &#39;user&#39;: unicode(request.user), # django.contrib.auth.User实例</span><br><span class="line">        &#39;auth&#39;: unicode(request.auth),</span><br><span class="line">        # None</span><br><span class="line">    &#125;</span><br><span class="line">    return Response(content)</span><br></pre></td></tr></table></figure>
-<h6 id="6-3-前后端分离时为何推荐token认证？"><a href="#6-3-前后端分离时为何推荐token认证？" class="headerlink" title="6.3 前后端分离时为何推荐token认证？"></a>6.3 前后端分离时为何推荐token认证？</h6><blockquote>
-<ul>
-<li>Token无需存储降低服务器成本，session是将用户信息存储在服务器的，当用户量增大时服务器的压力也会随之增大。</br></li>
-<li>防御CSRF跨站伪造请求攻击，session是基于cookie进行用户识别的，cookie如果被截获，用户信息就容易泄露。</br></li>
-<li>扩展性强，session需要存储无法共享，当搭建了多个服务器时其他服务器无法获取到session中的验证数据用户无法验证成功。Token可以实现服务器间共享，这样不管在哪里都可以访问到。</li>
-<li>Token可以减轻服务器的压力，减少频繁的查询数据库。</li>
-<li>支持跨域访问，适用于移动平台应用</li>
-</ul>
-</blockquote>
-<h6 id="6-4-如何使用TokenAuthentication"><a href="#6-4-如何使用TokenAuthentication" class="headerlink" title="6.4 如何使用TokenAuthentication"></a>6.4 如何使用TokenAuthentication</h6>DRF自带的<code>TokenAuthentication</code>方案可以实现基本的token认证，整个流程如下：</br><br>首先，你需要修改<code>settings.py</code>，加入以下app<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">INSTALLED_APP &#x3D; (</span><br><span class="line">    ...</span><br><span class="line">    &#39;rest_framework.authtoken&#39;</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
-其次，你需要为你的用户生成令牌(token)。如果你希望在创建用户时自动生成token，可以借助Django的signal实现，如下所示：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">from django.conf import settings</span><br><span class="line">from django.db.models.signals import post_save</span><br><span class="line">from django.dispatch import receiver</span><br><span class="line">from rest_framework.authentication.models import Token</span><br><span class="line"></span><br><span class="line">@receiver(post_save, sender&#x3D;settings.AUTH_USER_MODEL)</span><br><span class="line">def create_auth_token(sender, instance&#x3D;None, created&#x3D;False, **kwargs):</span><br><span class="line">    if created:</span><br><span class="line">        Token.objects.create(user&#x3D;instance)</span><br></pre></td></tr></table></figure>
-如果已经有了一些用户，则可以打开shell为所有现有用户生成令牌，如下所示：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">from django.contrib.auth.models import User</span><br><span class="line">from rest_framework.authtoken.models import Token</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">for user in User.objects.all():</span><br><span class="line">    Token.objects.get_or_create(user&#x3D;user)</span><br></pre></td></tr></table></figure>
-还可以在<code>admin.py</code>中给用户创建token，如下所示：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">from restframework.authtoken import TokenAdmin</span><br><span class="line">TokenAdmin.raw_id_fields &#x3D; [&#39;user&#39;]</span><br></pre></td></tr></table></figure>
-对Django来说，还可以用以下命令为一个用户新建或重置token<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">.&#x2F;manage.py drf_create_token &lt;username&gt; # 新建</span><br><span class="line">.&#x2F;manage.py drf_create_token -r &lt;username&gt; #重置</span><br></pre></td></tr></table></figure>
-接下来，我们需要暴露用户获取token的url地址(API端点)<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">from rest_framework.authtoken import views</span><br><span class="line">urlpattern +&#x3D; [</span><br><span class="line">    url(r&#39;^api-token-auth&#x2F;&#39;, views.obtain_auth_token)</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
-这样每当用户使用form表单或者JSON将有效的username和password字段POST提交到以上视图时，obtain_auth_token视图将返回以下的JSON响应：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#39;token&#39;: &#39;9944b09199c62bcf9418ad846dd0e4bbdfc6ee4b&#39;&#125;</span><br></pre></td></tr></table></figure>
-客户端拿到token后可以将其存储在本地cookie或localstorage里，下次发送请求时把token包含在<code>Authorization</code>HTTP头中即可，如下所示：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Authorization: Token 9944b09199c62bcf9418ad846dd0e4bbdfc6ee4b</span><br></pre></td></tr></table></figure>
-我们可以借助```curl``工具来进行简单的测试<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -X GET http:&#x2F;&#x2F;127.0.0.1:8000&#x2F;api&#x2F;example -H &#39;Authorization: Token 9944b09199c62bcf9418ad846dd0e4bbdfc6ee4b&#39;</span><br></pre></td></tr></table></figure>
-<h6 id="6-5自定义Token返回信息"><a href="#6-5自定义Token返回信息" class="headerlink" title="6.5自定义Token返回信息"></a>6.5自定义Token返回信息</h6>默认的<code>obtain_auth_token</code>视图返回的json响应数据是非常简单的，只有token一项。如果希望返回更多的信息，比如用户的id或email，就要继承ObtainAuthToken类量身定制这个视图，如下所示：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">from rest_framework.authtoken.views import ObtainAuthToken</span><br><span class="line">from rest_framework.authtoken.models import Token</span><br><span class="line">from rest_framework.response import Response</span><br><span class="line"></span><br><span class="line">class CustomAuthToken(ObtainAuthToken):</span><br><span class="line">    def post(self, request, *args, **kwargs):</span><br><span class="line">    serializer &#x3D; self.serializer_class(data&#x3D;request.data, context&#x3D;&#123;&#39;request&#39;: request&#125;)</span><br><span class="line">    serializer.is_valid(raise_exception&#x3D;False)</span><br><span class="line">    user &#x3D; serializer.validated_data[&#39;user&#39;]</span><br><span class="line">    token, created &#x3D; Token.objects.get_or_create(user&#x3D;user)</span><br><span class="line">    return Response(&#123;</span><br><span class="line">        &#39;token&#39;: token.key,</span><br><span class="line">        &#39;user_id&#39;: user.pk,</span><br><span class="line">        &#39;email&#39;: user.email</span><br><span class="line">    &#125;)</span><br></pre></td></tr></table></figure>
-最后一步，DRF的<code>TokenAuthentication</code>类会从请求头中获取Token，验证其有效性。如果token有效，返回<code>request.user</code>。至此，整个token的签发和验证过程就完成了。<h4 id="7-JWT认证"><a href="#7-JWT认证" class="headerlink" title="7.JWT认证"></a>7.JWT认证</h4><blockquote>
-<p>前言：JSON Web Token(JWT)是一种更新的使用token进行身份认证的标准。与DRF内置的TokenAuthentication方案不同，JWT身份验证不需要使用数据库来验证令牌，而且可以轻松设置token失效期或刷新token，是API开发中当前最流行的跨域认证解决方案。本文将详细介绍JWT认证的工作原理已经如何通过<code>djangorestframework-simplejwt</code>这个第三方包轻松实现JWT认证。</p>
-</blockquote>
-<h6 id="7-1什么是Json-Web-Token"><a href="#7-1什么是Json-Web-Token" class="headerlink" title="7.1什么是Json Web Token?"></a>7.1什么是Json Web Token?</h6>&emsp;&emsp;JSON Web Token(JWT)是一种开放标准，它定义了一种<b>紧凑且自包含</b>的方式，用于各方之间安全地将信息以JSON对象传输。由于此信息是经过数字签名的，因此可以被验证和信任。JWT用于为应用程序创建访问token，通常适用于API身份验证和服务器到服务器的授权。</li>
-</ol>
-<ul>
-<li>紧凑：数据量较少，可以通过url参数，http请求提交的数据以及http header多种方式来传递。</li>
-<li>自包含：这个字符串可以包含很多信息，比如用户id，用户名，订单号id登，如果其他人拿到该信息，就可以拿到关键业务信息。</li>
-</ul>
-<p>&emsp;&emsp;客户端提交用户登录信息验证身份通过后，服务器生成一个用于证明用户身份的令牌(token)，也就是一个加密后的长字符串，并且将其发送给客户端。在后续请求中，客户端以各种方式(比如通过url参数或者请求头)将这个令牌发送给服务器，服务器就知道请求来自哪个特定身份的用户了。<br>JSON Web Token由三部分组成，这些部分由点(.)分隔，分别是header(头部)， payload(有效负载)和signature(签名)。</p>
-<ul>
-<li>header(头部)：识别以何种算法来生成签名。</li>
-<li>pyload(有效负载)：用来存放实际需要传递的数据。</li>
-<li>signature(签名)：安全验证token的有效性，防止数据被篡改。</li>
-</ul>
-<p>通过http传输的数据实际上是加密后的JWT</p>
-<h6 id="7-2-DRF中如何使用JWT认证"><a href="#7-2-DRF中如何使用JWT认证" class="headerlink" title="7.2 DRF中如何使用JWT认证"></a>7.2 DRF中如何使用JWT认证</h6><p>安装</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install djangorestframework-simplejwt</span><br></pre></td></tr></table></figure>
-<p>其次，需要告诉DRF我们使用jwt认证作为后台认证方案，修改<code>settings.py</code>文件</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">REST_FRAMEWORK &#x3D; &#123;</span><br><span class="line">    &#39;DEFAULT_AUTHENTICATION_CLASSES&#39;:[</span><br><span class="line">        &#39;rest_framework_simplejwt.authentication.JWTAuthentication&#39;</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>最后，我们需要提供用户可以获取和刷新token的urls地址，这两个urls地址分别对应<code>TokenObtainPaireView</code>和<code>TokenRefreshView</code>两个视图。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">from rest_framework_simplejwt.views import (</span><br><span class="line">    TokenObtainPaireView，</span><br><span class="line">    TokenRefreshView，</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">urlpatterns &#x3D; [</span><br><span class="line">    path(&#39;token&#x2F;&#39;, TokenObtainPairView.as_view(), name&#x3D;&#39;token_obtain_pair&#39;),</span><br><span class="line">    path(&#39;token&#x2F;refresh&#39;, TokenRefreshView.as_view(), name&#x3D;&#39;token_refresh&#39;)</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
-<p>若我们对Simple JWT返回的<code>access token</code>进行解码，这个token的payload数据部分包括token类型,token失效时间，jti和user_id。如果我们要在payload部分提供更多的信息，比如用户的username，这时候就要自定义令牌(token)了。</p>
-<h6 id="7-3-如何自定义token"><a href="#7-3-如何自定义token" class="headerlink" title="7.3 如何自定义token"></a>7.3 如何自定义token</h6><p>首先，编写<code>myapp/serializer.py</code>，添加如下代码，该序列化器继承了<code>TokenObtainPairSerializer</code>类</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">from rest_framework_simplejwt.serializers import TokenObtainPairSerializer</span><br><span class="line"></span><br><span class="line">class MyTokenObtainPairSerializer(TokenObtainPairSerializer):</span><br><span class="line">    @classmethod</span><br><span class="line">    def get_token(cls, user):</span><br><span class="line">        token &#x3D; super(MyTokenObtainSerializer, cls).get_token(user)</span><br><span class="line">        </span><br><span class="line">        # add extra info</span><br><span class="line">        token[&#39;username&#39;] &#x3D; user.username</span><br><span class="line">        return token</span><br></pre></td></tr></table></figure>
-<p>其次，不使用Simple JWT提供的默认视图，使用自定义视图。修改<code>myapp/views.py</code>，添加如下代码：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">from rest_framework_simplejwt.views import TokenObtainPairView</span><br><span class="line">from rest_framework.permissions import AllowAny</span><br><span class="line">from .serializers import MyTokenObtainPairSerializer</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class MyObtainTokenPairView(TokenObtainPairView):</span><br><span class="line">    permisssion_classes &#x3D; (AllowAny, )</span><br><span class="line">    serializer_class &#x3D; MyTokenObtainPairSerializer</span><br></pre></td></tr></table></figure>
-<p>最后，修改<code>urls.py</code>添加如下代码，将/token/指向新的自定义的视图。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line">urlpatterns &#x3D; [</span><br><span class="line">    path(&#39;token&#x2F;&#39;, MyObtainTokenPairView.as_view(), name&#x3D;&#39;token_obtain_pair&#39;)</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
-<h6 id="7-4-自定义认证后台-Backend"><a href="#7-4-自定义认证后台-Backend" class="headerlink" title="7.4 自定义认证后台(Backend)"></a>7.4 自定义认证后台(Backend)</h6><p>&emsp;&emsp;通常情况下，我们使用的方法是使用用户名和密码登录，如果我们希望后台同时支持邮箱/密码，手机/密码组合登录，则我们需要自定义认证后台(Backend)<br>首先，修改<code>views.py</code>添加如下代码：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">from django.contrib.auth.backends import ModelBackend</span><br><span class="line">from django.db.models import Q</span><br><span class="line">from django.contrib.auth import get_user_model</span><br><span class="line"></span><br><span class="line">User &#x3D; get_user_model()</span><br><span class="line"></span><br><span class="line">class MyCustomBackend(ModelBackend):</span><br><span class="line">    def authenticate(self, request, username&#x3D;None, password&#x3D;None, **kwargs):</span><br><span class="line">        try:</span><br><span class="line">            user &#x3D; User.objects.get(Q(username&#x3D;username) | Q(email&#x3D;username))</span><br><span class="line">            if user.check_password(password):</span><br><span class="line">                return user</span><br><span class="line">        except Exception as e:</span><br><span class="line">            return None</span><br></pre></td></tr></table></figure>
-<p>最后，修改<code>settings.py</code>，把自定义的验证方法添加到<code>AUTHENTICATION_BAKENDS</code>里去</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">AUTHENTICATION_BACKENDS &#x3D; (</span><br><span class="line">    &#39;user.views.MyCustomBackend&#39;</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
-<h4 id="8-分页"><a href="#8-分页" class="headerlink" title="8.分页"></a>8.分页</h4><h6 id="8-1分页的目的"><a href="#8-1分页的目的" class="headerlink" title="8.1分页的目的"></a>8.1分页的目的</h6><p>当数据库的数据量非常大时，如果一次将这些数据查询出来，必然加大了服务器内存的负载，降低系统的运行速度。一种更好的设计方式是将数据分段的展示给用户，如果用户再展示的分段数据中没有找到自己的内容，可以通过指定页码或翻页的方式查看更多数据，直到找到自己想要的内容为止。</p>
-<h6 id="8-2DRF提供的分页"><a href="#8-2DRF提供的分页" class="headerlink" title="8.2DRF提供的分页"></a>8.2DRF提供的分页</h6><p>Django REST Framework提供了3中分页类</p>
-<ul>
-<li>PageNumberPagination：普通分页器。可输入page和size参数。通常还需要设置max_page_size数量，防止用户进行恶意查询。</li>
-<li>LimitOffsetPagination：偏移分页器。支持用户按limit和offset这种方式进行查询。offset是查询数据的起点，limit是每页展示数据的最大条数。</li>
-<li>CursorPagination类：加密分页器。这是DRF提供的加密分页查询，仅支持用户按响应提供的上一页和下一页链接进行分页查询。<h6 id="8-3-PageNumberPagination类"><a href="#8-3-PageNumberPagination类" class="headerlink" title="8.3 PageNumberPagination类"></a>8.3 PageNumberPagination类</h6>DRF中使用的默认分页类的最简单方式就是在<code>settings.py</code>中进行全局配置，如下所示：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">REST_FRAMEWORK &#x3D; &#123;</span><br><span class="line">    &#39;DEFAULT_PAGINATION_CLASS:&#39;rest_framework.pagination.PageNumberPagination&#39;,</span><br><span class="line">    &#39;PAGE_SIZE&#39;: 2</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-实际使用中，自定义分页器要比使用默认的分页类更常见，具体做法如下：</br><br>第一步，在app目录下新建<code>pagination.py</code>，添加如下代码：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">from rest_framework.pagination import PageNumberPagination</span><br><span class="line"></span><br><span class="line">class MyPageNumberPagination(PageNumberPagination):</span><br><span class="line">    page_size &#x3D; 2</span><br><span class="line">    page_size_query_param &#x3D; &#39;size&#39;</span><br><span class="line">    max_page_size &#x3D; 10 </span><br></pre></td></tr></table></figure>
-<h4 id="9-过滤和排序"><a href="#9-过滤和排序" class="headerlink" title="9.过滤和排序"></a>9.过滤和排序</h4><h6 id="9-1过滤方法一：重写get-queryset方法"><a href="#9-1过滤方法一：重写get-queryset方法" class="headerlink" title="9.1过滤方法一：重写get_queryset方法"></a>9.1过滤方法一：重写get_queryset方法</h6>此方法不依赖于任何第三方包，只适合于需要过滤的字段比较少的模型。如果这里希望对文章title进行过滤，我们只需要修改ArticleList视图函数类即可<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"># views.py</span><br><span class="line">from rest_framework import generics</span><br><span class="line">from rest_framework import permissions</span><br><span class="line">from .permissions import IsOwnerOrReadOnly</span><br><span class="line">from .pagination import MyPageNumberPagination</span><br><span class="line"></span><br><span class="line">class ArticleList(generics.ListCreateAPIView):</span><br><span class="line">    serializer_class &#x3D; ArticleSerializer</span><br><span class="line">    permission_classes &#x3D; (permissions.IsAuthenticatedOrReadOnly,)</span><br><span class="line">    pagination_class &#x3D; MyPageNumerPagination</span><br><span class="line">    </span><br><span class="line">    def get_queryset(self):</span><br><span class="line">        keyword &#x3D; self.request.query_params.get(&#39;q&#39;)</span><br><span class="line">        if not keyword:</span><br><span class="line">            queryset &#x3D; Article.objects.all()</span><br><span class="line">        else:</span><br><span class="line">            queryset &#x3D; Article.objects.filter(title_icontains&#x3D;keyword)</span><br><span class="line">        return queryset</span><br></pre></td></tr></table></figure>
-&emsp;&emsp;但当一个模型需要过滤的字段很多且不确定时，重写get_queryset方法将变得非常麻烦，更好的方式是使用django-filter这个第三方库实现过滤。<h6 id="7-2-使用django-filter"><a href="#7-2-使用django-filter" class="headerlink" title="7.2 使用django-filter"></a>7.2 使用django-filter</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">安装&#96;&#96;&#96;django-filter&#96;&#96;&#96;&lt;&#x2F;br&gt;</span><br></pre></td></tr></table></figure>
-pip install django-filter<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">把django-filter添加到INSTALLED_APPS中去</span><br></pre></td></tr></table></figure>
-INSTALLED_APPS = [<br>  …,<br>  django-filters,<br>]<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">接下来需要把&#96;&#96;&#96;DjangoFilterBackend&#96;&#96;&#96;设为过滤后台，可以在&#96;&#96;&#96;settings.py&#96;&#96;&#96;中进行全局配置</span><br></pre></td></tr></table></figure>
-REST_FRAMEWORK = {<br>  ‘DEFAULT_FILTER_BACKENDS’: [‘django_filters.rest_framework.DjangoFilterBackend’]<br>}<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">还可以在单个视图中使用它：</span><br></pre></td></tr></table></figure>
-from django_filters import rest_framework</li>
-</ul>
-<p>class ArticleList(generics.ListCreateAPIView):<br>    # new: filter backends and classes<br>    filter_backends = (rest_framework.DjangoFilterBackend,)</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">在类视图中使用django-filter时，你可以直接通过&#96;&#96;&#96;filterset_fields&#96;&#96;&#96;设置需要过滤的字段，如下所示：</span><br></pre></td></tr></table></figure>
-<p>from django_filters import rest_framework</p>
-<p>class ArticleList(generics.ListCreateAPIView):<br>    # new: filter backends and classes<br>    filter_backends = (rest_framework.DjangoFilterBackend,)<br>    filterset_fields = [‘title’, ‘status’]<br>```</p>
- 
-      <!-- reward -->
-      
-    </div>
-    
-
-    <!-- copyright -->
-    
-    <footer class="article-footer">
-       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Django/" rel="tag">Django</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%8A%80%E6%9C%AF/" rel="tag">技术</a></li></ul>
 
     </footer>
   </div>
